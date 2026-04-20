@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<title>Dooodle — Redirection…</title>
+<script>
+  // GitHub Pages SPA redirect trick:
+  // When someone visits /dooodle/apero-juin-2026, GitHub serves this 404.html.
+  // We extract the slug from the path and redirect to poll.html?id=slug.
+  (function() {
+    var path = window.location.pathname;
+    // path looks like /dooodle/some-slug
+    var parts = path.replace(/\/$/, '').split('/');
+    var slug = parts[parts.length - 1];
+
+    // If there's a slug that doesn't look like a static file, redirect to poll
+    if (slug && slug !== 'dooodle' && !slug.includes('.')) {
+      window.location.replace('/dooodle/poll.html?id=' + encodeURIComponent(slug));
+    } else {
+      window.location.replace('/dooodle/');
+    }
+  })();
+</script>
+</head>
+<body>
+  <p>Redirection…</p>
+</body>
+</html>
