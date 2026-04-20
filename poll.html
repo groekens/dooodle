@@ -188,68 +188,37 @@
   }
   input[type="text"]:focus { border-color: var(--accent); background: var(--surface); }
 
-  .dates-vote-list {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-bottom: 1.25rem;
-  }
-  .date-vote-row {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 1rem 1.25rem;
+  /* VOTE CALENDAR */
+  .vote-calendars { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.25rem; }
+  .vote-cal-card {
     background: var(--surface);
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius);
-    cursor: pointer;
-    transition: border-color 0.12s, background 0.12s;
-    user-select: none;
-  }
-  .date-vote-row:hover { border-color: var(--green); background: var(--green-light); }
-  .date-vote-row.selected {
-    border-color: var(--green);
-    background: var(--green-light);
-  }
-  .check-box {
-    width: 22px;
-    height: 22px;
-    border: 2px solid var(--border);
-    border-radius: 6px;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: border-color 0.12s, background 0.12s;
-  }
-  .date-vote-row.selected .check-box {
-    background: var(--green);
-    border-color: var(--green);
-  }
-  .check-mark {
-    display: none;
-    color: white;
-    font-size: 13px;
-    font-weight: 700;
-    line-height: 1;
-  }
-  .date-vote-row.selected .check-mark { display: block; }
-  .date-vote-text { font-size: 0.95rem; font-weight: 500; color: var(--ink); }
-  .date-vote-day {
-    font-size: 0.78rem;
-    color: var(--ink-muted);
-    font-weight: 300;
-    margin-top: 1px;
-  }
-  .vote-count-badge {
-    margin-left: auto;
-    font-size: 0.78rem;
-    color: var(--ink-muted);
-    background: var(--paper);
     border: 1px solid var(--border);
-    border-radius: 999px;
-    padding: 2px 9px;
-    flex-shrink: 0;
+    border-radius: var(--radius-lg);
+    padding: 1.25rem 1.5rem;
+  }
+  .vote-cal-month {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.95rem; font-weight: 700; color: var(--ink);
+    margin-bottom: 10px; text-transform: capitalize;
+  }
+  .vote-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
+  .vcal-header { text-align: center; font-size: 0.68rem; font-weight: 500; color: var(--ink-muted); padding: 2px 0 6px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .vcal-day {
+    aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+    border-radius: 7px; font-size: 0.85rem; border: 1.5px solid transparent;
+    transition: background 0.1s, border-color 0.1s, color 0.1s;
+    position: relative;
+  }
+  .vcal-day.inactive { color: var(--ink-muted); opacity: 0.3; }
+  .vcal-day.proposed {
+    color: var(--ink); cursor: pointer; font-weight: 500;
+    border-color: var(--border); background: var(--paper);
+  }
+  .vcal-day.proposed:hover { border-color: var(--green); background: var(--green-light); color: var(--green); }
+  .vcal-day.proposed.selected { background: var(--green); border-color: var(--green); color: white; font-weight: 600; }
+  .vcal-day.proposed.selected::after {
+    content: ''; position: absolute; bottom: 3px; left: 50%; transform: translateX(-50%);
+    width: 3px; height: 3px; border-radius: 50%; background: rgba(255,255,255,0.7);
   }
 
   .btn-submit {
@@ -525,8 +494,8 @@
           <label class="field-label" for="voter-name">Votre prénom</label>
           <input type="text" id="voter-name" placeholder="ex. Marie, Thomas…" maxlength="40" />
         </div>
-        <p style="font-size:0.83rem;color:var(--ink-muted);margin-bottom:0.75rem;">Cochez les dates où vous êtes disponible :</p>
-        <div class="dates-vote-list" id="dates-vote-list"></div>
+        <p style="font-size:0.83rem;color:var(--ink-muted);margin-bottom:0.75rem;">Cliquez sur les dates en surbrillance où vous êtes disponible :</p>
+        <div class="vote-calendars" id="vote-calendars"></div>
         <button class="btn-submit" id="btn-submit" onclick="submitVote()">Enregistrer mes disponibilités</button>
         <div class="vote-msg" id="vote-msg"></div>
       </div>
@@ -535,36 +504,72 @@
       <div id="tab-results" style="display:none;"></div>
     `;
 
-    renderVoteDates();
+    renderVoteCalendars();
     window.switchTab = switchTabFn;
     window.copyLink = copyLinkFn;
     window.submitVote = submitVoteFn;
-    window.toggleDate = toggleDateFn;
   }
 
-  function renderVoteDates() {
-    const list = document.getElementById('dates-vote-list');
-    if (!list) return;
-    const votes = poll.votes || {};
-    list.innerHTML = poll.dates.map(d => {
-      const count = Object.values(votes).filter(v => v.includes(d)).length;
-      const sel = selectedDates.has(d);
-      return `<div class="date-vote-row ${sel ? 'selected' : ''}" id="row-${d}" onclick="toggleDate('${d}')">
-        <div class="check-box"><span class="check-mark">✓</span></div>
-        <div>
-          <div class="date-vote-text">${capitalise(formatDateShort(d))}</div>
-          <div class="date-vote-day">${formatDate(d)}</div>
-        </div>
-        ${count > 0 ? `<span class="vote-count-badge">${count} dispo</span>` : ''}
-      </div>`;
-    }).join('');
+  // Build a set of months that contain at least one proposed date
+  function getMonthsWithDates() {
+    const months = new Map(); // key: "YYYY-MM" → sorted days array
+    poll.dates.forEach(d => {
+      const monthKey = d.slice(0, 7); // "YYYY-MM"
+      if (!months.has(monthKey)) months.set(monthKey, []);
+      months.get(monthKey).push(parseInt(d.slice(8, 10)));
+    });
+    return months;
   }
 
-  function toggleDateFn(d) {
-    if (selectedDates.has(d)) selectedDates.delete(d);
-    else selectedDates.add(d);
-    const row = document.getElementById('row-' + d);
-    if (row) row.classList.toggle('selected', selectedDates.has(d));
+  const VCAL_HEADERS = ['Lu','Ma','Me','Je','Ve','Sa','Di'];
+
+  function renderVoteCalendars() {
+    const wrap = document.getElementById('vote-calendars');
+    if (!wrap) return;
+
+    const proposedSet = new Set(poll.dates);
+    const months = getMonthsWithDates();
+    wrap.innerHTML = '';
+
+    months.forEach((days, monthKey) => {
+      const [y, m] = monthKey.split('-').map(Number);
+      const label = capitalise(new Date(y, m - 1, 1).toLocaleDateString('fr-BE', { month: 'long', year: 'numeric' }));
+      const daysInMonth = new Date(y, m, 0).getDate();
+
+      // Monday-based start offset
+      let startDow = new Date(y, m - 1, 1).getDay();
+      startDow = (startDow + 6) % 7;
+
+      let cellsHtml = VCAL_HEADERS.map(h => `<div class="vcal-header">${h}</div>`).join('');
+
+      for (let i = 0; i < startDow; i++) cellsHtml += '<div class="vcal-day empty"></div>';
+
+      for (let day = 1; day <= daysInMonth; day++) {
+        const key = `${y}-${String(m).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+        const isProposed = proposedSet.has(key);
+        const isSel = selectedDates.has(key);
+        const cls = 'vcal-day' + (isProposed ? ' proposed' + (isSel ? ' selected' : '') : ' inactive');
+        cellsHtml += `<div class="${cls}" id="vcal-${key}" ${isProposed ? `data-key="${key}"` : ''}>${day}</div>`;
+      }
+
+      const card = document.createElement('div');
+      card.className = 'vote-cal-card';
+      card.innerHTML = `<div class="vote-cal-month">${label}</div><div class="vote-cal-grid">${cellsHtml}</div>`;
+
+      // attach click listeners only on proposed days
+      card.querySelectorAll('.vcal-day.proposed').forEach(el => {
+        el.addEventListener('click', () => toggleDateFn(el.dataset.key));
+      });
+
+      wrap.appendChild(card);
+    });
+  }
+
+  function toggleDateFn(key) {
+    if (selectedDates.has(key)) selectedDates.delete(key);
+    else selectedDates.add(key);
+    const el = document.getElementById('vcal-' + key);
+    if (el) el.classList.toggle('selected', selectedDates.has(key));
   }
 
   async function submitVoteFn() {
@@ -585,7 +590,7 @@
       showVoteMsg(`✓ Disponibilités enregistrées pour ${name} !`);
       document.getElementById('voter-name').value = '';
       selectedDates.clear();
-      renderVoteDates();
+      renderVoteCalendars();
 
       const voters = Object.keys(poll.votes);
       const pill = document.getElementById('voters-pill');
