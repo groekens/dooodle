@@ -6,393 +6,159 @@
 <title>Dooodle — Voter</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   :root {
-    --ink: #1a1a2e;
-    --ink-soft: #4a4a6a;
-    --ink-muted: #9090b0;
-    --paper: #fafaf7;
-    --surface: #ffffff;
-    --accent: #ff6b35;
-    --accent-light: #fff0eb;
-    --green: #2d9c6e;
-    --green-light: #e8f7f1;
-    --border: #e8e8f0;
-    --radius: 12px;
-    --radius-lg: 20px;
+    --ink: #1a1a2e; --ink-soft: #4a4a6a; --ink-muted: #9090b0;
+    --paper: #fafaf7; --surface: #ffffff;
+    --accent: #ff6b35; --accent-light: #fff0eb;
+    --green: #2d9c6e; --green-light: #e8f7f1;
+    --border: #e8e8f0; --radius: 12px; --radius-lg: 20px;
+    --font-title: 'Plus Jakarta Sans', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
   }
-
-  html { font-size: 16px; }
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--paper);
-    color: var(--ink);
-    min-height: 100vh;
-  }
+  html { font-size: 17px; }
+  body { font-family: var(--font-body); background: var(--paper); color: var(--ink); min-height: 100vh; }
 
   header {
-    padding: 1.25rem 2rem;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    border-bottom: 1px solid var(--border);
-    background: var(--surface);
+    padding: 1.1rem 1.5rem;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid var(--border); background: var(--surface);
   }
-  .logo {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
-    font-size: 1.3rem;
-    color: var(--ink);
-    text-decoration: none;
-    letter-spacing: -0.5px;
-  }
+  .header-left { display: flex; align-items: center; gap: 12px; }
+  .logo { font-family: var(--font-title); font-weight: 700; font-size: 1.3rem; color: var(--ink); text-decoration: none; letter-spacing: -0.3px; }
   .logo span { color: var(--accent); }
-
-  .page-wrap {
-    max-width: 640px;
-    margin: 0 auto;
-    padding: 2rem 1.5rem 4rem;
+  .btn-new-poll {
+    padding: 0.45rem 1rem;
+    background: var(--accent); color: white; border: none; border-radius: var(--radius);
+    font-family: var(--font-title); font-size: 0.82rem; font-weight: 600; cursor: pointer;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 5px;
+    transition: background 0.15s;
+    white-space: nowrap;
   }
+  .btn-new-poll:hover { background: #e85a24; }
+
+  .page-wrap { max-width: 640px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
 
   /* EVENT HEADER */
-  .event-header {
-    margin-bottom: 2rem;
-  }
+  .event-header { margin-bottom: 2rem; }
   .event-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 2rem;
-    font-weight: 800;
-    letter-spacing: -1px;
-    color: var(--ink);
-    margin-bottom: 0.5rem;
-    line-height: 1.15;
+    font-family: var(--font-title);
+    font-size: 2rem; font-weight: 700; letter-spacing: -0.3px;
+    color: var(--ink); margin-bottom: 0.5rem; line-height: 1.2;
   }
-  .event-meta {
-    font-size: 0.85rem;
-    color: var(--ink-muted);
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
+  .event-meta { font-size: 0.85rem; color: var(--ink-muted); display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
   .meta-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    padding: 3px 10px;
-    background: var(--paper);
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    font-size: 0.8rem;
-    color: var(--ink-soft);
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 3px 10px; background: var(--paper); border: 1px solid var(--border);
+    border-radius: 999px; font-size: 0.8rem; color: var(--ink-soft);
   }
 
   /* SHARE BOX */
   .share-box {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 0.75rem 1rem;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 1.75rem;
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 0.75rem 1rem; display: flex; align-items: center; gap: 10px; margin-bottom: 1.75rem;
   }
-  .share-url {
-    flex: 1;
-    font-family: monospace;
-    font-size: 0.8rem;
-    color: var(--ink-soft);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
+  .share-url { flex: 1; font-family: monospace; font-size: 0.78rem; color: var(--ink-soft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .btn-copy {
-    padding: 5px 14px;
-    background: var(--ink);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.8rem;
-    font-weight: 500;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: background 0.15s;
-    flex-shrink: 0;
+    padding: 5px 14px; background: var(--ink); color: white; border: none; border-radius: 8px;
+    font-family: var(--font-body); font-size: 0.8rem; font-weight: 500; cursor: pointer;
+    white-space: nowrap; transition: background 0.15s; flex-shrink: 0;
   }
   .btn-copy:hover { background: var(--accent); }
   .btn-copy.copied { background: var(--green); }
 
   /* TABS */
-  .tabs {
-    display: flex;
-    gap: 0;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
-    margin-bottom: 1.5rem;
-    background: var(--surface);
-  }
-  .tab {
-    flex: 1;
-    padding: 0.65rem;
-    background: none;
-    border: none;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.9rem;
-    font-weight: 400;
-    color: var(--ink-muted);
-    cursor: pointer;
-    transition: background 0.12s, color 0.12s;
-  }
+  .tabs { display: flex; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 1.5rem; background: var(--surface); }
+  .tab { flex: 1; padding: 0.7rem; background: none; border: none; font-family: var(--font-body); font-size: 0.92rem; font-weight: 400; color: var(--ink-muted); cursor: pointer; transition: background 0.12s, color 0.12s; }
   .tab:not(:last-child) { border-right: 1px solid var(--border); }
-  .tab.active {
-    background: var(--ink);
-    color: white;
-    font-weight: 500;
-  }
+  .tab.active { background: var(--ink); color: white; font-weight: 500; }
   .tab:hover:not(.active) { background: var(--paper); color: var(--ink-soft); }
 
   /* VOTE TAB */
-  .vote-name-row {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 1.25rem 1.5rem;
-    margin-bottom: 1rem;
-  }
-  .field-label {
-    font-size: 0.73rem;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--ink-muted);
-    display: block;
-    margin-bottom: 7px;
-  }
+  .vote-name-row { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem 1.5rem; margin-bottom: 1rem; }
+  .field-label { font-size: 0.74rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-muted); display: block; margin-bottom: 7px; }
   input[type="text"] {
-    width: 100%;
-    padding: 0.7rem 1rem;
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 1rem;
-    color: var(--ink);
-    background: var(--paper);
-    outline: none;
-    transition: border-color 0.15s;
+    width: 100%; padding: 0.75rem 1rem; border: 1.5px solid var(--border); border-radius: var(--radius);
+    font-family: var(--font-body); font-size: 1.05rem; color: var(--ink);
+    background: var(--paper); outline: none; transition: border-color 0.15s;
   }
   input[type="text"]:focus { border-color: var(--accent); background: var(--surface); }
 
   /* VOTE CALENDAR */
   .vote-calendars { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.25rem; }
-  .vote-cal-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 1.25rem 1.5rem;
-  }
-  .vote-cal-month {
-    font-family: 'Syne', sans-serif;
-    font-size: 0.95rem; font-weight: 700; color: var(--ink);
-    margin-bottom: 10px; text-transform: capitalize;
-  }
+  .vote-cal-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem 1.5rem; }
+  .vote-cal-month { font-family: var(--font-title); font-size: 1rem; font-weight: 700; color: var(--ink); margin-bottom: 10px; text-transform: capitalize; }
   .vote-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
-  .vcal-header { text-align: center; font-size: 0.68rem; font-weight: 500; color: var(--ink-muted); padding: 2px 0 6px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .vcal-header { text-align: center; font-size: 0.7rem; font-weight: 600; color: var(--ink-muted); padding: 2px 0 6px; text-transform: uppercase; letter-spacing: 0.04em; }
   .vcal-day {
     aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
-    border-radius: 7px; font-size: 0.85rem; border: 1.5px solid transparent;
-    transition: background 0.1s, border-color 0.1s, color 0.1s;
-    position: relative;
+    border-radius: 7px; font-size: 0.88rem; border: 1.5px solid transparent;
+    transition: background 0.1s, border-color 0.1s, color 0.1s; position: relative;
   }
   .vcal-day.inactive { color: var(--ink-muted); opacity: 0.3; }
-  .vcal-day.proposed {
-    color: var(--ink); cursor: pointer; font-weight: 500;
-    border-color: var(--border); background: var(--paper);
-  }
+  .vcal-day.proposed { color: var(--ink); cursor: pointer; font-weight: 500; border-color: var(--border); background: var(--paper); }
   .vcal-day.proposed:hover { border-color: var(--green); background: var(--green-light); color: var(--green); }
   .vcal-day.proposed.selected { background: var(--green); border-color: var(--green); color: white; font-weight: 600; }
-  .vcal-day.proposed.selected::after {
-    content: ''; position: absolute; bottom: 3px; left: 50%; transform: translateX(-50%);
-    width: 3px; height: 3px; border-radius: 50%; background: rgba(255,255,255,0.7);
-  }
+  .vcal-day.proposed.selected::after { content:''; position:absolute; bottom:3px; left:50%; transform:translateX(-50%); width:3px; height:3px; border-radius:50%; background:rgba(255,255,255,0.7); }
 
   .btn-submit {
-    width: 100%;
-    padding: 0.9rem;
-    background: var(--accent);
-    color: white;
-    border: none;
-    border-radius: var(--radius-lg);
-    font-family: 'Syne', sans-serif;
-    font-size: 1rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background 0.15s, transform 0.1s;
-    box-shadow: 0 4px 18px rgba(255,107,53,0.22);
+    width: 100%; padding: 0.95rem; background: var(--accent); color: white; border: none; border-radius: var(--radius-lg);
+    font-family: var(--font-title); font-size: 1rem; font-weight: 700; cursor: pointer;
+    transition: background 0.15s, transform 0.1s; box-shadow: 0 4px 18px rgba(255,107,53,0.22);
   }
   .btn-submit:hover { background: #e85a24; }
   .btn-submit:active { transform: scale(0.98); }
   .btn-submit:disabled { background: var(--ink-muted); box-shadow: none; cursor: not-allowed; }
-
-  .vote-msg {
-    text-align: center;
-    font-size: 0.85rem;
-    color: var(--green);
-    font-weight: 500;
-    margin-top: 10px;
-    min-height: 20px;
-  }
+  .vote-msg { text-align: center; font-size: 0.88rem; color: var(--green); font-weight: 500; margin-top: 10px; min-height: 20px; }
   .vote-msg.error { color: #c0392b; }
 
   /* RESULTS TAB */
-  .results-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 1rem;
-  }
-  .results-count {
-    font-size: 0.83rem;
-    color: var(--ink-muted);
-  }
-
-  .result-item {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 1rem 1.25rem;
-    margin-bottom: 8px;
-    transition: border-color 0.15s;
-  }
-  .result-item.top {
-    border-color: var(--green);
-    border-width: 1.5px;
-  }
-  .result-top-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 8px;
-  }
-  .rank-num {
-    font-family: 'Syne', sans-serif;
-    font-size: 0.78rem;
-    font-weight: 700;
-    color: var(--ink-muted);
-    width: 20px;
-    flex-shrink: 0;
-  }
+  .results-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+  .result-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem; margin-bottom: 8px; }
+  .result-item.top { border-color: var(--green); border-width: 1.5px; }
+  .result-top-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .rank-num { font-family: var(--font-title); font-size: 0.82rem; font-weight: 700; color: var(--ink-muted); width: 20px; flex-shrink: 0; }
   .rank-num.gold { color: var(--accent); }
-  .result-date-label {
-    font-size: 0.95rem;
-    font-weight: 500;
-    color: var(--ink);
-    flex: 1;
-  }
-  .result-score {
-    font-size: 0.83rem;
-    color: var(--ink-soft);
-    font-weight: 500;
-  }
-  .result-bar-wrap {
-    height: 5px;
-    background: var(--border);
-    border-radius: 999px;
-    overflow: hidden;
-    margin-bottom: 8px;
-  }
-  .result-bar {
-    height: 100%;
-    border-radius: 999px;
-    background: var(--ink-muted);
-    transition: width 0.5s ease;
-  }
+  .result-date-label { font-size: 0.98rem; font-weight: 500; color: var(--ink); flex: 1; }
+  .result-score { font-size: 0.85rem; color: var(--ink-soft); font-weight: 500; }
+  .result-bar-wrap { height: 5px; background: var(--border); border-radius: 999px; overflow: hidden; margin-bottom: 8px; }
+  .result-bar { height: 100%; border-radius: 999px; background: var(--ink-muted); transition: width 0.5s ease; }
   .result-item.top .result-bar { background: var(--green); }
-  .result-voters {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-  }
-  .voter-pill {
-    display: inline-block;
-    padding: 2px 9px;
-    background: var(--green-light);
-    color: var(--green);
-    border-radius: 999px;
-    font-size: 0.76rem;
-    font-weight: 500;
-  }
-  .no-votes-msg {
-    text-align: center;
-    padding: 3rem 0;
-    color: var(--ink-muted);
-    font-size: 0.9rem;
-  }
+  .result-voters { display: flex; flex-wrap: wrap; gap: 5px; }
+  .voter-pill { display: inline-block; padding: 2px 9px; background: var(--green-light); color: var(--green); border-radius: 999px; font-size: 0.78rem; font-weight: 500; }
+  .no-votes-msg { text-align: center; padding: 3rem 0; color: var(--ink-muted); font-size: 0.92rem; }
 
   /* PARTICIPANTS TAB */
-  .participant-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 0.9rem 1.25rem;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    margin-bottom: 8px;
-  }
-  .avatar {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: var(--accent-light);
-    color: var(--accent);
-    font-family: 'Syne', sans-serif;
-    font-size: 0.85rem;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-  }
-  .participant-name {
-    font-size: 0.95rem;
-    font-weight: 500;
-    color: var(--ink);
-  }
-  .participant-dates-summary {
-    margin-left: auto;
-    font-size: 0.8rem;
-    color: var(--ink-muted);
-  }
+  .participant-item { display: flex; align-items: center; gap: 12px; padding: 0.9rem 1.25rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 8px; }
+  .avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--accent-light); color: var(--accent); font-family: var(--font-title); font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .participant-name { font-size: 0.98rem; font-weight: 500; color: var(--ink); }
+  .participant-dates-summary { margin-left: auto; font-size: 0.82rem; color: var(--ink-muted); }
 
-  /* LOADING / ERROR STATES */
-  .state-screen {
-    text-align: center;
-    padding: 5rem 2rem;
-  }
-  .spinner {
-    width: 36px;
-    height: 36px;
-    border: 3px solid var(--border);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-    margin: 0 auto 16px;
-  }
+  /* STATES */
+  .state-screen { text-align: center; padding: 5rem 2rem; }
+  .spinner { width: 34px; height: 34px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; margin: 0 auto 16px; }
   @keyframes spin { to { transform: rotate(360deg); } }
-  .state-screen p { color: var(--ink-muted); font-size: 0.9rem; }
-  .state-screen h2 { font-family: 'Syne', sans-serif; font-size: 1.4rem; margin-bottom: 8px; }
+  .state-screen p { color: var(--ink-muted); font-size: 0.92rem; }
+  .state-screen h2 { font-family: var(--font-title); font-size: 1.4rem; margin-bottom: 8px; }
+
+  /* VOTE EDIT HINT */
+  .edit-hint {
+    font-size: 0.8rem; color: var(--ink-muted); text-align: center;
+    margin-top: 8px; padding: 6px 12px;
+    background: var(--paper); border-radius: var(--radius);
+    border: 1px solid var(--border);
+  }
 </style>
 </head>
 <body>
 
 <header>
-  <a class="logo" href="index.html">Do<span>ooo</span>dle</a>
+  <div class="header-left">
+    <a class="logo" href="index.html">Do<span>ooo</span>dle</a>
+  </div>
+  <a class="btn-new-poll" href="index.html">+ Nouveau sondage</a>
 </header>
 
 <div class="page-wrap" id="page-wrap">
@@ -404,9 +170,7 @@
     <h2>Sondage introuvable</h2>
     <p>Ce lien est invalide ou le sondage a été supprimé.</p>
   </div>
-  <div id="poll-content" style="display:none;">
-    <!-- filled by JS -->
-  </div>
+  <div id="poll-content" style="display:none;"></div>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -429,43 +193,34 @@
   let selectedDates = new Set();
   let currentTab = 'vote';
 
-  function formatDate(str) {
-    const d = new Date(str + 'T12:00:00');
-    return d.toLocaleDateString('fr-BE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-  }
-  function formatDateShort(str) {
-    const d = new Date(str + 'T12:00:00');
-    return d.toLocaleDateString('fr-BE', { weekday: 'short', day: 'numeric', month: 'short' });
-  }
-  function getInitials(name) {
-    return name.trim().split(/\s+/).map(w => w[0]).join('').toUpperCase().slice(0, 2);
-  }
+  function formatDate(str) { return new Date(str+'T12:00:00').toLocaleDateString('fr-BE',{weekday:'long',day:'numeric',month:'long',year:'numeric'}); }
+  function formatDateShort(str) { return new Date(str+'T12:00:00').toLocaleDateString('fr-BE',{weekday:'short',day:'numeric',month:'short'}); }
+  function getInitials(name) { return name.trim().split(/\s+/).map(w=>w[0]).join('').toUpperCase().slice(0,2); }
+  function cap(str) { return str.charAt(0).toUpperCase()+str.slice(1); }
+  function escHtml(str) { return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
   async function loadPoll() {
-    if (!pollId) { showError(); return; }
+    if(!pollId){showError();return;}
     try {
       const snap = await db.collection('polls').doc(pollId).get();
-      if (!snap.exists) { showError(); return; }
+      if(!snap.exists){showError();return;}
       poll = snap.data();
       renderPoll();
-    } catch (e) {
-      console.error(e);
-      showError();
-    }
+    } catch(e) { console.error(e); showError(); }
   }
 
   function showError() {
-    document.getElementById('loading-screen').style.display = 'none';
-    document.getElementById('error-screen').style.display = 'block';
+    document.getElementById('loading-screen').style.display='none';
+    document.getElementById('error-screen').style.display='block';
   }
 
   function renderPoll() {
     document.title = `Dooodle — ${poll.title}`;
-    document.getElementById('loading-screen').style.display = 'none';
+    document.getElementById('loading-screen').style.display='none';
     const content = document.getElementById('poll-content');
-    content.style.display = 'block';
+    content.style.display='block';
 
-    const voters = Object.keys(poll.votes || {});
+    const voters = Object.keys(poll.votes||{});
     const dateCount = poll.dates.length;
     const shareUrl = window.location.href;
 
@@ -473,238 +228,180 @@
       <div class="event-header">
         <div class="event-title">${escHtml(poll.title)}</div>
         <div class="event-meta">
-          <span class="meta-pill">📅 ${dateCount} date${dateCount > 1 ? 's' : ''} proposée${dateCount > 1 ? 's' : ''}</span>
-          <span class="meta-pill" id="voters-pill">👤 ${voters.length} participant${voters.length > 1 ? 's' : ''}</span>
+          <span class="meta-pill">📅 ${dateCount} date${dateCount>1?'s':''} proposée${dateCount>1?'s':''}</span>
+          <span class="meta-pill" id="voters-pill">👤 ${voters.length} participant${voters.length>1?'s':''}</span>
         </div>
       </div>
-
       <div class="share-box">
         <span class="share-url">${escHtml(shareUrl)}</span>
-        <button class="btn-copy" id="copy-btn" onclick="copyLink()">Copier</button>
+        <button class="btn-copy" id="copy-btn">Copier</button>
       </div>
-
       <div class="tabs">
-        <button class="tab active" id="tab-btn-vote" onclick="switchTab('vote')">Voter</button>
-        <button class="tab" id="tab-btn-participants" onclick="switchTab('participants')">Participants <span id="participants-count">(${voters.length})</span></button>
-        <button class="tab" id="tab-btn-results" onclick="switchTab('results')">Résultats</button>
+        <button class="tab active" id="tab-btn-vote">Voter</button>
+        <button class="tab" id="tab-btn-participants">Participants <span id="participants-count">(${voters.length})</span></button>
+        <button class="tab" id="tab-btn-results">Résultats</button>
       </div>
-
       <div id="tab-vote">
         <div class="vote-name-row">
           <label class="field-label" for="voter-name">Votre prénom</label>
           <input type="text" id="voter-name" placeholder="ex. Marie, Thomas…" maxlength="40" />
         </div>
-        <p style="font-size:0.83rem;color:var(--ink-muted);margin-bottom:0.75rem;">Cliquez sur les dates en surbrillance où vous êtes disponible :</p>
+        <p style="font-size:0.85rem;color:var(--ink-muted);margin-bottom:0.75rem;">Cliquez sur les dates en surbrillance où vous êtes disponible :</p>
         <div class="vote-calendars" id="vote-calendars"></div>
-        <button class="btn-submit" id="btn-submit" onclick="submitVote()">Enregistrer mes disponibilités</button>
+        <button class="btn-submit" id="btn-submit">Enregistrer mes disponibilités</button>
+        <div class="edit-hint">Vous pouvez modifier votre vote à tout moment en re-soumettant avec le même prénom.</div>
         <div class="vote-msg" id="vote-msg"></div>
       </div>
-
       <div id="tab-participants" style="display:none;"></div>
       <div id="tab-results" style="display:none;"></div>
     `;
 
+    // Wire up events
+    document.getElementById('copy-btn').addEventListener('click', copyLink);
+    document.getElementById('btn-submit').addEventListener('click', submitVote);
+    document.getElementById('tab-btn-vote').addEventListener('click', ()=>switchTab('vote'));
+    document.getElementById('tab-btn-participants').addEventListener('click', ()=>switchTab('participants'));
+    document.getElementById('tab-btn-results').addEventListener('click', ()=>switchTab('results'));
+
     renderVoteCalendars();
-    window.switchTab = switchTabFn;
-    window.copyLink = copyLinkFn;
-    window.submitVote = submitVoteFn;
   }
 
-  // Build a set of months that contain at least one proposed date
+  /* --- Vote calendar --- */
+  const VCAL_HEADERS = ['Lu','Ma','Me','Je','Ve','Sa','Di'];
+
   function getMonthsWithDates() {
-    const months = new Map(); // key: "YYYY-MM" → sorted days array
+    const months = new Map();
     poll.dates.forEach(d => {
-      const monthKey = d.slice(0, 7); // "YYYY-MM"
-      if (!months.has(monthKey)) months.set(monthKey, []);
-      months.get(monthKey).push(parseInt(d.slice(8, 10)));
+      const mk = d.slice(0,7);
+      if(!months.has(mk)) months.set(mk,[]);
+      months.get(mk).push(parseInt(d.slice(8,10)));
     });
     return months;
   }
 
-  const VCAL_HEADERS = ['Lu','Ma','Me','Je','Ve','Sa','Di'];
-
   function renderVoteCalendars() {
     const wrap = document.getElementById('vote-calendars');
-    if (!wrap) return;
-
+    if(!wrap) return;
     const proposedSet = new Set(poll.dates);
     const months = getMonthsWithDates();
-    wrap.innerHTML = '';
+    wrap.innerHTML='';
 
-    months.forEach((days, monthKey) => {
-      const [y, m] = monthKey.split('-').map(Number);
-      const label = capitalise(new Date(y, m - 1, 1).toLocaleDateString('fr-BE', { month: 'long', year: 'numeric' }));
-      const daysInMonth = new Date(y, m, 0).getDate();
+    months.forEach((_days, monthKey)=>{
+      const [y,m] = monthKey.split('-').map(Number);
+      const label = cap(new Date(y,m-1,1).toLocaleDateString('fr-BE',{month:'long',year:'numeric'}));
+      const daysInMonth = new Date(y,m,0).getDate();
+      let startDow = new Date(y,m-1,1).getDay();
+      startDow = (startDow+6)%7;
 
-      // Monday-based start offset
-      let startDow = new Date(y, m - 1, 1).getDay();
-      startDow = (startDow + 6) % 7;
-
-      let cellsHtml = VCAL_HEADERS.map(h => `<div class="vcal-header">${h}</div>`).join('');
-
-      for (let i = 0; i < startDow; i++) cellsHtml += '<div class="vcal-day empty"></div>';
-
-      for (let day = 1; day <= daysInMonth; day++) {
-        const key = `${y}-${String(m).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-        const isProposed = proposedSet.has(key);
-        const isSel = selectedDates.has(key);
-        const cls = 'vcal-day' + (isProposed ? ' proposed' + (isSel ? ' selected' : '') : ' inactive');
-        cellsHtml += `<div class="${cls}" id="vcal-${key}" ${isProposed ? `data-key="${key}"` : ''}>${day}</div>`;
+      let cells = VCAL_HEADERS.map(h=>`<div class="vcal-header">${h}</div>`).join('');
+      for(let i=0;i<startDow;i++) cells+='<div class="vcal-day empty"></div>';
+      for(let day=1;day<=daysInMonth;day++){
+        const key=`${y}-${String(m).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+        const isP=proposedSet.has(key), isSel=selectedDates.has(key);
+        cells+=`<div class="vcal-day ${isP?'proposed'+(isSel?' selected':''):'inactive'}" ${isP?`data-key="${key}"`:''}>${day}</div>`;
       }
 
-      const card = document.createElement('div');
-      card.className = 'vote-cal-card';
-      card.innerHTML = `<div class="vote-cal-month">${label}</div><div class="vote-cal-grid">${cellsHtml}</div>`;
-
-      // attach click listeners only on proposed days
-      card.querySelectorAll('.vcal-day.proposed').forEach(el => {
-        el.addEventListener('click', () => toggleDateFn(el.dataset.key));
+      const card=document.createElement('div');
+      card.className='vote-cal-card';
+      card.innerHTML=`<div class="vote-cal-month">${label}</div><div class="vote-cal-grid">${cells}</div>`;
+      card.querySelectorAll('.vcal-day.proposed').forEach(el=>{
+        el.addEventListener('click',()=>{
+          const k=el.dataset.key;
+          if(selectedDates.has(k)) selectedDates.delete(k); else selectedDates.add(k);
+          el.classList.toggle('selected',selectedDates.has(k));
+        });
       });
-
       wrap.appendChild(card);
     });
   }
 
-  function toggleDateFn(key) {
-    if (selectedDates.has(key)) selectedDates.delete(key);
-    else selectedDates.add(key);
-    const el = document.getElementById('vcal-' + key);
-    if (el) el.classList.toggle('selected', selectedDates.has(key));
-  }
-
-  async function submitVoteFn() {
-    const name = document.getElementById('voter-name').value.trim();
-    const btn = document.getElementById('btn-submit');
-    const msg = document.getElementById('vote-msg');
-    if (!name) { showVoteMsg('Veuillez saisir votre prénom.', true); return; }
-
-    btn.disabled = true;
-    btn.textContent = 'Enregistrement…';
-
+  /* --- Submit --- */
+  async function submitVote() {
+    const name=document.getElementById('voter-name').value.trim();
+    const btn=document.getElementById('btn-submit');
+    if(!name){showVoteMsg('Veuillez saisir votre prénom.',true);return;}
+    btn.disabled=true; btn.textContent='Enregistrement…';
     try {
-      const updatedVotes = { ...(poll.votes || {}) };
-      updatedVotes[name] = Array.from(selectedDates);
-      await db.collection('polls').doc(pollId).update({ votes: updatedVotes });
-      poll.votes = updatedVotes;
-
+      const updatedVotes={...(poll.votes||{})};
+      updatedVotes[name]=Array.from(selectedDates);
+      await db.collection('polls').doc(pollId).update({votes:updatedVotes});
+      poll.votes=updatedVotes;
       showVoteMsg(`✓ Disponibilités enregistrées pour ${name} !`);
-      document.getElementById('voter-name').value = '';
+      document.getElementById('voter-name').value='';
       selectedDates.clear();
       renderVoteCalendars();
-
-      const voters = Object.keys(poll.votes);
-      const pill = document.getElementById('voters-pill');
-      const cnt = document.getElementById('participants-count');
-      if (pill) pill.textContent = `👤 ${voters.length} participant${voters.length > 1 ? 's' : ''}`;
-      if (cnt) cnt.textContent = `(${voters.length})`;
-
-    } catch(e) {
-      console.error(e);
-      showVoteMsg('Erreur lors de l\'enregistrement.', true);
-    }
-    btn.disabled = false;
-    btn.textContent = 'Enregistrer mes disponibilités';
-    setTimeout(() => showVoteMsg(''), 4000);
+      const v=Object.keys(poll.votes);
+      const pill=document.getElementById('voters-pill');
+      const cnt=document.getElementById('participants-count');
+      if(pill) pill.textContent=`👤 ${v.length} participant${v.length>1?'s':''}`;
+      if(cnt) cnt.textContent=`(${v.length})`;
+    } catch(e){ console.error(e); showVoteMsg("Erreur lors de l'enregistrement.",true); }
+    btn.disabled=false; btn.textContent='Enregistrer mes disponibilités';
+    setTimeout(()=>showVoteMsg(''),4000);
   }
 
-  function showVoteMsg(txt, isError = false) {
-    const el = document.getElementById('vote-msg');
-    if (!el) return;
-    el.textContent = txt;
-    el.className = 'vote-msg' + (isError ? ' error' : '');
+  function showVoteMsg(txt,isError=false){
+    const el=document.getElementById('vote-msg');
+    if(!el) return;
+    el.textContent=txt; el.className='vote-msg'+(isError?' error':'');
   }
 
-  function switchTabFn(tab) {
-    currentTab = tab;
-    ['vote','participants','results'].forEach(t => {
-      const btn = document.getElementById(`tab-btn-${t}`);
-      const pane = document.getElementById(`tab-${t}`);
-      if (btn) btn.classList.toggle('active', t === tab);
-      if (pane) pane.style.display = t === tab ? 'block' : 'none';
+  /* --- Tabs --- */
+  function switchTab(tab){
+    currentTab=tab;
+    ['vote','participants','results'].forEach(t=>{
+      document.getElementById(`tab-btn-${t}`)?.classList.toggle('active',t===tab);
+      const pane=document.getElementById(`tab-${t}`);
+      if(pane) pane.style.display=t===tab?'block':'none';
     });
-    if (tab === 'participants') renderParticipants();
-    if (tab === 'results') renderResults();
+    if(tab==='participants') renderParticipants();
+    if(tab==='results') renderResults();
   }
 
-  function renderParticipants() {
-    const el = document.getElementById('tab-participants');
-    if (!el) return;
-    const votes = poll.votes || {};
-    const names = Object.keys(votes);
-    if (names.length === 0) {
-      el.innerHTML = '<div class="no-votes-msg">Aucun participant pour l\'instant.</div>';
-      return;
-    }
-    el.innerHTML = names.map(name => {
-      const count = votes[name].length;
-      return `<div class="participant-item">
+  function renderParticipants(){
+    const el=document.getElementById('tab-participants'); if(!el) return;
+    const votes=poll.votes||{}, names=Object.keys(votes);
+    if(names.length===0){el.innerHTML='<div class="no-votes-msg">Aucun participant pour l\'instant.</div>';return;}
+    el.innerHTML=names.map(name=>`
+      <div class="participant-item">
         <div class="avatar">${getInitials(name)}</div>
-        <div>
-          <div class="participant-name">${escHtml(name)}</div>
-        </div>
-        <div class="participant-dates-summary">${count} date${count > 1 ? 's' : ''} disponible${count > 1 ? 's' : ''}</div>
-      </div>`;
-    }).join('');
+        <div><div class="participant-name">${escHtml(name)}</div></div>
+        <div class="participant-dates-summary">${votes[name].length} date${votes[name].length>1?'s':''} dispo</div>
+      </div>`).join('');
   }
 
-  function renderResults() {
-    const el = document.getElementById('tab-results');
-    if (!el) return;
-    const votes = poll.votes || {};
-    const totalVoters = Object.keys(votes).length;
-
-    if (totalVoters === 0) {
-      el.innerHTML = '<div class="no-votes-msg">Aucun vote pour l\'instant.<br/>Partagez le lien pour inviter des participants !</div>';
-      return;
-    }
-
-    const dateScores = poll.dates.map(d => {
-      const available = Object.entries(votes).filter(([, dts]) => dts.includes(d)).map(([n]) => n);
-      return { date: d, available };
-    }).sort((a, b) => b.available.length - a.available.length);
-
-    const max = dateScores[0].available.length || 1;
-
-    el.innerHTML = `
-      <div class="results-header">
-        <span style="font-size:0.83rem;color:var(--ink-muted);">${totalVoters} participant${totalVoters > 1 ? 's' : ''} ont voté</span>
-      </div>
-      ${dateScores.map((item, i) => {
-        const pct = Math.round(item.available.length / max * 100);
-        const isTop = i === 0;
-        return `<div class="result-item ${isTop ? 'top' : ''}">
+  function renderResults(){
+    const el=document.getElementById('tab-results'); if(!el) return;
+    const votes=poll.votes||{}, totalVoters=Object.keys(votes).length;
+    if(totalVoters===0){el.innerHTML='<div class="no-votes-msg">Aucun vote pour l\'instant.<br/>Partagez le lien pour inviter des participants !</div>';return;}
+    const scores=poll.dates.map(d=>({
+      date:d, available:Object.entries(votes).filter(([,dts])=>dts.includes(d)).map(([n])=>n)
+    })).sort((a,b)=>b.available.length-a.available.length);
+    const max=scores[0].available.length||1;
+    el.innerHTML=`<div class="results-header"><span style="font-size:0.85rem;color:var(--ink-muted);">${totalVoters} participant${totalVoters>1?'s':''} ont voté</span></div>`+
+      scores.map((item,i)=>{
+        const pct=Math.round(item.available.length/max*100), isTop=i===0;
+        return `<div class="result-item ${isTop?'top':''}">
           <div class="result-top-row">
-            <span class="rank-num ${isTop ? 'gold' : ''}">${i + 1}.</span>
-            <span class="result-date-label">${capitalise(formatDateShort(item.date))}</span>
+            <span class="rank-num ${isTop?'gold':''}">${i+1}.</span>
+            <span class="result-date-label">${cap(formatDateShort(item.date))}</span>
             <span class="result-score">${item.available.length}/${totalVoters}</span>
           </div>
-          <div class="result-bar-wrap">
-            <div class="result-bar" style="width:${pct}%"></div>
-          </div>
+          <div class="result-bar-wrap"><div class="result-bar" style="width:${pct}%"></div></div>
           <div class="result-voters">
-            ${item.available.map(n => `<span class="voter-pill">${escHtml(n)}</span>`).join('')}
-            ${item.available.length === 0 ? '<span style="font-size:0.8rem;color:var(--ink-muted)">Personne de disponible</span>' : ''}
+            ${item.available.map(n=>`<span class="voter-pill">${escHtml(n)}</span>`).join('')}
+            ${item.available.length===0?'<span style="font-size:0.82rem;color:var(--ink-muted)">Personne de disponible</span>':''}
           </div>
         </div>`;
-      }).join('')}
-    `;
+      }).join('');
   }
 
-  function copyLinkFn() {
-    navigator.clipboard.writeText(window.location.href).then(() => {
-      const btn = document.getElementById('copy-btn');
-      if (!btn) return;
-      btn.textContent = '✓ Copié !';
-      btn.classList.add('copied');
-      setTimeout(() => { btn.textContent = 'Copier'; btn.classList.remove('copied'); }, 2500);
+  function copyLink(){
+    navigator.clipboard.writeText(window.location.href).then(()=>{
+      const btn=document.getElementById('copy-btn'); if(!btn) return;
+      btn.textContent='✓ Copié !'; btn.classList.add('copied');
+      setTimeout(()=>{btn.textContent='Copier';btn.classList.remove('copied');},2500);
     });
-  }
-
-  function escHtml(str) {
-    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
-  function capitalise(str) {
-    return str.charAt(0).toUpperCase() + str.slice(1);
   }
 
   loadPoll();
