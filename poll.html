@@ -55,19 +55,30 @@
     border-radius: 999px; font-size: 0.8rem; color: var(--ink-soft);
   }
 
-  /* SHARE BOX */
-  .share-box {
-    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
-    padding: 0.75rem 1rem; display: flex; align-items: center; gap: 10px; margin-bottom: 1.75rem;
+  /* SHARE SECTION */
+  .share-section {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg);
+    padding: 1rem 1.25rem; margin-bottom: 1.75rem;
   }
-  .share-url { flex: 1; font-family: monospace; font-size: 0.78rem; color: var(--ink-soft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .share-intro { font-size: 0.85rem; color: var(--ink-soft); margin-bottom: 10px; line-height: 1.5; }
+  .share-intro strong { color: var(--ink); font-weight: 600; }
+  .share-row { display: flex; align-items: center; gap: 8px; }
+  .share-url { flex: 1; font-family: monospace; font-size: 0.78rem; color: var(--ink-soft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; background: var(--paper); border: 1px solid var(--border); border-radius: 8px; padding: 7px 10px; }
   .btn-copy {
-    padding: 5px 14px; background: var(--ink); color: white; border: none; border-radius: 8px;
-    font-family: var(--font-body); font-size: 0.8rem; font-weight: 500; cursor: pointer;
+    padding: 7px 14px; background: var(--ink); color: white; border: none; border-radius: 8px;
+    font-family: var(--font-body); font-size: 0.82rem; font-weight: 600; cursor: pointer;
     white-space: nowrap; transition: background 0.15s; flex-shrink: 0;
   }
-  .btn-copy:hover { background: var(--accent); }
+  .btn-copy:hover { background: #333; }
   .btn-copy.copied { background: var(--green); }
+  .btn-whatsapp {
+    padding: 7px 14px; background: #25D366; color: white; border: none; border-radius: 8px;
+    font-family: var(--font-body); font-size: 0.82rem; font-weight: 600; cursor: pointer;
+    white-space: nowrap; transition: background 0.15s; flex-shrink: 0;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+  }
+  .btn-whatsapp:hover { background: #1dba57; }
+  .btn-whatsapp svg { width: 15px; height: 15px; flex-shrink: 0; }
 
   /* TABS */
   .tabs { display: flex; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 1.5rem; background: var(--surface); }
@@ -232,9 +243,16 @@
           <span class="meta-pill" id="voters-pill">👤 ${voters.length} participant${voters.length>1?'s':''}</span>
         </div>
       </div>
-      <div class="share-box">
-        <span class="share-url">${escHtml(shareUrl)}</span>
-        <button class="btn-copy" id="copy-btn">Copier</button>
+      <div class="share-section">
+        <div class="share-intro"><strong>Partagez ce lien</strong> avec tous les participants pour qu'ils puissent indiquer leurs disponibilités.</div>
+        <div class="share-row">
+          <span class="share-url" id="share-url-text">${escHtml(shareUrl)}</span>
+          <button class="btn-copy" id="copy-btn">Copier</button>
+          <a class="btn-whatsapp" id="whatsapp-btn" href="#" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.528 5.845L.057 23.882l6.197-1.624A11.934 11.934 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.894a9.867 9.867 0 01-5.031-1.378l-.36-.214-3.733.979 1.001-3.656-.235-.374A9.861 9.861 0 012.106 12C2.106 6.535 6.535 2.106 12 2.106c5.466 0 9.894 4.429 9.894 9.894 0 5.466-4.428 9.894-9.894 9.894z"/></svg>
+            WhatsApp
+          </a>
+        </div>
       </div>
       <div class="tabs">
         <button class="tab active" id="tab-btn-vote">Voter</button>
@@ -258,6 +276,11 @@
 
     // Wire up events
     document.getElementById('copy-btn').addEventListener('click', copyLink);
+    const waBtn = document.getElementById('whatsapp-btn');
+    if (waBtn) {
+      const waText = encodeURIComponent('Salut ! Indique tes disponibilités pour "' + poll.title + '" ici : ' + shareUrl);
+      waBtn.href = 'https://wa.me/?text=' + waText;
+    }
     document.getElementById('btn-submit').addEventListener('click', submitVote);
     document.getElementById('tab-btn-vote').addEventListener('click', ()=>switchTab('vote'));
     document.getElementById('tab-btn-participants').addEventListener('click', ()=>switchTab('participants'));
