@@ -507,7 +507,7 @@ function t() {
       const v=Object.keys(poll.votes);
       const pill=document.getElementById('voters-pill');
       const cnt=document.getElementById('participants-count');
-      if(pill) pill.textContent=`👤 ${v.length} participant${v.length>1?'s':''}`;
+      if(pill) pill.textContent=`👤 ${t().participants(v.length)}`;
       if(cnt) cnt.textContent=`(${v.length})`;
     } catch(e){ console.error(e); showVoteMsg(t().errSubmit,true); }
     btn.disabled=false; btn.textContent=t().btnSubmit;
@@ -535,7 +535,7 @@ function t() {
   function renderParticipants(){
     const el=document.getElementById('tab-participants'); if(!el) return;
     const votes=poll.votes||{}, names=Object.keys(votes);
-    if(names.length===0){el.innerHTML='<div class="no-votes-msg">${t().noParticipants}</div>';return;}
+    if(names.length===0){el.innerHTML=`<div class="no-votes-msg">${t().noParticipants}</div>`;return;}
     el.innerHTML=names.map(name=>`
       <div class="participant-item">
         <div class="avatar">${getInitials(name)}</div>
@@ -547,12 +547,12 @@ function t() {
   function renderResults(){
     const el=document.getElementById('tab-results'); if(!el) return;
     const votes=poll.votes||{}, totalVoters=Object.keys(votes).length;
-    if(totalVoters===0){el.innerHTML='<div class="no-votes-msg">${t().noVotes}</div>';return;}
+    if(totalVoters===0){el.innerHTML=`<div class="no-votes-msg">${t().noVotes}</div>`;return;}
     const scores=poll.dates.map(d=>({
       date:d, available:Object.entries(votes).filter(([,dts])=>dts.includes(d)).map(([n])=>n)
     })).sort((a,b)=>b.available.length-a.available.length);
     const max=scores[0].available.length||1;
-    el.innerHTML=`<div class="results-header"><span style="font-size:0.85rem;color:var(--ink-muted);">${totalVoters} ${t().voted(totalVoters)}</span></div>`+
+    el.innerHTML=`<div class="results-header"><span style="font-size:0.85rem;color:var(--ink-muted);">${t().voted(totalVoters)}</span></div>`+
       scores.map((item,i)=>{
         const pct=Math.round(item.available.length/max*100), isTop=i===0;
         return `<div class="result-item ${isTop?'top':''}">
@@ -564,7 +564,7 @@ function t() {
           <div class="result-bar-wrap"><div class="result-bar" style="width:${pct}%"></div></div>
           <div class="result-voters">
             ${item.available.map(n=>`<span class="voter-pill">${escHtml(n)}</span>`).join('')}
-            ${item.available.length===0?'<span style="font-size:0.82rem;color:var(--ink-muted)">${t().nobody}</span>':''}
+            ${item.available.length===0?`<span style="font-size:0.82rem;color:var(--ink-muted)">${t().nobody}</span>`:""}
           </div>
         </div>`;
       }).join('');
