@@ -22,26 +22,30 @@
   body { font-family: var(--font-body); background: var(--paper); color: var(--ink); min-height: 100vh; }
 
   header {
-    padding: 1.35rem 2rem;
+    padding: 1rem 1.25rem;
     display: flex; align-items: center; justify-content: space-between;
     border-bottom: 1px solid var(--border); background: var(--surface);
+    gap: 8px;
   }
-  .header-left { display: flex; align-items: center; gap: 14px; }
-  .logo { font-family: var(--font-title); font-weight: 800; font-size: 1.6rem; color: var(--ink); text-decoration: none; letter-spacing: -0.5px; }
+  .header-left { display: flex; align-items: center; gap: 8px; min-width: 0; }
+  .logo { font-family: var(--font-title); font-weight: 800; font-size: 1.4rem; color: var(--ink); text-decoration: none; letter-spacing: -0.5px; flex-shrink: 0; }
   .logo span { color: var(--accent); }
   .btn-new-poll {
-    padding: 0.6rem 1.25rem;
+    padding: 0.5rem 0.9rem;
     background: var(--accent); color: white; border: none; border-radius: var(--radius);
-    font-family: var(--font-title); font-size: 0.92rem; font-weight: 600; cursor: pointer;
-    text-decoration: none; display: inline-flex; align-items: center; gap: 5px;
-    transition: background 0.15s;
-    white-space: nowrap;
+    font-family: var(--font-title); font-size: 0.82rem; font-weight: 600; cursor: pointer;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 4px;
+    transition: background 0.15s; white-space: nowrap; flex-shrink: 0;
   }
   .btn-new-poll:hover { background: #e85a24; }
-  .lang-toggle { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
-  .lang-btn { padding: 5px 11px; background: none; border: none; font-family: var(--font-body); font-size: 0.78rem; font-weight: 600; cursor: pointer; color: var(--ink-muted); transition: background 0.12s, color 0.12s; letter-spacing: 0.03em; }
+  .lang-toggle { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; flex-shrink: 0; }
+  .lang-btn { padding: 5px 9px; background: none; border: none; font-family: var(--font-body); font-size: 0.75rem; font-weight: 600; cursor: pointer; color: var(--ink-muted); transition: background 0.12s, color 0.12s; letter-spacing: 0.03em; }
   .lang-btn:first-child { border-right: 1px solid var(--border); }
   .lang-btn.active { background: var(--ink); color: white; }
+  @media (max-width: 480px) {
+    .btn-new-poll span { display: none; }
+    .btn-new-poll::before { content: '+'; }
+  }
 
   .page-wrap { max-width: 640px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
 
@@ -178,7 +182,7 @@
 
 <header>
   <div class="header-left">
-    <a class="logo" href="index.html">Do<span>ooo</span>dle</a>
+    <a class="logo" href="index.html">Do<span>oo</span>dle</a>
   </div>
   <div style="display:flex;align-items:center;gap:10px;">
     <a class="btn-new-poll" id="btn-new-poll" href="index.html"></a>
