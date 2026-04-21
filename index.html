@@ -20,10 +20,15 @@
   html { font-size: 17px; }
   body { font-family: var(--font); background: var(--paper); color: var(--ink); min-height: 100vh; display: flex; flex-direction: column; }
 
-  header { padding: 1.35rem 2rem; display: flex; align-items: center; gap: 14px; border-bottom: 1px solid var(--border); background: var(--surface); }
-  .logo { font-family: var(--font); font-weight: 800; font-size: 1.6rem; color: var(--ink); letter-spacing: -0.5px; }
+  header { padding: 1rem 1.25rem; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border); background: var(--surface); }
+  .lang-toggle { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; flex-shrink: 0; margin-left: auto; }
+  .lang-btn { padding: 5px 9px; background: none; border: none; font-family: var(--font); font-size: 0.75rem; font-weight: 600; cursor: pointer; color: var(--ink-muted); transition: background 0.12s, color 0.12s; letter-spacing: 0.03em; }
+  .lang-btn:first-child { border-right: 1px solid var(--border); }
+  .lang-btn.active { background: var(--ink); color: white; }
+  .logo { font-family: var(--font); font-weight: 800; font-size: 1.4rem; color: var(--ink); letter-spacing: -0.5px; flex-shrink: 0; }
   .logo span { color: var(--accent); }
-  .tagline { font-size: 0.82rem; color: var(--ink-muted); font-weight: 400; margin-left: 4px; padding-left: 14px; border-left: 1px solid var(--border); flex: 1; }
+  .tagline { font-size: 0.82rem; color: var(--ink-muted); font-weight: 400; margin-left: 4px; padding-left: 14px; border-left: 1px solid var(--border); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  @media (max-width: 480px) { .tagline { display: none; } }
   .lang-toggle {
     display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-left: auto;
   }
@@ -100,7 +105,7 @@
 <body>
 
 <header>
-  <div class="logo">Do<span>ooo</span>dle</div>
+  <div class="logo">Do<span>oo</span>dle</div>
   <span class="tagline" id="tagline"></span>
   <div class="lang-toggle">
     <button class="lang-btn" id="lang-fr" onclick="switchLang('fr')">FR</button>
