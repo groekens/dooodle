@@ -3,165 +3,193 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Dooodle — Planifiez sans prise de tête</title>
+<title>Dooodle — Voter</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
-    --ink: #1a1a2e;
-    --ink-soft: #4a4a6a;
-    --ink-muted: #9090b0;
-    --paper: #fafaf7;
-    --surface: #ffffff;
-    --accent: #ff6b35;
-    --accent-light: #fff0eb;
-    --green: #2d9c6e;
-    --green-light: #e8f7f1;
-    --border: #e8e8f0;
-    --radius: 12px;
-    --radius-lg: 20px;
+    --ink: #1a1a2e; --ink-soft: #4a4a6a; --ink-muted: #9090b0;
+    --paper: #fafaf7; --surface: #ffffff;
+    --accent: #ff6b35; --accent-light: #fff0eb;
+    --green: #2d9c6e; --green-light: #e8f7f1;
+    --border: #e8e8f0; --radius: 12px; --radius-lg: 20px;
     --font-title: 'Manrope', sans-serif;
     --font-body: 'Manrope', sans-serif;
   }
   html { font-size: 17px; }
-  body { font-family: var(--font-body); background: var(--paper); color: var(--ink); min-height: 100vh; display: flex; flex-direction: column; }
+  body { font-family: var(--font-body); background: var(--paper); color: var(--ink); min-height: 100vh; }
 
-  header { padding: 1.35rem 2rem; display: flex; align-items: center; gap: 14px; border-bottom: 1px solid var(--border); background: var(--surface); }
-  .logo { font-family: var(--font-title); font-weight: 800; font-size: 1.6rem; color: var(--ink); letter-spacing: -0.5px; }
+  header {
+    padding: 1.35rem 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid var(--border); background: var(--surface);
+  }
+  .header-left { display: flex; align-items: center; gap: 14px; }
+  .logo { font-family: var(--font-title); font-weight: 800; font-size: 1.6rem; color: var(--ink); text-decoration: none; letter-spacing: -0.5px; }
   .logo span { color: var(--accent); }
-  .tagline { font-size: 0.82rem; color: var(--ink-muted); font-weight: 400; margin-left: 4px; padding-left: 14px; border-left: 1px solid var(--border); }
+  .btn-new-poll {
+    padding: 0.6rem 1.25rem;
+    background: var(--accent); color: white; border: none; border-radius: var(--radius);
+    font-family: var(--font-title); font-size: 0.92rem; font-weight: 600; cursor: pointer;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 5px;
+    transition: background 0.15s;
+    white-space: nowrap;
+  }
+  .btn-new-poll:hover { background: #e85a24; }
 
-  .hero { padding: 3rem 2rem 1.5rem; text-align: center; max-width: 580px; margin: 0 auto; }
-  .hero h1 { font-family: var(--font-title); font-size: 2.6rem; font-weight: 700; line-height: 1.15; letter-spacing: -0.5px; margin-bottom: 0.75rem; }
-  .hero h1 em { font-style: normal; color: var(--accent); }
-  .hero p { font-size: 1rem; color: var(--ink-soft); font-weight: 300; line-height: 1.65; }
+  .page-wrap { max-width: 640px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
 
-  .form-wrap { max-width: 580px; margin: 1.5rem auto 4rem; padding: 0 1.5rem; width: 100%; }
-  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem 1.75rem; margin-bottom: 1rem; }
+  /* EVENT HEADER */
+  .event-header { margin-bottom: 2rem; }
+  .event-title {
+    font-family: var(--font-title);
+    font-size: 2rem; font-weight: 700; letter-spacing: -0.3px;
+    color: var(--ink); margin-bottom: 0.5rem; line-height: 1.2;
+  }
+  .event-meta { font-size: 0.85rem; color: var(--ink-muted); display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .meta-pill {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 3px 10px; background: var(--paper); border: 1px solid var(--border);
+    border-radius: 999px; font-size: 0.8rem; color: var(--ink-soft);
+  }
 
-  .field-label { font-size: 0.74rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-muted); display: block; margin-bottom: 9px; }
+  /* SHARE SECTION */
+  .share-section {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg);
+    padding: 1rem 1.25rem; margin-bottom: 1.75rem;
+  }
+  .share-intro { font-size: 0.85rem; color: var(--ink-soft); margin-bottom: 10px; line-height: 1.5; }
+  .share-intro strong { color: var(--ink); font-weight: 600; }
+  .share-row { display: flex; align-items: center; gap: 8px; }
+  .share-url { flex: 1; font-family: monospace; font-size: 0.78rem; color: var(--ink-soft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; background: var(--paper); border: 1px solid var(--border); border-radius: 8px; padding: 7px 10px; }
+  .btn-copy {
+    padding: 7px 14px; background: var(--ink); color: white; border: none; border-radius: 8px;
+    font-family: var(--font-body); font-size: 0.82rem; font-weight: 600; cursor: pointer;
+    white-space: nowrap; transition: background 0.15s; flex-shrink: 0;
+  }
+  .btn-copy:hover { background: #333; }
+  .btn-copy.copied { background: var(--green); }
+  .btn-whatsapp {
+    padding: 7px 14px; background: #25D366; color: white; border: none; border-radius: 8px;
+    font-family: var(--font-body); font-size: 0.82rem; font-weight: 600; cursor: pointer;
+    white-space: nowrap; transition: background 0.15s; flex-shrink: 0;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+  }
+  .btn-whatsapp:hover { background: #1dba57; }
+  .btn-whatsapp svg { width: 15px; height: 15px; flex-shrink: 0; }
 
+  /* TABS */
+  .tabs { display: flex; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 1.5rem; background: var(--surface); }
+  .tab { flex: 1; padding: 0.7rem; background: none; border: none; font-family: var(--font-body); font-size: 0.92rem; font-weight: 400; color: var(--ink-muted); cursor: pointer; transition: background 0.12s, color 0.12s; }
+  .tab:not(:last-child) { border-right: 1px solid var(--border); }
+  .tab.active { background: var(--ink); color: white; font-weight: 500; }
+  .tab:hover:not(.active) { background: var(--paper); color: var(--ink-soft); }
+
+  /* VOTE TAB */
+  .vote-name-row { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem 1.5rem; margin-bottom: 1rem; }
+  .field-label { font-size: 0.74rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-muted); display: block; margin-bottom: 7px; }
   input[type="text"] {
-    width: 100%; padding: 0.8rem 1rem;
-    border: 1.5px solid var(--border); border-radius: var(--radius);
+    width: 100%; padding: 0.75rem 1rem; border: 1.5px solid var(--border); border-radius: var(--radius);
     font-family: var(--font-body); font-size: 1.05rem; color: var(--ink);
     background: var(--paper); outline: none; transition: border-color 0.15s;
   }
   input[type="text"]:focus { border-color: var(--accent); background: var(--surface); }
 
-  /* CALENDAR */
+  /* VOTE CALENDAR */
   .cal-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-  .cal-month-label { font-family: var(--font-title); font-size: 1rem; font-weight: 700; color: var(--ink); }
   .cal-nav-btn {
     background: none; border: 1px solid var(--border); border-radius: 8px;
-    width: 32px; height: 32px; cursor: pointer; font-size: 1.1rem; color: var(--ink-soft);
+    width: 32px; height: 32px; cursor: pointer; font-size: 1.2rem; color: var(--ink-soft);
     display: flex; align-items: center; justify-content: center; transition: background 0.12s, color 0.12s;
   }
-  .cal-nav-btn:hover { background: var(--paper); color: var(--ink); }
-  .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
-  .cal-day-header { text-align: center; font-size: 0.7rem; font-weight: 600; color: var(--ink-muted); padding: 4px 0 8px; text-transform: uppercase; letter-spacing: 0.05em; }
-  .cal-day {
+  .cal-nav-btn:hover:not(:disabled) { background: var(--paper); color: var(--ink); }
+  .vote-calendars { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.25rem; }
+  .vote-cal-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem 1.5rem; }
+  .vote-cal-month { font-family: var(--font-title); font-size: 1rem; font-weight: 700; color: var(--ink); margin-bottom: 10px; text-transform: capitalize; }
+  .vote-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
+  .vcal-header { text-align: center; font-size: 0.7rem; font-weight: 600; color: var(--ink-muted); padding: 2px 0 6px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .vcal-day {
     aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
-    border-radius: 8px; font-size: 0.9rem; cursor: pointer; border: 1.5px solid transparent;
-    transition: background 0.1s, border-color 0.1s, color 0.1s; color: var(--ink);
+    border-radius: 7px; font-size: 0.88rem; border: 1.5px solid transparent;
+    transition: background 0.1s, border-color 0.1s, color 0.1s; position: relative;
   }
-  .cal-day:hover:not(.empty):not(.past) { background: var(--accent-light); border-color: #ffd4c2; color: var(--accent); }
-  .cal-day.past { color: var(--ink-muted); cursor: default; opacity: 0.4; }
-  .cal-day.today { border-color: var(--border); font-weight: 700; }
-  .cal-day.selected { background: var(--accent); color: white; border-color: var(--accent); font-weight: 600; }
-  .cal-day.selected:hover { background: #e85a24; border-color: #e85a24; color: white; }
-  .cal-day.empty { cursor: default; }
+  .vcal-day.inactive { color: var(--ink-muted); opacity: 0.3; }
+  .vcal-day.proposed { color: var(--ink); cursor: pointer; font-weight: 500; border-color: var(--border); background: var(--paper); }
+  .vcal-day.proposed:hover { border-color: var(--green); background: var(--green-light); color: var(--green); }
+  .vcal-day.proposed.selected { background: var(--green); border-color: var(--green); color: white; font-weight: 600; }
+  .vcal-day.proposed.selected::after { content:''; position:absolute; bottom:3px; left:50%; transform:translateX(-50%); width:3px; height:3px; border-radius:50%; background:rgba(255,255,255,0.7); }
 
-  /* CHIPS */
-  .selected-dates-wrap { margin-top: 1.25rem; border-top: 1px solid var(--border); padding-top: 1rem; }
-  .selected-dates-label { font-size: 0.74rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-muted); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
-  .selected-count { background: var(--accent); color: white; border-radius: 999px; font-size: 0.7rem; font-weight: 600; padding: 1px 7px; }
-  .chips-list { display: flex; flex-wrap: wrap; gap: 6px; min-height: 28px; }
-  .date-chip {
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 4px 10px; background: var(--accent-light); border: 1px solid #ffd4c2;
-    border-radius: 999px; font-size: 0.83rem; color: var(--accent); font-weight: 500;
-    animation: popIn 0.12s ease;
+  .btn-submit {
+    width: 100%; padding: 0.95rem; background: var(--accent); color: white; border: none; border-radius: var(--radius-lg);
+    font-family: var(--font-title); font-size: 1rem; font-weight: 700; cursor: pointer;
+    transition: background 0.15s, transform 0.1s; box-shadow: 0 4px 18px rgba(255,107,53,0.22);
   }
-  @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-  .chip-remove { background: none; border: none; cursor: pointer; color: var(--accent); font-size: 1rem; line-height: 1; padding: 0; opacity: 0.5; }
-  .chip-remove:hover { opacity: 1; }
-  .no-dates-msg { font-size: 0.85rem; color: var(--ink-muted); font-style: italic; }
+  .btn-submit:hover { background: #e85a24; }
+  .btn-submit:active { transform: scale(0.98); }
+  .btn-submit:disabled { background: var(--ink-muted); box-shadow: none; cursor: not-allowed; }
+  .vote-msg { text-align: center; font-size: 0.88rem; color: var(--green); font-weight: 500; margin-top: 10px; min-height: 20px; }
+  .vote-msg.error { color: #c0392b; }
 
-  .btn-create {
-    width: 100%; padding: 1rem;
-    background: var(--accent); color: white; border: none; border-radius: var(--radius-lg);
-    font-family: var(--font-title); font-size: 1.05rem; font-weight: 700; cursor: pointer;
-    transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
-    box-shadow: 0 4px 20px rgba(255,107,53,0.25);
-  }
-  .btn-create:hover { background: #e85a24; box-shadow: 0 6px 24px rgba(255,107,53,0.35); }
-  .btn-create:active { transform: scale(0.98); }
-  .btn-create:disabled { background: var(--ink-muted); box-shadow: none; cursor: not-allowed; }
+  /* RESULTS TAB */
+  .results-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+  .result-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem; margin-bottom: 8px; }
+  .result-item.top { border-color: var(--green); border-width: 1.5px; }
+  .result-top-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .rank-num { font-family: var(--font-title); font-size: 0.82rem; font-weight: 700; color: var(--ink-muted); width: 20px; flex-shrink: 0; }
+  .rank-num.gold { color: var(--accent); }
+  .result-date-label { font-size: 0.98rem; font-weight: 500; color: var(--ink); flex: 1; }
+  .result-score { font-size: 0.85rem; color: var(--ink-soft); font-weight: 500; }
+  .result-bar-wrap { height: 5px; background: var(--border); border-radius: 999px; overflow: hidden; margin-bottom: 8px; }
+  .result-bar { height: 100%; border-radius: 999px; background: var(--ink-muted); transition: width 0.5s ease; }
+  .result-item.top .result-bar { background: var(--green); }
+  .result-voters { display: flex; flex-wrap: wrap; gap: 5px; }
+  .voter-pill { display: inline-block; padding: 2px 9px; background: var(--green-light); color: var(--green); border-radius: 999px; font-size: 0.78rem; font-weight: 500; }
+  .no-votes-msg { text-align: center; padding: 3rem 0; color: var(--ink-muted); font-size: 0.92rem; }
 
-  .error-msg { font-size: 0.85rem; color: #c0392b; margin-top: 8px; min-height: 20px; }
+  /* PARTICIPANTS TAB */
+  .participant-item { display: flex; align-items: center; gap: 12px; padding: 0.9rem 1.25rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 8px; }
+  .avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--accent-light); color: var(--accent); font-family: var(--font-title); font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .participant-name { font-size: 0.98rem; font-weight: 500; color: var(--ink); }
+  .participant-dates-summary { margin-left: auto; font-size: 0.82rem; color: var(--ink-muted); }
 
-  .loading-overlay {
-    display: none; position: fixed; inset: 0; background: rgba(250,250,247,0.88); z-index: 100;
-    align-items: center; justify-content: center; flex-direction: column; gap: 14px;
-  }
-  .loading-overlay.visible { display: flex; }
-  .spinner { width: 34px; height: 34px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; }
+  /* STATES */
+  .state-screen { text-align: center; padding: 5rem 2rem; }
+  .spinner { width: 34px; height: 34px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; margin: 0 auto 16px; }
   @keyframes spin { to { transform: rotate(360deg); } }
-  .loading-text { font-family: var(--font-title); font-size: 0.9rem; color: var(--ink-soft); }
+  .state-screen p { color: var(--ink-muted); font-size: 0.92rem; }
+  .state-screen h2 { font-family: var(--font-title); font-size: 1.4rem; margin-bottom: 8px; }
 
-  footer { margin-top: auto; padding: 1.25rem; text-align: center; font-size: 0.73rem; color: var(--ink-muted); border-top: 1px solid var(--border); }
+  /* VOTE EDIT HINT */
+  .edit-hint {
+    font-size: 0.8rem; color: var(--ink-muted); text-align: center;
+    margin-top: 8px; padding: 6px 12px;
+    background: var(--paper); border-radius: var(--radius);
+    border: 1px solid var(--border);
+  }
 </style>
 </head>
 <body>
 
 <header>
-  <div class="logo">Do<span>ooo</span>dle</div>
-  <span class="tagline">Trouvez la date parfaite</span>
+  <div class="header-left">
+    <a class="logo" href="index.html">Do<span>ooo</span>dle</a>
+  </div>
+  <a class="btn-new-poll" href="index.html">+ Nouveau sondage</a>
 </header>
 
-<div class="hero">
-  <h1>Planifier,<br/>c'est <em>simple.</em></h1>
-  <p>Créez un sondage en 30 secondes, partagez le lien, et laissez tout le monde indiquer ses disponibilités.</p>
-</div>
-
-<div class="form-wrap">
-  <div class="card">
-    <label class="field-label" for="event-title">Nom de l'événement</label>
-    <input type="text" id="event-title" placeholder="ex. Réunion d'équipe, Apéro du vendredi…" maxlength="80" />
+<div class="page-wrap" id="page-wrap">
+  <div class="state-screen" id="loading-screen">
+    <div class="spinner"></div>
+    <p>Chargement du sondage…</p>
   </div>
-
-  <div class="card">
-    <label class="field-label">Sélectionnez les dates proposées</label>
-    <div class="cal-nav">
-      <button class="cal-nav-btn" id="prev-month">&#8249;</button>
-      <span class="cal-month-label" id="month-label"></span>
-      <button class="cal-nav-btn" id="next-month">&#8250;</button>
-    </div>
-    <div class="cal-grid" id="cal-grid"></div>
-    <div class="selected-dates-wrap">
-      <div class="selected-dates-label">
-        Dates sélectionnées
-        <span class="selected-count" id="selected-count">0</span>
-      </div>
-      <div class="chips-list" id="chips-list">
-        <span class="no-dates-msg">Cliquez sur les jours pour les ajouter</span>
-      </div>
-    </div>
+  <div class="state-screen" id="error-screen" style="display:none;">
+    <h2>Sondage introuvable</h2>
+    <p>Ce lien est invalide ou le sondage a été supprimé.</p>
   </div>
-
-  <button class="btn-create" id="btn-create">Créer le sondage →</button>
-  <div class="error-msg" id="error-msg"></div>
+  <div id="poll-content" style="display:none;"></div>
 </div>
-
-<div class="loading-overlay" id="loading">
-  <div class="spinner"></div>
-  <div class="loading-text">Création du sondage…</div>
-</div>
-
-<footer>Dooodle — open source, sans compte, sans pub.</footer>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
@@ -176,96 +204,261 @@
   });
   const db = firebase.firestore();
 
-  const selectedDates = new Set();
-  const today = new Date(); today.setHours(0,0,0,0);
-  let viewYear = today.getFullYear(), viewMonth = today.getMonth();
-  const HEADERS = ['Lu','Ma','Me','Je','Ve','Sa','Di'];
+  const urlParams = new URLSearchParams(window.location.search);
+  const pollId = urlParams.get('id');
 
-  function toKey(y,m,d) { return `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`; }
-  function formatKey(key) { return cap(new Date(key+'T12:00:00').toLocaleDateString('fr-BE',{weekday:'short',day:'numeric',month:'short'})); }
-  function cap(s) { return s.charAt(0).toUpperCase()+s.slice(1); }
+  let poll = null;
+  let selectedDates = new Set();
+  let currentTab = 'vote';
 
-  // Generate a URL-friendly slug from a title + unique suffix
-  function toSlug(title) {
-    return title.normalize('NFD').replace(/[\u0300-\u036f]/g,'')
-      .toLowerCase().trim()
-      .replace(/[^a-z0-9\s-]/g,'')
-      .replace(/\s+/g,'-')
-      .replace(/-+/g,'-')
-      .slice(0,50);
-  }
+  function formatDate(str) { return new Date(str+'T12:00:00').toLocaleDateString('fr-BE',{weekday:'long',day:'numeric',month:'long',year:'numeric'}); }
+  function formatDateShort(str) { return new Date(str+'T12:00:00').toLocaleDateString('fr-BE',{weekday:'short',day:'numeric',month:'short'}); }
+  function getInitials(name) { return name.trim().split(/\s+/).map(w=>w[0]).join('').toUpperCase().slice(0,2); }
+  function cap(str) { return str.charAt(0).toUpperCase()+str.slice(1); }
+  function escHtml(str) { return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
-  function renderCalendar() {
-    const label = document.getElementById('month-label');
-    const grid  = document.getElementById('cal-grid');
-    label.textContent = cap(new Date(viewYear,viewMonth,1).toLocaleDateString('fr-BE',{month:'long',year:'numeric'}));
-    grid.innerHTML = '';
-    HEADERS.forEach(h => { const el=document.createElement('div'); el.className='cal-day-header'; el.textContent=h; grid.appendChild(el); });
-    let startDow = new Date(viewYear,viewMonth,1).getDay();
-    startDow = (startDow+6)%7;
-    for(let i=0;i<startDow;i++){const el=document.createElement('div');el.className='cal-day empty';grid.appendChild(el);}
-    const dim = new Date(viewYear,viewMonth+1,0).getDate();
-    for(let day=1;day<=dim;day++){
-      const key=toKey(viewYear,viewMonth,day);
-      const date=new Date(key+'T12:00:00');
-      const isPast=date<today, isToday=date.getTime()===today.getTime(), isSel=selectedDates.has(key);
-      const el=document.createElement('div');
-      el.className='cal-day'+(isPast?' past':'')+(isToday?' today':'')+(isSel?' selected':'');
-      el.textContent=day;
-      if(!isPast) el.addEventListener('click',()=>toggleDate(key));
-      grid.appendChild(el);
-    }
-  }
-
-  function toggleDate(key) {
-    if(selectedDates.has(key)) selectedDates.delete(key); else selectedDates.add(key);
-    renderCalendar(); renderChips();
-  }
-
-  function renderChips() {
-    const list=document.getElementById('chips-list');
-    document.getElementById('selected-count').textContent=selectedDates.size;
-    if(selectedDates.size===0){list.innerHTML='<span class="no-dates-msg">Cliquez sur les jours pour les ajouter</span>';return;}
-    list.innerHTML=Array.from(selectedDates).sort().map(k=>`<div class="date-chip">${formatKey(k)}<button class="chip-remove" data-key="${k}">×</button></div>`).join('');
-    list.querySelectorAll('.chip-remove').forEach(btn=>btn.addEventListener('click',()=>toggleDate(btn.dataset.key)));
-  }
-
-  document.getElementById('prev-month').addEventListener('click',()=>{viewMonth--;if(viewMonth<0){viewMonth=11;viewYear--;}renderCalendar();});
-  document.getElementById('next-month').addEventListener('click',()=>{viewMonth++;if(viewMonth>11){viewMonth=0;viewYear++;}renderCalendar();});
-
-  document.getElementById('btn-create').addEventListener('click', async()=>{
-    const title=document.getElementById('event-title').value.trim();
-    const errEl=document.getElementById('error-msg');
-    errEl.textContent='';
-    if(!title){errEl.textContent="Veuillez saisir un nom pour l'événement.";return;}
-    if(selectedDates.size<2){errEl.textContent='Sélectionnez au moins 2 dates sur le calendrier.';return;}
-
-    document.getElementById('loading').classList.add('visible');
-    document.getElementById('btn-create').disabled=true;
-
+  async function loadPoll() {
+    if(!pollId){showError();return;}
     try {
-      const baseSlug = toSlug(title);
-      // Check if slug already exists, add suffix if needed
-      const existing = await db.collection('polls').where('slug','==',baseSlug).limit(1).get();
-      const slug = existing.empty ? baseSlug : baseSlug+'-'+Math.random().toString(36).slice(2,6);
+      const snap = await db.collection('polls').doc(pollId).get();
+      if(!snap.exists){showError();return;}
+      poll = snap.data();
+      renderPoll();
+    } catch(e) { console.error(e); showError(); }
+  }
 
-      await db.collection('polls').doc(slug).set({
-        slug,
-        title,
-        dates: Array.from(selectedDates).sort(),
-        votes: {},
-        createdAt: new Date().toISOString()
-      });
-      window.location.href = 'poll.html?id=' + slug;
-    } catch(e) {
-      console.error(e);
-      document.getElementById('loading').classList.remove('visible');
-      document.getElementById('btn-create').disabled=false;
-      document.getElementById('error-msg').textContent='Erreur lors de la création. Vérifiez votre connexion.';
+  function showError() {
+    document.getElementById('loading-screen').style.display='none';
+    document.getElementById('error-screen').style.display='block';
+  }
+
+  function renderPoll() {
+    document.title = `Dooodle — ${poll.title}`;
+    document.getElementById('loading-screen').style.display='none';
+    const content = document.getElementById('poll-content');
+    content.style.display='block';
+
+    const voters = Object.keys(poll.votes||{});
+    const dateCount = poll.dates.length;
+    const shareUrl = window.location.href;
+
+    content.innerHTML = `
+      <div class="event-header">
+        <div class="event-title">${escHtml(poll.title)}</div>
+        <div class="event-meta">
+          <span class="meta-pill">📅 ${dateCount} date${dateCount>1?'s':''} proposée${dateCount>1?'s':''}</span>
+          <span class="meta-pill" id="voters-pill">👤 ${voters.length} participant${voters.length>1?'s':''}</span>
+        </div>
+      </div>
+      <div class="share-section">
+        <div class="share-intro"><strong>Partagez ce lien</strong> avec tous les participants pour qu'ils puissent indiquer leurs disponibilités.</div>
+        <div class="share-row">
+          <span class="share-url" id="share-url-text">${escHtml(shareUrl)}</span>
+          <button class="btn-copy" id="copy-btn">Copier</button>
+          <a class="btn-whatsapp" id="whatsapp-btn" href="#" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.528 5.845L.057 23.882l6.197-1.624A11.934 11.934 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.894a9.867 9.867 0 01-5.031-1.378l-.36-.214-3.733.979 1.001-3.656-.235-.374A9.861 9.861 0 012.106 12C2.106 6.535 6.535 2.106 12 2.106c5.466 0 9.894 4.429 9.894 9.894 0 5.466-4.428 9.894-9.894 9.894z"/></svg>
+            WhatsApp
+          </a>
+        </div>
+      </div>
+      <div class="tabs">
+        <button class="tab active" id="tab-btn-vote">Voter</button>
+        <button class="tab" id="tab-btn-participants">Participants <span id="participants-count">(${voters.length})</span></button>
+        <button class="tab" id="tab-btn-results">Résultats</button>
+      </div>
+      <div id="tab-vote">
+        <div class="vote-name-row">
+          <label class="field-label" for="voter-name">Votre prénom</label>
+          <input type="text" id="voter-name" placeholder="ex. Marie, Thomas…" maxlength="40" />
+        </div>
+        <p style="font-size:0.85rem;color:var(--ink-muted);margin-bottom:0.75rem;">Cliquez sur les dates en surbrillance où vous êtes disponible :</p>
+        <div class="vote-cal-card" id="vote-cal-card">
+          <div class="cal-nav">
+            <button class="cal-nav-btn" id="vcal-prev">&#8249;</button>
+            <span class="vote-cal-month" id="vcal-month-label"></span>
+            <button class="cal-nav-btn" id="vcal-next">&#8250;</button>
+          </div>
+          <div class="vote-cal-grid" id="vcal-grid"></div>
+        </div>
+        <button class="btn-submit" id="btn-submit">Enregistrer mes disponibilités</button>
+        <div class="edit-hint">Vous pouvez modifier votre vote à tout moment en re-soumettant avec le même prénom.</div>
+        <div class="vote-msg" id="vote-msg"></div>
+      </div>
+      <div id="tab-participants" style="display:none;"></div>
+      <div id="tab-results" style="display:none;"></div>
+    `;
+
+    // Wire up events
+    document.getElementById('copy-btn').addEventListener('click', copyLink);
+    const waBtn = document.getElementById('whatsapp-btn');
+    if (waBtn) {
+      const waText = encodeURIComponent('Salut ! Indique tes disponibilités pour "' + poll.title + '" ici : ' + shareUrl);
+      waBtn.href = 'https://wa.me/?text=' + waText;
     }
-  });
+    document.getElementById('btn-submit').addEventListener('click', submitVote);
+    document.getElementById('tab-btn-vote').addEventListener('click', ()=>switchTab('vote'));
+    document.getElementById('tab-btn-participants').addEventListener('click', ()=>switchTab('participants'));
+    document.getElementById('tab-btn-results').addEventListener('click', ()=>switchTab('results'));
 
-  renderCalendar();
+    renderVoteCalendars();
+  }
+
+  /* --- Vote calendar with navigation --- */
+  const VCAL_HEADERS = ['Lu','Ma','Me','Je','Ve','Sa','Di'];
+  let vcalYear, vcalMonth;
+
+  function initVoteCalendar() {
+    // Start on the first month that has proposed dates
+    const firstDate = poll.dates[0];
+    vcalYear  = parseInt(firstDate.slice(0,4));
+    vcalMonth = parseInt(firstDate.slice(5,7));
+
+    document.getElementById('vcal-prev').addEventListener('click', ()=>{
+      vcalMonth--; if(vcalMonth<1){vcalMonth=12;vcalYear--;} renderVoteCalendar();
+    });
+    document.getElementById('vcal-next').addEventListener('click', ()=>{
+      vcalMonth++; if(vcalMonth>12){vcalMonth=1;vcalYear++;} renderVoteCalendar();
+    });
+    renderVoteCalendar();
+  }
+
+  function renderVoteCalendars() { initVoteCalendar(); }
+
+  function renderVoteCalendar() {
+    const grid = document.getElementById('vcal-grid');
+    const label = document.getElementById('vcal-month-label');
+    const prevBtn = document.getElementById('vcal-prev');
+    const nextBtn = document.getElementById('vcal-next');
+    if(!grid || !label) return;
+
+    const proposedSet = new Set(poll.dates);
+
+    // Determine min/max months from proposed dates
+    const monthKeys = poll.dates.map(d=>d.slice(0,7));
+    const minKey = monthKeys[0];
+    const maxKey = monthKeys[monthKeys.length-1];
+    const curKey = `${vcalYear}-${String(vcalMonth).padStart(2,'0')}`;
+
+    // Disable nav if at boundaries
+    prevBtn.disabled = curKey <= minKey;
+    prevBtn.style.opacity = curKey <= minKey ? '0.3' : '1';
+    nextBtn.disabled = curKey >= maxKey;
+    nextBtn.style.opacity = curKey >= maxKey ? '0.3' : '1';
+
+    label.textContent = cap(new Date(vcalYear, vcalMonth-1, 1).toLocaleDateString('fr-BE',{month:'long',year:'numeric'}));
+
+    const daysInMonth = new Date(vcalYear, vcalMonth, 0).getDate();
+    let startDow = new Date(vcalYear, vcalMonth-1, 1).getDay();
+    startDow = (startDow+6)%7;
+
+    let cells = VCAL_HEADERS.map(h=>`<div class="vcal-header">${h}</div>`).join('');
+    for(let i=0;i<startDow;i++) cells+='<div class="vcal-day empty"></div>';
+    for(let day=1;day<=daysInMonth;day++){
+      const key=`${vcalYear}-${String(vcalMonth).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+      const isP=proposedSet.has(key), isSel=selectedDates.has(key);
+      cells+=`<div class="vcal-day ${isP?'proposed'+(isSel?' selected':''):'inactive'}" ${isP?`data-key="${key}"`:''}>${day}</div>`;
+    }
+
+    grid.innerHTML = cells;
+    grid.querySelectorAll('.vcal-day.proposed').forEach(el=>{
+      el.addEventListener('click',()=>{
+        const k=el.dataset.key;
+        if(selectedDates.has(k)) selectedDates.delete(k); else selectedDates.add(k);
+        el.classList.toggle('selected',selectedDates.has(k));
+      });
+    });
+  }
+
+  /* --- Submit --- */
+  async function submitVote() {
+    const name=document.getElementById('voter-name').value.trim();
+    const btn=document.getElementById('btn-submit');
+    if(!name){showVoteMsg('Veuillez saisir votre prénom.',true);return;}
+    btn.disabled=true; btn.textContent='Enregistrement…';
+    try {
+      const updatedVotes={...(poll.votes||{})};
+      updatedVotes[name]=Array.from(selectedDates);
+      await db.collection('polls').doc(pollId).update({votes:updatedVotes});
+      poll.votes=updatedVotes;
+      showVoteMsg(`✓ Disponibilités enregistrées pour ${name} !`);
+      document.getElementById('voter-name').value='';
+      selectedDates.clear();
+      renderVoteCalendar();
+      const v=Object.keys(poll.votes);
+      const pill=document.getElementById('voters-pill');
+      const cnt=document.getElementById('participants-count');
+      if(pill) pill.textContent=`👤 ${v.length} participant${v.length>1?'s':''}`;
+      if(cnt) cnt.textContent=`(${v.length})`;
+    } catch(e){ console.error(e); showVoteMsg("Erreur lors de l'enregistrement.",true); }
+    btn.disabled=false; btn.textContent='Enregistrer mes disponibilités';
+    setTimeout(()=>showVoteMsg(''),4000);
+  }
+
+  function showVoteMsg(txt,isError=false){
+    const el=document.getElementById('vote-msg');
+    if(!el) return;
+    el.textContent=txt; el.className='vote-msg'+(isError?' error':'');
+  }
+
+  /* --- Tabs --- */
+  function switchTab(tab){
+    currentTab=tab;
+    ['vote','participants','results'].forEach(t=>{
+      document.getElementById(`tab-btn-${t}`)?.classList.toggle('active',t===tab);
+      const pane=document.getElementById(`tab-${t}`);
+      if(pane) pane.style.display=t===tab?'block':'none';
+    });
+    if(tab==='participants') renderParticipants();
+    if(tab==='results') renderResults();
+  }
+
+  function renderParticipants(){
+    const el=document.getElementById('tab-participants'); if(!el) return;
+    const votes=poll.votes||{}, names=Object.keys(votes);
+    if(names.length===0){el.innerHTML='<div class="no-votes-msg">Aucun participant pour l\'instant.</div>';return;}
+    el.innerHTML=names.map(name=>`
+      <div class="participant-item">
+        <div class="avatar">${getInitials(name)}</div>
+        <div><div class="participant-name">${escHtml(name)}</div></div>
+        <div class="participant-dates-summary">${votes[name].length} date${votes[name].length>1?'s':''} dispo</div>
+      </div>`).join('');
+  }
+
+  function renderResults(){
+    const el=document.getElementById('tab-results'); if(!el) return;
+    const votes=poll.votes||{}, totalVoters=Object.keys(votes).length;
+    if(totalVoters===0){el.innerHTML='<div class="no-votes-msg">Aucun vote pour l\'instant.<br/>Partagez le lien pour inviter des participants !</div>';return;}
+    const scores=poll.dates.map(d=>({
+      date:d, available:Object.entries(votes).filter(([,dts])=>dts.includes(d)).map(([n])=>n)
+    })).sort((a,b)=>b.available.length-a.available.length);
+    const max=scores[0].available.length||1;
+    el.innerHTML=`<div class="results-header"><span style="font-size:0.85rem;color:var(--ink-muted);">${totalVoters} participant${totalVoters>1?'s':''} ont voté</span></div>`+
+      scores.map((item,i)=>{
+        const pct=Math.round(item.available.length/max*100), isTop=i===0;
+        return `<div class="result-item ${isTop?'top':''}">
+          <div class="result-top-row">
+            <span class="rank-num ${isTop?'gold':''}">${i+1}.</span>
+            <span class="result-date-label">${cap(formatDateShort(item.date))}</span>
+            <span class="result-score">${item.available.length}/${totalVoters}</span>
+          </div>
+          <div class="result-bar-wrap"><div class="result-bar" style="width:${pct}%"></div></div>
+          <div class="result-voters">
+            ${item.available.map(n=>`<span class="voter-pill">${escHtml(n)}</span>`).join('')}
+            ${item.available.length===0?'<span style="font-size:0.82rem;color:var(--ink-muted)">Personne de disponible</span>':''}
+          </div>
+        </div>`;
+      }).join('');
+  }
+
+  function copyLink(){
+    navigator.clipboard.writeText(window.location.href).then(()=>{
+      const btn=document.getElementById('copy-btn'); if(!btn) return;
+      btn.textContent='✓ Copié !'; btn.classList.add('copied');
+      setTimeout(()=>{btn.textContent='Copier';btn.classList.remove('copied');},2500);
+    });
+  }
+
+  loadPoll();
 </script>
 </body>
 </html>
