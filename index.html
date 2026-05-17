@@ -78,11 +78,13 @@
     border-radius: 8px; font-size: 0.9rem; cursor: pointer; border: 1.5px solid transparent;
     transition: background 0.1s, border-color 0.1s, color 0.1s; color: var(--ink);
   }
-  .cal-day:hover:not(.empty):not(.past) { background: var(--accent-light); border-color: #ffd4c2; color: var(--accent); }
+  @media (hover: hover) {
+    .cal-day:hover:not(.empty):not(.past):not(.selected) { background: var(--accent-light); border-color: #ffd4c2; color: var(--accent); }
+    .cal-day.selected:hover { background: #e85a24; border-color: #e85a24; color: white; }
+  }
   .cal-day.past { color: var(--ink-muted); cursor: default; opacity: 0.4; }
   .cal-day.today { border-color: var(--border); font-weight: 700; }
   .cal-day.selected { background: var(--accent); color: white; border-color: var(--accent); font-weight: 600; }
-  .cal-day.selected:hover { background: #e85a24; border-color: #e85a24; color: white; }
   .cal-day.empty { cursor: default; }
 
   .selected-dates-wrap { margin-top: 1.25rem; border-top: 1px solid var(--border); padding-top: 1rem; }
