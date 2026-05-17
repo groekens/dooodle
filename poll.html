@@ -134,11 +134,9 @@
   }
   .vcal-day.inactive { color: var(--ink-muted); opacity: 0.3; }
   .vcal-day.proposed { color: var(--ink); cursor: pointer; font-weight: 500; border-color: var(--border); background: var(--paper); }
-  .vcal-day.proposed:hover { border-color: var(--green); background: var(--green-light); color: var(--green); }
+  .vcal-day.proposed:not(.yes):not(.maybe):hover { border-color: var(--green); background: var(--green-light); color: var(--green); }
   .vcal-day.proposed.yes { background: var(--green); border-color: var(--green); color: white; font-weight: 600; }
-  .vcal-day.proposed.yes:hover { background: var(--amber); border-color: var(--amber); color: white; }
   .vcal-day.proposed.maybe { background: var(--amber); border-color: var(--amber); color: white; font-weight: 600; }
-  .vcal-day.proposed.maybe:hover { background: var(--paper); border-color: var(--border); color: var(--ink); }
   .vcal-day.proposed.yes::after { content:''; position:absolute; bottom:3px; left:50%; transform:translateX(-50%); width:3px; height:3px; border-radius:50%; background:rgba(255,255,255,0.7); }
   .vcal-day.proposed.maybe::after { content:'?'; position:absolute; bottom:1px; right:3px; font-size:0.6rem; font-weight:700; color:rgba(255,255,255,0.85); }
 
@@ -356,12 +354,12 @@
     vcalYear  = parseInt(firstDate.slice(0,4));
     vcalMonth = parseInt(firstDate.slice(5,7));
 
-    document.getElementById('vcal-prev').addEventListener('click', () => {
+    document.getElementById('vcal-prev').onclick = () => {
       vcalMonth--; if(vcalMonth<1){vcalMonth=12;vcalYear--;} renderVoteCalendar();
-    });
-    document.getElementById('vcal-next').addEventListener('click', () => {
+    };
+    document.getElementById('vcal-next').onclick = () => {
       vcalMonth++; if(vcalMonth>12){vcalMonth=1;vcalYear++;} renderVoteCalendar();
-    });
+    };
     renderVoteCalendar();
   }
 
@@ -400,20 +398,23 @@
     }
 
     grid.innerHTML = cells;
-    grid.querySelectorAll('.vcal-day.proposed').forEach(el=>{
-      el.addEventListener('click', () => {
-        const k = el.dataset.key;
-        const current = selectedDates.get(k);
-        // Cycle: undefined → yes → maybe → undefined
-        if (current === undefined) selectedDates.set(k, 'yes');
-        else if (current === 'yes') selectedDates.set(k, 'maybe');
-        else selectedDates.delete(k);
-        // Re-render only this cell's classes
-        el.classList.remove('yes', 'maybe');
-        const newState = selectedDates.get(k);
-        if (newState) el.classList.add(newState);
-      });
-    });
+    // Event delegation: single listener on the grid container, replaced on each render
+    // This prevents double-handler bugs from successive renderVoteCalendar calls.
+    grid.onclick = (event) => {
+      const el = event.target.closest('.vcal-day.proposed');
+      if (!el || !grid.contains(el)) return;
+      const k = el.dataset.key;
+      if (!k) return;
+      const current = selectedDates.get(k);
+      // Cycle: undefined → yes → maybe → undefined
+      if (current === undefined) selectedDates.set(k, 'yes');
+      else if (current === 'yes') selectedDates.set(k, 'maybe');
+      else selectedDates.delete(k);
+      // Update only this cell's state classes
+      el.classList.remove('yes', 'maybe');
+      const newState = selectedDates.get(k);
+      if (newState) el.classList.add(newState);
+    };
   }
 
   /* --- Submit vote --- */
