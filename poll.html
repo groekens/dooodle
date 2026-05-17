@@ -169,6 +169,9 @@
   .rank-num.gold { color: var(--accent); }
   .result-date-label { font-size: 0.98rem; font-weight: 500; color: var(--ink); flex: 1; }
   .result-score { font-size: 0.85rem; color: var(--ink-soft); font-weight: 500; }
+  .result-score .score-yes { color: var(--green); font-weight: 700; }
+  .result-score .score-maybe { color: var(--amber); font-weight: 600; margin-left: 1px; }
+  .result-score .score-total { color: var(--ink-muted); font-weight: 400; }
   .result-bar-wrap { height: 5px; background: var(--border); border-radius: 999px; overflow: hidden; margin-bottom: 8px; }
   .result-bar { height: 100%; border-radius: 999px; background: var(--ink-muted); transition: width 0.5s ease; }
   .result-item.top .result-bar { background: var(--green); }
@@ -502,11 +505,14 @@
         const maybePct = Math.round(item.maybe.length * 0.5 / max * 100);
         const isTop = i === 0;
         const totalCount = item.yes.length + item.maybe.length;
+        const scoreText = item.maybe.length > 0
+          ? `<span class="score-yes">${item.yes.length}</span><span class="score-maybe">+${item.maybe.length}?</span><span class="score-total">/${totalVoters}</span>`
+          : `<span class="score-yes">${item.yes.length}</span><span class="score-total">/${totalVoters}</span>`;
         return `<div class="result-item ${isTop ? 'top' : ''}">
           <div class="result-top-row">
             <span class="rank-num ${isTop ? 'gold' : ''}">${i + 1}.</span>
             <span class="result-date-label">${cap(formatDateShort(item.date))}</span>
-            <span class="result-score">${item.yes.length}${item.maybe.length > 0 ? `+${item.maybe.length}` : ''}/${totalVoters}</span>
+            <span class="result-score">${scoreText}</span>
           </div>
           <div class="result-bar-stack">
             <div class="result-bar-yes" style="width:${yesPct}%"></div>
