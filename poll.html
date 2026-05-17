@@ -4,51 +4,55 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
-<link rel="manifest" href="manifest.json" />
 <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-<title>Dooodle — Voter</title>
+<link rel="manifest" href="manifest.json" />
+<link rel="icon" type="image/x-icon" href="images/favicon.ico" />
+<link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png" />
+<link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+<title>Dooodle</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 <style>
-  :root { --safe-top: env(safe-area-inset-top, 0px); }
-  header { padding-top: calc(1rem + var(--safe-top)); }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
     --ink: #1a1a2e; --ink-soft: #4a4a6a; --ink-muted: #9090b0;
     --paper: #fafaf7; --surface: #ffffff;
     --accent: #ff6b35; --accent-light: #fff0eb;
     --green: #2d9c6e; --green-light: #e8f7f1;
+    --amber: #d97706; --amber-light: #fef3c7;
     --border: #e8e8f0; --radius: 12px; --radius-lg: 20px;
-    --font-title: 'Manrope', sans-serif;
-    --font-body: 'Manrope', sans-serif;
+    --font: 'Manrope', sans-serif;
+    --safe-top: env(safe-area-inset-top, 0px);
   }
   html { font-size: 17px; }
-  body { font-family: var(--font-body); background: var(--paper); color: var(--ink); min-height: 100vh; }
+  body { font-family: var(--font); background: var(--paper); color: var(--ink); min-height: 100vh; }
 
   header {
     padding: 1rem 1.25rem;
+    padding-top: calc(1rem + var(--safe-top));
     display: flex; align-items: center; justify-content: space-between;
     border-bottom: 1px solid var(--border); background: var(--surface);
     gap: 8px;
   }
   .header-left { display: flex; align-items: center; gap: 8px; min-width: 0; }
-  .logo { font-family: var(--font-title); font-weight: 800; font-size: 1.4rem; color: var(--ink); text-decoration: none; letter-spacing: -0.5px; flex-shrink: 0; }
+  .logo { font-family: var(--font); font-weight: 800; font-size: 1.4rem; color: var(--ink); text-decoration: none; letter-spacing: -0.5px; flex-shrink: 0; }
   .logo span { color: var(--accent); }
   .btn-new-poll {
     padding: 0.5rem 0.9rem;
     background: var(--accent); color: white; border: none; border-radius: var(--radius);
-    font-family: var(--font-title); font-size: 0.82rem; font-weight: 600; cursor: pointer;
+    font-family: var(--font); font-size: 0.82rem; font-weight: 600; cursor: pointer;
     text-decoration: none; display: inline-flex; align-items: center; gap: 4px;
     transition: background 0.15s; white-space: nowrap; flex-shrink: 0;
   }
   .btn-new-poll:hover { background: #e85a24; }
   .lang-toggle { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; flex-shrink: 0; }
-  .lang-btn { padding: 5px 9px; background: none; border: none; font-family: var(--font-body); font-size: 0.75rem; font-weight: 600; cursor: pointer; color: var(--ink-muted); transition: background 0.12s, color 0.12s; letter-spacing: 0.03em; }
+  .lang-btn { padding: 5px 9px; background: none; border: none; font-family: var(--font); font-size: 0.75rem; font-weight: 600; cursor: pointer; color: var(--ink-muted); transition: background 0.12s, color 0.12s; letter-spacing: 0.03em; }
   .lang-btn:first-child { border-right: 1px solid var(--border); }
   .lang-btn.active { background: var(--ink); color: white; }
   @media (max-width: 480px) {
-    header { padding: 0.9rem 1rem; }
+    header { padding: 0.9rem 1rem; padding-top: calc(0.9rem + var(--safe-top)); }
     .logo { font-size: 1.25rem; }
     .btn-new-poll { font-size: 0.78rem; padding: 0.45rem 0.75rem; }
   }
@@ -58,7 +62,7 @@
   /* EVENT HEADER */
   .event-header { margin-bottom: 2rem; }
   .event-title {
-    font-family: var(--font-title);
+    font-family: var(--font);
     font-size: 2rem; font-weight: 700; letter-spacing: -0.3px;
     color: var(--ink); margin-bottom: 0.5rem; line-height: 1.2;
   }
@@ -80,14 +84,14 @@
   .share-url { flex: 1; font-family: monospace; font-size: 0.78rem; color: var(--ink-soft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; background: var(--paper); border: 1px solid var(--border); border-radius: 8px; padding: 7px 10px; }
   .btn-copy {
     padding: 7px 14px; background: var(--ink); color: white; border: none; border-radius: 8px;
-    font-family: var(--font-body); font-size: 0.82rem; font-weight: 600; cursor: pointer;
+    font-family: var(--font); font-size: 0.82rem; font-weight: 600; cursor: pointer;
     white-space: nowrap; transition: background 0.15s; flex-shrink: 0;
   }
   .btn-copy:hover { background: #333; }
   .btn-copy.copied { background: var(--green); }
   .btn-whatsapp {
     padding: 7px 14px; background: #25D366; color: white; border: none; border-radius: 8px;
-    font-family: var(--font-body); font-size: 0.82rem; font-weight: 600; cursor: pointer;
+    font-family: var(--font); font-size: 0.82rem; font-weight: 600; cursor: pointer;
     white-space: nowrap; transition: background 0.15s; flex-shrink: 0;
     text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
   }
@@ -96,7 +100,7 @@
 
   /* TABS */
   .tabs { display: flex; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 1.5rem; background: var(--surface); }
-  .tab { flex: 1; padding: 0.7rem; background: none; border: none; font-family: var(--font-body); font-size: 0.92rem; font-weight: 400; color: var(--ink-muted); cursor: pointer; transition: background 0.12s, color 0.12s; }
+  .tab { flex: 1; padding: 0.7rem; background: none; border: none; font-family: var(--font); font-size: 0.92rem; font-weight: 400; color: var(--ink-muted); cursor: pointer; transition: background 0.12s, color 0.12s; }
   .tab:not(:last-child) { border-right: 1px solid var(--border); }
   .tab.active { background: var(--ink); color: white; font-weight: 500; }
   .tab:hover:not(.active) { background: var(--paper); color: var(--ink-soft); }
@@ -106,7 +110,7 @@
   .field-label { font-size: 0.74rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-muted); display: block; margin-bottom: 7px; }
   input[type="text"] {
     width: 100%; padding: 0.75rem 1rem; border: 1.5px solid var(--border); border-radius: var(--radius);
-    font-family: var(--font-body); font-size: 1.05rem; color: var(--ink);
+    font-family: var(--font); font-size: 1.05rem; color: var(--ink);
     background: var(--paper); outline: none; transition: border-color 0.15s;
   }
   input[type="text"]:focus { border-color: var(--accent); background: var(--surface); }
@@ -119,9 +123,8 @@
     display: flex; align-items: center; justify-content: center; transition: background 0.12s, color 0.12s;
   }
   .cal-nav-btn:hover:not(:disabled) { background: var(--paper); color: var(--ink); }
-  .vote-calendars { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.25rem; }
-  .vote-cal-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem 1.5rem; }
-  .vote-cal-month { font-family: var(--font-title); font-size: 1rem; font-weight: 700; color: var(--ink); margin-bottom: 10px; text-transform: capitalize; }
+  .vote-cal-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem 1.5rem; margin-bottom: 1.25rem; }
+  .vote-cal-month { font-family: var(--font); font-size: 1rem; font-weight: 700; color: var(--ink); text-transform: capitalize; }
   .vote-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
   .vcal-header { text-align: center; font-size: 0.7rem; font-weight: 600; color: var(--ink-muted); padding: 2px 0 6px; text-transform: uppercase; letter-spacing: 0.04em; }
   .vcal-day {
@@ -132,12 +135,23 @@
   .vcal-day.inactive { color: var(--ink-muted); opacity: 0.3; }
   .vcal-day.proposed { color: var(--ink); cursor: pointer; font-weight: 500; border-color: var(--border); background: var(--paper); }
   .vcal-day.proposed:hover { border-color: var(--green); background: var(--green-light); color: var(--green); }
-  .vcal-day.proposed.selected { background: var(--green); border-color: var(--green); color: white; font-weight: 600; }
-  .vcal-day.proposed.selected::after { content:''; position:absolute; bottom:3px; left:50%; transform:translateX(-50%); width:3px; height:3px; border-radius:50%; background:rgba(255,255,255,0.7); }
+  .vcal-day.proposed.yes { background: var(--green); border-color: var(--green); color: white; font-weight: 600; }
+  .vcal-day.proposed.yes:hover { background: var(--amber); border-color: var(--amber); color: white; }
+  .vcal-day.proposed.maybe { background: var(--amber); border-color: var(--amber); color: white; font-weight: 600; }
+  .vcal-day.proposed.maybe:hover { background: var(--paper); border-color: var(--border); color: var(--ink); }
+  .vcal-day.proposed.yes::after { content:''; position:absolute; bottom:3px; left:50%; transform:translateX(-50%); width:3px; height:3px; border-radius:50%; background:rgba(255,255,255,0.7); }
+  .vcal-day.proposed.maybe::after { content:'?'; position:absolute; bottom:1px; right:3px; font-size:0.6rem; font-weight:700; color:rgba(255,255,255,0.85); }
+
+  /* LEGEND */
+  .vote-legend { display: flex; gap: 12px; flex-wrap: wrap; margin: 0.5rem 0 1rem; font-size: 0.78rem; color: var(--ink-soft); }
+  .legend-item { display: inline-flex; align-items: center; gap: 6px; }
+  .legend-swatch { width: 14px; height: 14px; border-radius: 4px; border: 1.5px solid var(--border); flex-shrink: 0; }
+  .legend-swatch.yes { background: var(--green); border-color: var(--green); }
+  .legend-swatch.maybe { background: var(--amber); border-color: var(--amber); }
 
   .btn-submit {
     width: 100%; padding: 0.95rem; background: var(--accent); color: white; border: none; border-radius: var(--radius-lg);
-    font-family: var(--font-title); font-size: 1rem; font-weight: 700; cursor: pointer;
+    font-family: var(--font); font-size: 1rem; font-weight: 700; cursor: pointer;
     transition: background 0.15s, transform 0.1s; box-shadow: 0 4px 18px rgba(255,107,53,0.22);
   }
   .btn-submit:hover { background: #e85a24; }
@@ -151,7 +165,7 @@
   .result-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem; margin-bottom: 8px; }
   .result-item.top { border-color: var(--green); border-width: 1.5px; }
   .result-top-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-  .rank-num { font-family: var(--font-title); font-size: 0.82rem; font-weight: 700; color: var(--ink-muted); width: 20px; flex-shrink: 0; }
+  .rank-num { font-family: var(--font); font-size: 0.82rem; font-weight: 700; color: var(--ink-muted); width: 20px; flex-shrink: 0; }
   .rank-num.gold { color: var(--accent); }
   .result-date-label { font-size: 0.98rem; font-weight: 500; color: var(--ink); flex: 1; }
   .result-score { font-size: 0.85rem; color: var(--ink-soft); font-weight: 500; }
@@ -160,11 +174,17 @@
   .result-item.top .result-bar { background: var(--green); }
   .result-voters { display: flex; flex-wrap: wrap; gap: 5px; }
   .voter-pill { display: inline-block; padding: 2px 9px; background: var(--green-light); color: var(--green); border-radius: 999px; font-size: 0.78rem; font-weight: 500; }
+  .voter-pill.maybe { background: var(--amber-light); color: var(--amber); }
+  .voter-pill.maybe::after { content: ' ?'; opacity: 0.7; }
+  .result-bar-stack { display: flex; height: 5px; border-radius: 999px; overflow: hidden; background: var(--border); margin-bottom: 8px; }
+  .result-bar-yes { height: 100%; background: var(--ink-muted); transition: width 0.5s ease; }
+  .result-bar-maybe { height: 100%; background: var(--amber); opacity: 0.55; transition: width 0.5s ease; }
+  .result-item.top .result-bar-yes { background: var(--green); }
   .no-votes-msg { text-align: center; padding: 3rem 0; color: var(--ink-muted); font-size: 0.92rem; }
 
   /* PARTICIPANTS TAB */
   .participant-item { display: flex; align-items: center; gap: 12px; padding: 0.9rem 1.25rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 8px; }
-  .avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--accent-light); color: var(--accent); font-family: var(--font-title); font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--accent-light); color: var(--accent); font-family: var(--font); font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .participant-name { font-size: 0.98rem; font-weight: 500; color: var(--ink); }
   .participant-dates-summary { margin-left: auto; font-size: 0.82rem; color: var(--ink-muted); }
 
@@ -173,9 +193,8 @@
   .spinner { width: 34px; height: 34px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; margin: 0 auto 16px; }
   @keyframes spin { to { transform: rotate(360deg); } }
   .state-screen p { color: var(--ink-muted); font-size: 0.92rem; }
-  .state-screen h2 { font-family: var(--font-title); font-size: 1.4rem; margin-bottom: 8px; }
+  .state-screen h2 { font-family: var(--font); font-size: 1.4rem; margin-bottom: 8px; }
 
-  /* VOTE EDIT HINT */
   .edit-hint {
     font-size: 0.8rem; color: var(--ink-muted); text-align: center;
     margin-top: 8px; padding: 6px 12px;
@@ -183,10 +202,6 @@
     border: 1px solid var(--border);
   }
 </style>
-<link rel="icon" type="image/x-icon" href="images/favicon.ico" />
-<link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png" />
-<link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png" />
-<link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
 </head>
 <body>
 
@@ -197,160 +212,54 @@
   <div style="display:flex;align-items:center;gap:10px;">
     <a class="btn-new-poll" id="btn-new-poll" href="index.html"></a>
     <div class="lang-toggle">
-      <button class="lang-btn" id="lang-fr" onclick="switchLang('fr')">FR</button>
-      <button class="lang-btn" id="lang-en" onclick="switchLang('en')">EN</button>
+      <button class="lang-btn" id="lang-fr">FR</button>
+      <button class="lang-btn" id="lang-en">EN</button>
     </div>
   </div>
 </header>
 
-<div class="page-wrap" id="page-wrap">
+<div class="page-wrap">
   <div class="state-screen" id="loading-screen">
     <div class="spinner"></div>
-    <p id="loading-poll-text">Chargement du sondage…</p>
+    <p id="loading-poll-text"></p>
   </div>
   <div class="state-screen" id="error-screen" style="display:none;">
-    <h2 id="err-title">Sondage introuvable</h2>
-    <p id="err-sub">Ce lien est invalide ou le sondage a été supprimé.</p>
+    <h2 id="err-title"></h2>
+    <p id="err-sub"></p>
   </div>
   <div id="poll-content" style="display:none;"></div>
 </div>
 
-<script>
-const I18N = {
-  fr: {
-    // dates locale
-    locale: 'fr-BE',
-    // index page
-    tagline: 'Trouvez la date parfaite',
-    heroTitle: 'Planifier,<br/>c\'est <em>simple.</em>',
-    heroSub: 'Créez un sondage en 30 secondes, partagez le lien, et laissez tout le monde indiquer ses disponibilités.',
-    labelEventTitle: 'Nom de l\'événement',
-    placeholderEventTitle: 'ex. Réunion d\'équipe, Apéro du vendredi…',
-    labelDates: 'Sélectionnez les dates proposées',
-    labelSelected: 'Dates sélectionnées',
-    noDatesTip: 'Cliquez sur les jours pour les ajouter',
-    btnCreate: 'Créer le sondage →',
-    errNoTitle: 'Veuillez saisir un nom pour l\'événement.',
-    errNoDates: 'Sélectionnez au moins 2 dates sur le calendrier.',
-    errCreate: 'Erreur lors de la création. Vérifiez votre connexion.',
-    loadingCreate: 'Création du sondage…',
-    footer: 'Dooodle — open source, sans compte, sans pub.',
-    // poll page
-    btnNewPoll: '+ Nouveau sondage',
-    dateProposed: (n) => `${n} date${n>1?'s':''} proposée${n>1?'s':''}`,
-    participants: (n) => `${n} participant${n>1?'s':''}`,
-    shareIntro: '<strong>Partagez ce lien</strong> avec tous les participants pour qu\'ils puissent indiquer leurs disponibilités.',
-    btnCopy: 'Copier',
-    btnCopied: '✓ Copié !',
-    btnWhatsapp: 'WhatsApp',
-    waMessage: (title, url) => `Salut ! Indique tes disponibilités pour "${title}" ici : ${url}`,
-    tabVote: 'Voter',
-    tabParticipants: 'Participants',
-    tabResults: 'Résultats',
-    labelName: 'Votre prénom',
-    placeholderName: 'ex. Marie, Thomas…',
-    calTip: 'Cliquez sur les dates en surbrillance où vous êtes disponible :',
-    btnSubmit: 'Enregistrer mes disponibilités',
-    btnSubmitting: 'Enregistrement…',
-    editHint: 'Vous pouvez modifier votre vote à tout moment en re-soumettant avec le même prénom.',
-    successVote: (name) => `✓ Disponibilités enregistrées pour ${name} !`,
-    errNoName: 'Veuillez saisir votre prénom.',
-    errSubmit: 'Erreur lors de l\'enregistrement.',
-    noParticipants: 'Aucun participant pour l\'instant.',
-    datesAvail: (n) => `${n} date${n>1?'s':''} dispo`,
-    noVotes: 'Aucun vote pour l\'instant.<br/>Partagez le lien pour inviter des participants !',
-    voted: (n) => `${n} participant${n>1?'s':''} ont voté`,
-    nobody: 'Personne de disponible',
-    loadingPoll: 'Chargement du sondage…',
-    errNotFound: 'Sondage introuvable',
-    errNotFoundSub: 'Ce lien est invalide ou le sondage a été supprimé.',
-    dayHeaders: ['Lu','Ma','Me','Je','Ve','Sa','Di'],
-  },
-  en: {
-    locale: 'en-GB',
-    tagline: 'Find the perfect date',
-    heroTitle: 'Scheduling,<br/>made <em>simple.</em>',
-    heroSub: 'Create a poll in 30 seconds, share the link, and let everyone mark their availability.',
-    labelEventTitle: 'Event name',
-    placeholderEventTitle: 'e.g. Team meeting, Friday drinks…',
-    labelDates: 'Select proposed dates',
-    labelSelected: 'Selected dates',
-    noDatesTip: 'Click on days to add them',
-    btnCreate: 'Create poll →',
-    errNoTitle: 'Please enter a name for the event.',
-    errNoDates: 'Select at least 2 dates on the calendar.',
-    errCreate: 'Error creating poll. Check your connection.',
-    loadingCreate: 'Creating poll…',
-    footer: 'Dooodle — open source, no account, no ads.',
-    btnNewPoll: '+ New poll',
-    dateProposed: (n) => `${n} date${n>1?'s':''} proposed`,
-    participants: (n) => `${n} participant${n>1?'s':''}`,
-    shareIntro: '<strong>Share this link</strong> with all participants so they can mark their availability.',
-    btnCopy: 'Copy',
-    btnCopied: '✓ Copied!',
-    btnWhatsapp: 'WhatsApp',
-    waMessage: (title, url) => `Hey! Please mark your availability for "${title}" here: ${url}`,
-    tabVote: 'Vote',
-    tabParticipants: 'Participants',
-    tabResults: 'Results',
-    labelName: 'Your name',
-    placeholderName: 'e.g. Marie, Thomas…',
-    calTip: 'Click the highlighted dates when you are available:',
-    btnSubmit: 'Save my availability',
-    btnSubmitting: 'Saving…',
-    editHint: 'You can update your vote at any time by resubmitting with the same name.',
-    successVote: (name) => `✓ Availability saved for ${name}!`,
-    errNoName: 'Please enter your name.',
-    errSubmit: 'Error saving availability.',
-    noParticipants: 'No participants yet.',
-    datesAvail: (n) => `${n} date${n>1?'s':''} available`,
-    noVotes: 'No votes yet.<br/>Share the link to invite participants!',
-    voted: (n) => `${n} participant${n>1?'s':''} voted`,
-    nobody: 'Nobody available',
-    loadingPoll: 'Loading poll…',
-    errNotFound: 'Poll not found',
-    errNotFoundSub: 'This link is invalid or the poll has been deleted.',
-    dayHeaders: ['Mo','Tu','We','Th','Fr','Sa','Su'],
-  }
-};
-
-function getLang() {
-  return localStorage.getItem('dooodle-lang') || 'fr';
-}
-function setLang(l) {
-  localStorage.setItem('dooodle-lang', l);
-}
-function t() {
-  return I18N[getLang()];
-}
-
-</script>
+<script src="i18n.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
 <script>
-  firebase.initializeApp({
-    apiKey: "AIzaSyBFubNBtvGXJDG7TubBJ-REiaqaTSUFMX0",
-    authDomain: "dooodle-363fd.firebaseapp.com",
-    projectId: "dooodle-363fd",
-    storageBucket: "dooodle-363fd.firebasestorage.app",
-    messagingSenderId: "325060168942",
-    appId: "1:325060168942:web:5731f4ae9bdd975eb177ff"
-  });
-  const db = firebase.firestore();
-
   const urlParams = new URLSearchParams(window.location.search);
   const pollId = urlParams.get('id');
 
   let poll = null;
-  let selectedDates = new Set();
-  let currentTab = 'vote';
+  let selectedDates = new Map(); // key → 'yes' | 'maybe'
+  let vcalYear, vcalMonth;
 
+  /* --- Helpers --- */
   function formatDate(str) { return new Date(str+'T12:00:00').toLocaleDateString(t().locale,{weekday:'long',day:'numeric',month:'long',year:'numeric'}); }
-  function formatDateShort(str) { return new Date(str+'T12:00:00').toLocaleDateString('fr-BE',{weekday:'short',day:'numeric',month:'short'}); }
+  function formatDateShort(str) { return new Date(str+'T12:00:00').toLocaleDateString(t().locale,{weekday:'short',day:'numeric',month:'short'}); }
   function getInitials(name) { return name.trim().split(/\s+/).map(w=>w[0]).join('').toUpperCase().slice(0,2); }
   function cap(str) { return str.charAt(0).toUpperCase()+str.slice(1); }
   function escHtml(str) { return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
+  // Convert legacy vote format (Array of dates) to new format ({date: 'yes'})
+  function normalizeVote(vote) {
+    if (Array.isArray(vote)) {
+      const obj = {};
+      vote.forEach(d => { obj[d] = 'yes'; });
+      return obj;
+    }
+    return vote || {};
+  }
+
+  /* --- Load poll --- */
   async function loadPoll() {
     if(!pollId){showError();return;}
     try {
@@ -366,6 +275,7 @@ function t() {
     document.getElementById('error-screen').style.display='block';
   }
 
+  /* --- Render main poll content --- */
   function renderPoll() {
     document.title = `Dooodle — ${poll.title}`;
     document.getElementById('loading-screen').style.display='none';
@@ -387,7 +297,7 @@ function t() {
       <div class="share-section">
         <div class="share-intro">${t().shareIntro}</div>
         <div class="share-row">
-          <span class="share-url" id="share-url-text">${escHtml(shareUrl)}</span>
+          <span class="share-url">${escHtml(shareUrl)}</span>
           <button class="btn-copy" id="copy-btn">${t().btnCopy}</button>
           <a class="btn-whatsapp" id="whatsapp-btn" href="#" target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.528 5.845L.057 23.882l6.197-1.624A11.934 11.934 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.894a9.867 9.867 0 01-5.031-1.378l-.36-.214-3.733.979 1.001-3.656-.235-.374A9.861 9.861 0 012.106 12C2.106 6.535 6.535 2.106 12 2.106c5.466 0 9.894 4.429 9.894 9.894 0 5.466-4.428 9.894-9.894 9.894z"/></svg>
@@ -405,8 +315,12 @@ function t() {
           <label class="field-label" for="voter-name">${t().labelName}</label>
           <input type="text" id="voter-name" placeholder="${t().placeholderName}" maxlength="40" />
         </div>
-        <p style="font-size:0.85rem;color:var(--ink-muted);margin-bottom:0.75rem;">${t().calTip}</p>
-        <div class="vote-cal-card" id="vote-cal-card">
+        <p style="font-size:0.85rem;color:var(--ink-muted);margin-bottom:0.5rem;">${t().calTip}</p>
+        <div class="vote-legend">
+          <span class="legend-item"><span class="legend-swatch yes"></span>${t().legendYes}</span>
+          <span class="legend-item"><span class="legend-swatch maybe"></span>${t().legendMaybe}</span>
+        </div>
+        <div class="vote-cal-card">
           <div class="cal-nav">
             <button class="cal-nav-btn" id="vcal-prev">&#8249;</button>
             <span class="vote-cal-month" id="vcal-month-label"></span>
@@ -426,37 +340,30 @@ function t() {
     document.getElementById('copy-btn').addEventListener('click', copyLink);
     const waBtn = document.getElementById('whatsapp-btn');
     if (waBtn) {
-      const waText = encodeURIComponent(t().waMessage(poll.title, shareUrl));
-      waBtn.href = 'https://wa.me/?text=' + waText;
+      waBtn.href = 'https://wa.me/?text=' + encodeURIComponent(t().waMessage(poll.title, shareUrl));
     }
     document.getElementById('btn-submit').addEventListener('click', submitVote);
-    document.getElementById('tab-btn-vote').addEventListener('click', ()=>switchTab('vote'));
-    document.getElementById('tab-btn-participants').addEventListener('click', ()=>switchTab('participants'));
-    document.getElementById('tab-btn-results').addEventListener('click', ()=>switchTab('results'));
+    document.getElementById('tab-btn-vote').addEventListener('click', () => switchTab('vote'));
+    document.getElementById('tab-btn-participants').addEventListener('click', () => switchTab('participants'));
+    document.getElementById('tab-btn-results').addEventListener('click', () => switchTab('results'));
 
-    renderVoteCalendars();
+    initVoteCalendar();
   }
 
-  /* --- Vote calendar with navigation --- */
-  const VCAL_HEADERS = ['Lu','Ma','Me','Je','Ve','Sa','Di'];
-  let vcalYear, vcalMonth;
-
+  /* --- Vote calendar --- */
   function initVoteCalendar() {
-    // Start on the first month that has proposed dates
     const firstDate = poll.dates[0];
     vcalYear  = parseInt(firstDate.slice(0,4));
     vcalMonth = parseInt(firstDate.slice(5,7));
 
-    document.getElementById('vcal-prev').addEventListener('click', ()=>{
+    document.getElementById('vcal-prev').addEventListener('click', () => {
       vcalMonth--; if(vcalMonth<1){vcalMonth=12;vcalYear--;} renderVoteCalendar();
     });
-    document.getElementById('vcal-next').addEventListener('click', ()=>{
+    document.getElementById('vcal-next').addEventListener('click', () => {
       vcalMonth++; if(vcalMonth>12){vcalMonth=1;vcalYear++;} renderVoteCalendar();
     });
     renderVoteCalendar();
   }
-
-  function renderVoteCalendars() { initVoteCalendar(); }
 
   function renderVoteCalendar() {
     const grid = document.getElementById('vcal-grid');
@@ -466,14 +373,11 @@ function t() {
     if(!grid || !label) return;
 
     const proposedSet = new Set(poll.dates);
-
-    // Determine min/max months from proposed dates
     const monthKeys = poll.dates.map(d=>d.slice(0,7));
     const minKey = monthKeys[0];
     const maxKey = monthKeys[monthKeys.length-1];
     const curKey = `${vcalYear}-${String(vcalMonth).padStart(2,'0')}`;
 
-    // Disable nav if at boundaries
     prevBtn.disabled = curKey <= minKey;
     prevBtn.style.opacity = curKey <= minKey ? '0.3' : '1';
     nextBtn.disabled = curKey >= maxKey;
@@ -489,21 +393,30 @@ function t() {
     for(let i=0;i<startDow;i++) cells+='<div class="vcal-day empty"></div>';
     for(let day=1;day<=daysInMonth;day++){
       const key=`${vcalYear}-${String(vcalMonth).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-      const isP=proposedSet.has(key), isSel=selectedDates.has(key);
-      cells+=`<div class="vcal-day ${isP?'proposed'+(isSel?' selected':''):'inactive'}" ${isP?`data-key="${key}"`:''}>${day}</div>`;
+      const isP=proposedSet.has(key);
+      const state = selectedDates.get(key); // undefined | 'yes' | 'maybe'
+      const stateClass = isP ? ` proposed${state?(' '+state):''}` : ' inactive';
+      cells+=`<div class="vcal-day${stateClass}" ${isP?`data-key="${key}"`:''}>${day}</div>`;
     }
 
     grid.innerHTML = cells;
     grid.querySelectorAll('.vcal-day.proposed').forEach(el=>{
-      el.addEventListener('click',()=>{
-        const k=el.dataset.key;
-        if(selectedDates.has(k)) selectedDates.delete(k); else selectedDates.add(k);
-        el.classList.toggle('selected',selectedDates.has(k));
+      el.addEventListener('click', () => {
+        const k = el.dataset.key;
+        const current = selectedDates.get(k);
+        // Cycle: undefined → yes → maybe → undefined
+        if (current === undefined) selectedDates.set(k, 'yes');
+        else if (current === 'yes') selectedDates.set(k, 'maybe');
+        else selectedDates.delete(k);
+        // Re-render only this cell's classes
+        el.classList.remove('yes', 'maybe');
+        const newState = selectedDates.get(k);
+        if (newState) el.classList.add(newState);
       });
     });
   }
 
-  /* --- Submit --- */
+  /* --- Submit vote --- */
   async function submitVote() {
     const name=document.getElementById('voter-name').value.trim();
     const btn=document.getElementById('btn-submit');
@@ -511,7 +424,8 @@ function t() {
     btn.disabled=true; btn.textContent=t().btnSubmitting;
     try {
       const updatedVotes={...(poll.votes||{})};
-      updatedVotes[name]=Array.from(selectedDates);
+      // Store as object {date: 'yes'|'maybe'}
+      updatedVotes[name] = Object.fromEntries(selectedDates);
       await db.collection('polls').doc(pollId).update({votes:updatedVotes});
       poll.votes=updatedVotes;
       showVoteMsg(t().successVote(name));
@@ -536,11 +450,10 @@ function t() {
 
   /* --- Tabs --- */
   function switchTab(tab){
-    currentTab=tab;
-    ['vote','participants','results'].forEach(t=>{
-      document.getElementById(`tab-btn-${t}`)?.classList.toggle('active',t===tab);
-      const pane=document.getElementById(`tab-${t}`);
-      if(pane) pane.style.display=t===tab?'block':'none';
+    ['vote','participants','results'].forEach(name => {
+      document.getElementById(`tab-btn-${name}`)?.classList.toggle('active', name===tab);
+      const pane=document.getElementById(`tab-${name}`);
+      if(pane) pane.style.display = name===tab ? 'block' : 'none';
     });
     if(tab==='participants') renderParticipants();
     if(tab==='results') renderResults();
@@ -550,35 +463,56 @@ function t() {
     const el=document.getElementById('tab-participants'); if(!el) return;
     const votes=poll.votes||{}, names=Object.keys(votes);
     if(names.length===0){el.innerHTML=`<div class="no-votes-msg">${t().noParticipants}</div>`;return;}
-    el.innerHTML=names.map(name=>`
-      <div class="participant-item">
-        <div class="avatar">${getInitials(name)}</div>
+    el.innerHTML=names.map(name=>{
+      const v = normalizeVote(votes[name]);
+      const count = Object.keys(v).length;
+      return `<div class="participant-item">
+        <div class="avatar">${escHtml(getInitials(name))}</div>
         <div><div class="participant-name">${escHtml(name)}</div></div>
-        <div class="participant-dates-summary">${t().datesAvail(votes[name].length)}</div>
-      </div>`).join('');
+        <div class="participant-dates-summary">${t().datesAvail(count)}</div>
+      </div>`;
+    }).join('');
   }
 
   function renderResults(){
     const el=document.getElementById('tab-results'); if(!el) return;
     const votes=poll.votes||{}, totalVoters=Object.keys(votes).length;
     if(totalVoters===0){el.innerHTML=`<div class="no-votes-msg">${t().noVotes}</div>`;return;}
-    const scores=poll.dates.map(d=>({
-      date:d, available:Object.entries(votes).filter(([,dts])=>dts.includes(d)).map(([n])=>n)
-    })).sort((a,b)=>b.available.length-a.available.length);
-    const max=scores[0].available.length||1;
-    el.innerHTML=`<div class="results-header"><span style="font-size:0.85rem;color:var(--ink-muted);">${t().voted(totalVoters)}</span></div>`+
-      scores.map((item,i)=>{
-        const pct=Math.round(item.available.length/max*100), isTop=i===0;
-        return `<div class="result-item ${isTop?'top':''}">
+
+    // For each date: collect yes voters and maybe voters
+    const scores = poll.dates.map(d => {
+      const yes = [], maybe = [];
+      Object.entries(votes).forEach(([name, vote]) => {
+        const v = normalizeVote(vote);
+        if (v[d] === 'yes') yes.push(name);
+        else if (v[d] === 'maybe') maybe.push(name);
+      });
+      // Weighted score: yes=1, maybe=0.5
+      return { date: d, yes, maybe, score: yes.length + maybe.length * 0.5 };
+    }).sort((a, b) => b.score - a.score || b.yes.length - a.yes.length);
+
+    const max = scores[0].score || 1;
+
+    el.innerHTML = `<div class="results-header"><span style="font-size:0.85rem;color:var(--ink-muted);">${t().voted(totalVoters)}</span></div>` +
+      scores.map((item, i) => {
+        const yesPct = Math.round(item.yes.length / max * 100);
+        const maybePct = Math.round(item.maybe.length * 0.5 / max * 100);
+        const isTop = i === 0;
+        const totalCount = item.yes.length + item.maybe.length;
+        return `<div class="result-item ${isTop ? 'top' : ''}">
           <div class="result-top-row">
-            <span class="rank-num ${isTop?'gold':''}">${i+1}.</span>
+            <span class="rank-num ${isTop ? 'gold' : ''}">${i + 1}.</span>
             <span class="result-date-label">${cap(formatDateShort(item.date))}</span>
-            <span class="result-score">${item.available.length}/${totalVoters}</span>
+            <span class="result-score">${item.yes.length}${item.maybe.length > 0 ? `+${item.maybe.length}` : ''}/${totalVoters}</span>
           </div>
-          <div class="result-bar-wrap"><div class="result-bar" style="width:${pct}%"></div></div>
+          <div class="result-bar-stack">
+            <div class="result-bar-yes" style="width:${yesPct}%"></div>
+            <div class="result-bar-maybe" style="width:${maybePct}%"></div>
+          </div>
           <div class="result-voters">
-            ${item.available.map(n=>`<span class="voter-pill">${escHtml(n)}</span>`).join('')}
-            ${item.available.length===0?`<span style="font-size:0.82rem;color:var(--ink-muted)">${t().nobody}</span>`:""}
+            ${item.yes.map(n => `<span class="voter-pill">${escHtml(n)}</span>`).join('')}
+            ${item.maybe.map(n => `<span class="voter-pill maybe">${escHtml(n)}</span>`).join('')}
+            ${totalCount === 0 ? `<span style="font-size:0.82rem;color:var(--ink-muted)">${t().nobodyAvail}</span>` : ''}
           </div>
         </div>`;
       }).join('');
@@ -592,30 +526,26 @@ function t() {
     });
   }
 
+  /* --- Language toggle --- */
   function applyStaticTranslations() {
     const lang = getLang();
     document.documentElement.lang = lang;
     document.getElementById('lang-fr').classList.toggle('active', lang==='fr');
     document.getElementById('lang-en').classList.toggle('active', lang==='en');
-    const btnNew = document.getElementById('btn-new-poll');
-    if(btnNew) btnNew.textContent = t().btnNewPoll;
-    const loadTxt = document.getElementById('loading-poll-text');
-    if(loadTxt) loadTxt.textContent = t().loadingPoll;
-    const errTitle = document.getElementById('err-title');
-    if(errTitle) errTitle.textContent = t().errNotFound;
-    const errSub = document.getElementById('err-sub');
-    if(errSub) errSub.textContent = t().errNotFoundSub;
+    document.getElementById('btn-new-poll').textContent = t().btnNewPoll;
+    document.getElementById('loading-poll-text').textContent = t().loadingPoll;
+    document.getElementById('err-title').textContent = t().errNotFound;
+    document.getElementById('err-sub').textContent = t().errNotFoundSub;
   }
 
-  window.switchLang = function(lang) {
+  document.getElementById('lang-fr').addEventListener('click', () => switchLanguage('fr'));
+  document.getElementById('lang-en').addEventListener('click', () => switchLanguage('en'));
+
+  function switchLanguage(lang) {
     setLang(lang);
     applyStaticTranslations();
-    // Re-render poll content if loaded
-    if(poll) { renderPoll(); renderVoteCalendar(); }
-  };
-
-  // Also update calendar day headers locale when rendering
-  const _origRenderVoteCalendar = renderVoteCalendar;
+    if(poll) renderPoll();
+  }
 
   applyStaticTranslations();
   loadPoll();
