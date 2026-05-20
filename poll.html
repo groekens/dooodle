@@ -262,15 +262,32 @@
     return vote || {};
   }
 
-  /* --- Load poll --- */
-  async function loadPoll() {
+  /* --- Load poll with live updates --- */
+  function loadPoll() {
     if(!pollId){showError();return;}
-    try {
-      const snap = await db.collection('polls').doc(pollId).get();
+    db.collection('polls').doc(pollId).onSnapshot(snap => {
       if(!snap.exists){showError();return;}
+      const firstLoad = (poll === null);
       poll = snap.data();
-      renderPoll();
-    } catch(e) { console.error(e); showError(); }
+      if (firstLoad) {
+        renderPoll();
+      } else {
+        // Live update: refresh counts + the currently visible data tab,
+        // WITHOUT touching the vote calendar (preserves the user's in-progress selection).
+        refreshLiveCounts();
+        const activeTabId = document.querySelector('.tab.active')?.id;
+        if (activeTabId === 'tab-btn-participants') renderParticipants();
+        if (activeTabId === 'tab-btn-results') renderResults();
+      }
+    }, err => { console.error(err); showError(); });
+  }
+
+  function refreshLiveCounts() {
+    const voters = Object.keys(poll.votes||{});
+    const pill = document.getElementById('voters-pill');
+    const cnt = document.getElementById('participants-count');
+    if(pill) pill.textContent = `👤 ${t().participants(voters.length)}`;
+    if(cnt) cnt.textContent = `(${voters.length})`;
   }
 
   function showError() {
@@ -429,20 +446,21 @@
     if(!name){showVoteMsg(t().errNoName,true);return;}
     btn.disabled=true; btn.textContent=t().btnSubmitting;
     try {
-      const updatedVotes={...(poll.votes||{})};
-      // Store as object {date: 'yes'|'maybe'}
-      updatedVotes[name] = Object.fromEntries(selectedDates);
-      await db.collection('polls').doc(pollId).update({votes:updatedVotes});
-      poll.votes=updatedVotes;
+      // Atomic targeted write: only updates this voter's field, never overwrites
+      // the whole votes map. This prevents clobbering concurrent votes from others.
+      const voteData = Object.fromEntries(selectedDates);
+      await db.collection('polls').doc(pollId).update(
+        new firebase.firestore.FieldPath('votes', name),
+        voteData
+      );
+      // Local optimistic update (the snapshot listener will also confirm it)
+      if (!poll.votes) poll.votes = {};
+      poll.votes[name] = voteData;
       showVoteMsg(t().successVote(name));
       document.getElementById('voter-name').value='';
       selectedDates.clear();
       renderVoteCalendar();
-      const v=Object.keys(poll.votes);
-      const pill=document.getElementById('voters-pill');
-      const cnt=document.getElementById('participants-count');
-      if(pill) pill.textContent=`👤 ${t().participants(v.length)}`;
-      if(cnt) cnt.textContent=`(${v.length})`;
+      refreshLiveCounts();
     } catch(e){ console.error(e); showVoteMsg(t().errSubmit,true); }
     btn.disabled=false; btn.textContent=t().btnSubmit;
     setTimeout(()=>showVoteMsg(''),4000);
