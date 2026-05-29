@@ -108,7 +108,10 @@
   .spinner { width: 34px; height: 34px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
   .loading-text { font-family: var(--font); font-size: 0.9rem; color: var(--ink-soft); }
-  footer { margin-top: auto; padding: 1.25rem; text-align: center; font-size: 0.73rem; color: var(--ink-muted); border-top: 1px solid var(--border); }
+  footer { margin-top: auto; padding: 1rem 1.25rem; text-align: center; font-size: 0.73rem; color: var(--ink-muted); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 10px 20px; }
+  .powered-by { display: inline-flex; align-items: center; gap: 7px; text-decoration: none; color: var(--ink-muted); transition: opacity 0.15s; }
+  .powered-by:hover { opacity: 0.7; }
+  .powered-by img { height: 17px; width: auto; display: block; }
 </style>
 </head>
 <body>
@@ -159,7 +162,12 @@
   <div class="loading-text" id="loading-text"></div>
 </div>
 
-<footer id="footer"></footer>
+<footer>
+  <span id="footer-tagline"></span>
+  <a class="powered-by" href="https://nuxo.be" target="_blank" rel="noopener">
+    Powered by <img src="images/nuxo-logo.svg" alt="Nuxo">
+  </a>
+</footer>
 
 <script src="i18n.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -194,7 +202,7 @@
     document.getElementById('label-selected').textContent = t().labelSelected;
     document.getElementById('btn-create').textContent = t().btnCreate;
     document.getElementById('loading-text').textContent = t().loadingCreate;
-    document.getElementById('footer').textContent = t().footer;
+    document.getElementById('footer-tagline').textContent = t().footer;
     renderCalendar();
     renderChips();
   }
