@@ -348,6 +348,7 @@
           <label class="field-label" for="voter-name">${t().labelName}</label>
           <input type="text" id="voter-name" placeholder="${t().placeholderName}" maxlength="40" />
         </div>
+        <div class="edit-hint" id="edit-hint">${t().editHint}</div>
         <p style="font-size:0.85rem;color:var(--ink-muted);margin-bottom:0.5rem;">${t().calTip}</p>
         <div class="vote-legend">
           <span class="legend-item"><span class="legend-swatch yes"></span>${t().legendYes}</span>
@@ -362,7 +363,6 @@
           <div class="vote-cal-grid" id="vcal-grid"></div>
         </div>
         <button class="btn-submit" id="btn-submit">${t().btnSubmit}</button>
-        <div class="edit-hint" id="edit-hint">${t().editHint}</div>
         <div class="vote-msg" id="vote-msg"></div>
       </div>
       <div id="tab-participants" style="display:none;"></div>
