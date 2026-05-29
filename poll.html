@@ -244,6 +244,7 @@
   let poll = null;
   let selectedDates = new Map(); // key → 'yes' | 'maybe'
   let vcalYear, vcalMonth;
+  let editingExistingVoter = null;
 
   /* --- Helpers --- */
   function formatDate(str) { return new Date(str+'T12:00:00').toLocaleDateString(t().locale,{weekday:'long',day:'numeric',month:'long',year:'numeric'}); }
@@ -349,7 +350,7 @@
           <div class="vote-cal-grid" id="vcal-grid"></div>
         </div>
         <button class="btn-submit" id="btn-submit">${t().btnSubmit}</button>
-        <div class="edit-hint">${t().editHint}</div>
+        <div class="edit-hint" id="edit-hint">${t().editHint}</div>
         <div class="vote-msg" id="vote-msg"></div>
       </div>
       <div id="tab-participants" style="display:none;"></div>
@@ -357,6 +358,7 @@
     `;
 
     // Wire up events
+    document.getElementById('voter-name').addEventListener('input', onVoterNameInput);
     document.getElementById('copy-btn').addEventListener('click', copyLink);
     const waBtn = document.getElementById('whatsapp-btn');
     if (waBtn) {
@@ -368,6 +370,30 @@
     document.getElementById('tab-btn-results').addEventListener('click', () => switchTab('results'));
 
     initVoteCalendar();
+  }
+
+  /* --- Auto-load existing voter's dates when name matches --- */
+  function onVoterNameInput() {
+    const name = document.getElementById('voter-name').value.trim();
+    const hint = document.getElementById('edit-hint');
+    if (poll.votes && poll.votes[name]) {
+      if (editingExistingVoter !== name) {
+        editingExistingVoter = name;
+        const normalized = normalizeVote(poll.votes[name]);
+        selectedDates.clear();
+        Object.entries(normalized).forEach(([date, state]) => selectedDates.set(date, state));
+        const firstSelected = [...selectedDates.keys()].sort()[0];
+        if (firstSelected) {
+          vcalYear = parseInt(firstSelected.slice(0,4));
+          vcalMonth = parseInt(firstSelected.slice(5,7));
+        }
+        renderVoteCalendar();
+        if (hint) hint.textContent = t().editLoadedHint(name);
+      }
+    } else if (editingExistingVoter) {
+      editingExistingVoter = null;
+      if (hint) hint.textContent = t().editHint;
+    }
   }
 
   /* --- Vote calendar --- */
@@ -459,6 +485,9 @@
       showVoteMsg(t().successVote(name));
       document.getElementById('voter-name').value='';
       selectedDates.clear();
+      editingExistingVoter = null;
+      const hint = document.getElementById('edit-hint');
+      if (hint) hint.textContent = t().editHint;
       renderVoteCalendar();
       refreshLiveCounts();
     } catch(e){ console.error(e); showVoteMsg(t().errSubmit,true); }
