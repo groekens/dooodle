@@ -101,6 +101,8 @@
   .btn-create:hover { background: #e85a24; box-shadow: 0 6px 24px rgba(255,107,53,0.35); }
   .btn-create:active { transform: scale(0.98); }
   .btn-create:disabled { background: var(--ink-muted); box-shadow: none; cursor: not-allowed; }
+  .card-divider { height: 1px; background: var(--border); margin: 1rem 0; }
+  .creator-hint { font-size: 0.78rem; color: var(--ink-muted); margin-top: 7px; }
   .error-msg { font-size: 0.85rem; color: #c0392b; margin-top: 8px; min-height: 20px; }
 
   .loading-overlay { display: none; position: fixed; inset: 0; background: rgba(250,250,247,0.88); z-index: 100; align-items: center; justify-content: center; flex-direction: column; gap: 14px; }
@@ -134,6 +136,10 @@
   <div class="card">
     <label class="field-label" id="label-event-title" for="event-title"></label>
     <input type="text" id="event-title" maxlength="80" />
+    <div class="card-divider"></div>
+    <label class="field-label" id="label-creator-name" for="creator-name"></label>
+    <input type="text" id="creator-name" maxlength="40" />
+    <p class="creator-hint" id="creator-name-hint"></p>
   </div>
 
   <div class="card">
@@ -198,6 +204,9 @@
     document.getElementById('hero-sub').textContent = t().heroSub;
     document.getElementById('label-event-title').textContent = t().labelEventTitle;
     document.getElementById('event-title').placeholder = t().placeholderEventTitle;
+    document.getElementById('label-creator-name').textContent = t().labelCreatorName;
+    document.getElementById('creator-name').placeholder = t().placeholderCreatorName;
+    document.getElementById('creator-name-hint').textContent = t().creatorNameHint;
     document.getElementById('label-dates').textContent = t().labelDates;
     document.getElementById('label-selected').textContent = t().labelSelected;
     document.getElementById('btn-create').textContent = t().btnCreate;
@@ -257,10 +266,15 @@
     document.getElementById('loading').classList.add('visible');
     document.getElementById('btn-create').disabled=true;
     try {
+      const creatorName = document.getElementById('creator-name').value.trim();
+      const sortedDates = Array.from(selectedDates).sort();
+      const initialVotes = creatorName
+        ? { [creatorName]: Object.fromEntries(sortedDates.map(d => [d, 'yes'])) }
+        : {};
       const baseSlug=toSlug(title);
       const existing=await db.collection('polls').where('slug','==',baseSlug).limit(1).get();
       const slug=existing.empty?baseSlug:baseSlug+'-'+Math.random().toString(36).slice(2,6);
-      await db.collection('polls').doc(slug).set({slug,title,dates:Array.from(selectedDates).sort(),votes:{},createdAt:new Date().toISOString()});
+      await db.collection('polls').doc(slug).set({slug,title,dates:sortedDates,votes:initialVotes,createdAt:new Date().toISOString()});
       window.location.href='poll.html?id='+slug;
     } catch(e) {
       console.error(e);
