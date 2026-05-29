@@ -204,10 +204,9 @@
   .powered-by img { height: 17px; width: auto; display: block; }
 
   .edit-hint {
-    font-size: 0.8rem; color: var(--ink-muted); text-align: center;
-    margin-top: 8px; padding: 6px 12px;
-    background: var(--paper); border-radius: var(--radius);
-    border: 1px solid var(--border);
+    font-size: 0.78rem; color: var(--ink-muted);
+    margin-top: 8px; padding-top: 8px;
+    border-top: 1px solid var(--border);
   }
 </style>
 </head>
@@ -347,8 +346,8 @@
         <div class="vote-name-row">
           <label class="field-label" for="voter-name">${t().labelName}</label>
           <input type="text" id="voter-name" placeholder="${t().placeholderName}" maxlength="40" />
+          <div class="edit-hint" id="edit-hint">${t().editHint}</div>
         </div>
-        <div class="edit-hint" id="edit-hint">${t().editHint}</div>
         <p style="font-size:0.85rem;color:var(--ink-muted);margin-bottom:0.5rem;">${t().calTip}</p>
         <div class="vote-legend">
           <span class="legend-item"><span class="legend-swatch yes"></span>${t().legendYes}</span>
