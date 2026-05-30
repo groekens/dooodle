@@ -117,12 +117,16 @@
 
   /* VOTE CALENDAR */
   .cal-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .cal-nav-side { display: flex; flex-direction: column; align-items: center; gap: 3px; }
+  .cal-nav-label { font-size: 0.68rem; font-weight: 600; color: var(--accent); min-height: 11px; letter-spacing: 0.02em; }
   .cal-nav-btn {
     background: none; border: 1px solid var(--border); border-radius: 8px;
     width: 32px; height: 32px; cursor: pointer; font-size: 1.2rem; color: var(--ink-soft);
-    display: flex; align-items: center; justify-content: center; transition: background 0.12s, color 0.12s;
+    display: flex; align-items: center; justify-content: center; transition: background 0.12s, border-color 0.12s, color 0.12s;
   }
-  .cal-nav-btn:hover:not(:disabled) { background: var(--paper); color: var(--ink); }
+  .cal-nav-btn:disabled { opacity: 0.3; }
+  .cal-nav-btn.has-dates { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+  .cal-nav-btn.has-dates:hover { background: var(--accent); color: white; }
   .vote-cal-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem 1.5rem; margin-bottom: 1.25rem; }
   .vote-cal-month { font-family: var(--font); font-size: 1rem; font-weight: 700; color: var(--ink); text-transform: capitalize; }
   .vote-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
@@ -355,9 +359,15 @@
         </div>
         <div class="vote-cal-card">
           <div class="cal-nav">
-            <button class="cal-nav-btn" id="vcal-prev">&#8249;</button>
+            <div class="cal-nav-side">
+              <button class="cal-nav-btn" id="vcal-prev">&#8249;</button>
+              <span class="cal-nav-label" id="vcal-prev-label"></span>
+            </div>
             <span class="vote-cal-month" id="vcal-month-label"></span>
-            <button class="cal-nav-btn" id="vcal-next">&#8250;</button>
+            <div class="cal-nav-side">
+              <button class="cal-nav-btn" id="vcal-next">&#8250;</button>
+              <span class="cal-nav-label" id="vcal-next-label"></span>
+            </div>
           </div>
           <div class="vote-cal-grid" id="vcal-grid"></div>
         </div>
@@ -435,10 +445,26 @@
     const maxKey = monthKeys[monthKeys.length-1];
     const curKey = `${vcalYear}-${String(vcalMonth).padStart(2,'0')}`;
 
-    prevBtn.disabled = curKey <= minKey;
-    prevBtn.style.opacity = curKey <= minKey ? '0.3' : '1';
-    nextBtn.disabled = curKey >= maxKey;
-    nextBtn.style.opacity = curKey >= maxKey ? '0.3' : '1';
+    const hasPrev = curKey > minKey;
+    const hasNext = curKey < maxKey;
+
+    prevBtn.disabled = !hasPrev;
+    prevBtn.classList.toggle('has-dates', hasPrev);
+    nextBtn.disabled = !hasNext;
+    nextBtn.classList.toggle('has-dates', hasNext);
+
+    const prevLabel = document.getElementById('vcal-prev-label');
+    const nextLabel = document.getElementById('vcal-next-label');
+    if (prevLabel) {
+      const pm = vcalMonth === 1 ? 12 : vcalMonth - 1;
+      const py = vcalMonth === 1 ? vcalYear - 1 : vcalYear;
+      prevLabel.textContent = hasPrev ? cap(new Date(py, pm-1, 1).toLocaleDateString(t().locale, {month:'short'})) : '';
+    }
+    if (nextLabel) {
+      const nm = vcalMonth === 12 ? 1 : vcalMonth + 1;
+      const ny = vcalMonth === 12 ? vcalYear + 1 : vcalYear;
+      nextLabel.textContent = hasNext ? cap(new Date(ny, nm-1, 1).toLocaleDateString(t().locale, {month:'short'})) : '';
+    }
 
     label.textContent = cap(new Date(vcalYear, vcalMonth-1, 1).toLocaleDateString(t().locale,{month:'long',year:'numeric'}));
 
