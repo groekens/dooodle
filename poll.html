@@ -209,9 +209,10 @@
   .state-screen h2 { font-family: var(--font); font-size: 1.4rem; margin-bottom: 8px; }
 
   .site-footer { padding: 1rem 1.25rem; text-align: center; font-size: 0.73rem; color: var(--ink-muted); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 10px 20px; margin-top: 2rem; }
-  .powered-by { display: inline-flex; align-items: center; gap: 7px; text-decoration: none; color: var(--ink-muted); transition: opacity 0.15s; }
+  .powered-by-wrap { text-align: center; margin-top: 14px; }
+  .powered-by { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; color: var(--ink-muted); transition: opacity 0.15s; font-size: 0.72rem; font-weight: 500; }
   .powered-by:hover { opacity: 0.7; }
-  .powered-by img { height: 17px; width: auto; display: block; }
+  .powered-by img { height: 22px; width: auto; display: block; }
 
   .edit-hint {
     font-size: 0.78rem; color: var(--ink-muted);
@@ -249,9 +250,6 @@
 
 <footer class="site-footer">
   <span id="footer-tagline"></span>
-  <a class="powered-by" href="https://nuxo.be" target="_blank" rel="noopener">
-    Powered by <img src="images/nuxo-logo.svg" alt="Nuxo">
-  </a>
 </footer>
 
 <script src="i18n.js"></script>
@@ -379,6 +377,11 @@
         </div>
         <button class="btn-submit" id="btn-submit">${t().btnSubmit}</button>
         <div class="vote-msg" id="vote-msg"></div>
+        <div class="powered-by-wrap">
+          <a class="powered-by" href="https://nuxo.be" target="_blank" rel="noopener">
+            Powered by <img src="images/nuxo-logo.svg" alt="Nuxo">
+          </a>
+        </div>
       </div>
       <div id="tab-participants" style="display:none;"></div>
       <div id="tab-results" style="display:none;"></div>
