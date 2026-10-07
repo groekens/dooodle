@@ -2,7 +2,7 @@
   "name": "Dooodle",
   "short_name": "Dooodle",
   "description": "Trouvez la date parfaite",
-  "start_url": "/dooodle/index.html",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#fafaf7",
   "theme_color": "#ffffff",

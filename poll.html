@@ -272,14 +272,19 @@
   function cap(str) { return str.charAt(0).toUpperCase()+str.slice(1); }
   function escHtml(str) { return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
-  // Convert legacy vote format (Array of dates) to new format ({date: 'yes'})
+  // Convert legacy vote format (Array of dates) to new format ({date: 'yes'}).
+  // Only 'yes' / 'maybe' are kept: the state ends up in a class attribute.
   function normalizeVote(vote) {
     if (Array.isArray(vote)) {
       const obj = {};
       vote.forEach(d => { obj[d] = 'yes'; });
       return obj;
     }
-    return vote || {};
+    const obj = {};
+    Object.entries(vote || {}).forEach(([d, state]) => {
+      if (state === 'yes' || state === 'maybe') obj[d] = state;
+    });
+    return obj;
   }
 
   /* --- Load poll with live updates --- */
@@ -317,7 +322,7 @@
 
   /* --- Render main poll content --- */
   function renderPoll() {
-    document.title = `Dooodle — ${poll.title}`;
+    document.title = `${poll.title} | Dooodle`;
     document.getElementById('loading-screen').style.display='none';
     const content = document.getElementById('poll-content');
     content.style.display='block';
@@ -421,7 +426,10 @@
         if (hint) hint.textContent = t().editLoadedHint(name);
       }
     } else if (editingExistingVoter) {
+      // The loaded dates belong to someone else: don't carry them over to this new name
       editingExistingVoter = null;
+      selectedDates.clear();
+      renderVoteCalendar();
       if (hint) hint.textContent = t().editHint;
     }
   }
@@ -520,10 +528,11 @@
     try {
       // Atomic targeted write: only updates this voter's field, never overwrites
       // the whole votes map. This prevents clobbering concurrent votes from others.
-      const voteData = Object.fromEntries(selectedDates);
+      // lastVoter tells the security rules which vote to validate
+      const voteData = Object.fromEntries([...selectedDates].filter(([d]) => poll.dates.includes(d)));
       await db.collection('polls').doc(pollId).update(
-        new firebase.firestore.FieldPath('votes', name),
-        voteData
+        new firebase.firestore.FieldPath('votes', name), voteData,
+        'lastVoter', name
       );
       // Local optimistic update (the snapshot listener will also confirm it)
       if (!poll.votes) poll.votes = {};

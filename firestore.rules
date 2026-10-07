@@ -1,0 +1,61 @@
+rules_version = '2';
+
+// Dooodle : pas de compte, donc la sécurité repose sur trois principes.
+// 1. On peut lire un sondage dont on connaît l'ID, mais jamais lister la collection.
+// 2. Un sondage ne se modifie qu'en ajoutant ou corrigeant UN vote à la fois.
+// 3. Rien ne se supprime.
+//
+// Le client écrit le prénom du votant dans `lastVoter` en même temps que son vote :
+// les règles ne savent pas itérer une map, ce champ leur indique quelle clé vérifier.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isValidName(n) {
+      return n is string && n.size() >= 1 && n.size() <= 40;
+    }
+
+    // Un vote = { 'AAAA-MM-JJ': 'yes' | 'maybe' }, uniquement sur des dates du sondage.
+    function isValidVote(v, dates) {
+      return v is map
+        && v.keys().hasOnly(dates)
+        && v.values().hasOnly(['yes', 'maybe']);
+    }
+
+    match /polls/{pollId} {
+      allow get: if true;
+      allow list: if false;
+      allow delete: if false;
+
+      allow create: if
+        request.resource.data.keys().hasOnly(['slug', 'title', 'dates', 'votes', 'createdAt', 'lastVoter'])
+        && request.resource.data.slug == pollId
+        && pollId.size() <= 64
+        && request.resource.data.title is string
+        && request.resource.data.title.size() >= 1
+        && request.resource.data.title.size() <= 80
+        && request.resource.data.dates is list
+        && request.resource.data.dates.size() >= 2
+        && request.resource.data.dates.size() <= 60
+        && request.resource.data.createdAt is string
+        && request.resource.data.votes is map
+        && (
+          request.resource.data.votes.size() == 0
+          || (
+            isValidName(request.resource.data.lastVoter)
+            && request.resource.data.votes.keys().hasOnly([request.resource.data.lastVoter])
+            && isValidVote(request.resource.data.votes[request.resource.data.lastVoter], request.resource.data.dates)
+          )
+        );
+
+      allow update: if
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['votes', 'lastVoter'])
+        && isValidName(request.resource.data.lastVoter)
+        && request.resource.data.votes is map
+        && request.resource.data.votes.size() <= 200
+        && request.resource.data.votes.diff(resource.data.votes).affectedKeys()
+             .hasOnly([request.resource.data.lastVoter])
+        && request.resource.data.lastVoter in request.resource.data.votes
+        && isValidVote(request.resource.data.votes[request.resource.data.lastVoter], resource.data.dates);
+    }
+  }
+}
