@@ -264,6 +264,7 @@
   let selectedDates = new Map(); // key → 'yes' | 'maybe'
   let vcalYear, vcalMonth;
   let editingExistingVoter = null;
+  let voteMsgTimer = null;
 
   /* --- Helpers --- */
   function formatDate(str) { return new Date(str+'T12:00:00').toLocaleDateString(t().locale,{weekday:'long',day:'numeric',month:'long',year:'numeric'}); }
@@ -408,15 +409,24 @@
   }
 
   /* --- Auto-load existing voter's dates when name matches --- */
+  // "marie", "Marie " and "MARIE" are the same voter
+  function cleanName(str) { return str.trim().replace(/\s+/g, ' '); }
+  function findVoterKey(name) {
+    const target = cleanName(name).toLocaleLowerCase();
+    return Object.keys(poll.votes || {}).find(k => cleanName(k).toLocaleLowerCase() === target) || null;
+  }
+
   function onVoterNameInput() {
-    const name = document.getElementById('voter-name').value.trim();
+    const name = findVoterKey(document.getElementById('voter-name').value);
     const hint = document.getElementById('edit-hint');
-    if (poll.votes && poll.votes[name]) {
+    if (name) {
       if (editingExistingVoter !== name) {
         editingExistingVoter = name;
         const normalized = normalizeVote(poll.votes[name]);
         selectedDates.clear();
-        Object.entries(normalized).forEach(([date, state]) => selectedDates.set(date, state));
+        Object.entries(normalized)
+          .filter(([date]) => poll.dates.includes(date))
+          .forEach(([date, state]) => selectedDates.set(date, state));
         const firstSelected = [...selectedDates.keys()].sort()[0];
         if (firstSelected) {
           vcalYear = parseInt(firstSelected.slice(0,4));
@@ -521,7 +531,9 @@
 
   /* --- Submit vote --- */
   async function submitVote() {
-    const name=document.getElementById('voter-name').value.trim();
+    // Reuse the existing key if this voter already voted under another casing
+    const typed=cleanName(document.getElementById('voter-name').value);
+    const name=findVoterKey(typed) || typed;
     const btn=document.getElementById('btn-submit');
     if(!name){showVoteMsg(t().errNoName,true);return;}
     btn.disabled=true; btn.textContent=t().btnSubmitting;
@@ -547,7 +559,9 @@
       refreshLiveCounts();
     } catch(e){ console.error(e); showVoteMsg(t().errSubmit,true); }
     btn.disabled=false; btn.textContent=t().btnSubmit;
-    setTimeout(()=>showVoteMsg(''),4000);
+    // Restart the timer, otherwise a previous vote's timer erases this message
+    clearTimeout(voteMsgTimer);
+    voteMsgTimer = setTimeout(()=>showVoteMsg(''),4000);
   }
 
   function showVoteMsg(txt,isError=false){
@@ -656,7 +670,17 @@
   function switchLanguage(lang) {
     setLang(lang);
     applyStaticTranslations();
-    if(poll) renderPoll();
+    if(!poll) return;
+    // renderPoll rebuilds the whole page: keep what the user was doing
+    const typedName = document.getElementById('voter-name')?.value || '';
+    const activeTab = document.querySelector('.tab.active')?.id?.replace('tab-btn-','') || 'vote';
+    const [year, month] = [vcalYear, vcalMonth];
+    renderPoll();
+    document.getElementById('voter-name').value = typedName;
+    if (editingExistingVoter) document.getElementById('edit-hint').textContent = t().editLoadedHint(editingExistingVoter);
+    [vcalYear, vcalMonth] = [year, month];
+    renderVoteCalendar();
+    switchTab(activeTab);
   }
 
   applyStaticTranslations();
