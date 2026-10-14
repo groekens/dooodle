@@ -1,9 +1,12 @@
 rules_version = '2';
 
-// Dooodle : pas de compte, donc la sécurité repose sur trois principes.
-// 1. On peut lire un sondage dont on connaît l'ID, mais jamais lister la collection.
-// 2. Un sondage ne se modifie qu'en ajoutant ou corrigeant UN vote à la fois.
-// 3. Rien ne se supprime.
+// Dooodle : les participants n'ont pas de compte, la sécurité repose sur quatre principes.
+// 1. On peut lire un sondage dont on connaît l'ID. Seul son organisateur peut le retrouver
+//    par une requête (page "Mes sondages").
+// 2. N'importe qui peut ajouter ou corriger UN vote à la fois, tant que le sondage est ouvert.
+// 3. L'organisateur (ownerUid, posé à la création) peut annoncer une date, rouvrir,
+//    céder ou supprimer son sondage. Un sondage sans ownerUid n'a pas d'organisateur.
+// 4. Personne d'autre ne peut modifier le titre, les dates ou supprimer quoi que ce soit.
 //
 // Le client écrit le prénom du votant dans `lastVoter` en même temps que son vote :
 // les règles ne savent pas itérer une map, ce champ leur indique quelle clé vérifier.
@@ -21,13 +24,18 @@ service cloud.firestore {
         && v.values().hasOnly(['yes', 'maybe']);
     }
 
+    function isOwner(poll) {
+      return request.auth != null && poll.get('ownerUid', null) == request.auth.uid;
+    }
+
     match /polls/{pollId} {
       allow get: if true;
-      allow list: if false;
-      allow delete: if false;
+      // Une requête n'est acceptée que si elle filtre sur ownerUid == l'utilisateur connecté
+      allow list: if isOwner(resource.data);
+      allow delete: if isOwner(resource.data);
 
       allow create: if
-        request.resource.data.keys().hasOnly(['slug', 'title', 'dates', 'votes', 'createdAt', 'lastVoter'])
+        request.resource.data.keys().hasOnly(['slug', 'title', 'dates', 'votes', 'createdAt', 'lastVoter', 'ownerUid'])
         && request.resource.data.slug == pollId
         && pollId.size() <= 64
         && request.resource.data.title is string
@@ -37,6 +45,7 @@ service cloud.firestore {
         && request.resource.data.dates.size() >= 2
         && request.resource.data.dates.size() <= 60
         && request.resource.data.createdAt is string
+        && (!('ownerUid' in request.resource.data) || isOwner(request.resource.data))
         && request.resource.data.votes is map
         && (
           request.resource.data.votes.size() == 0
@@ -47,8 +56,10 @@ service cloud.firestore {
           )
         );
 
+      // Vote d'un participant : sondage ouvert, un seul vote touché
       allow update: if
-        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['votes', 'lastVoter'])
+        resource.data.get('closed', false) == false
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['votes', 'lastVoter'])
         && isValidName(request.resource.data.lastVoter)
         && request.resource.data.votes is map
         && request.resource.data.votes.size() <= 200
@@ -56,6 +67,24 @@ service cloud.firestore {
              .hasOnly([request.resource.data.lastVoter])
         && request.resource.data.lastVoter in request.resource.data.votes
         && isValidVote(request.resource.data.votes[request.resource.data.lastVoter], resource.data.dates);
+
+      // Organisateur : annoncer une date (closed + finalDate) ou rouvrir (closed = false)
+      allow update: if
+        isOwner(resource.data)
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['closed', 'finalDate'])
+        && request.resource.data.closed is bool
+        && (
+          (request.resource.data.closed == true && request.resource.data.finalDate in resource.data.dates)
+          || (request.resource.data.closed == false && !('finalDate' in request.resource.data))
+        );
+
+      // Organisateur : céder le sondage à un autre compte (rattachement anonyme vers Google)
+      allow update: if
+        isOwner(resource.data)
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['ownerUid'])
+        && request.resource.data.ownerUid is string
+        && request.resource.data.ownerUid.size() >= 1
+        && request.resource.data.ownerUid.size() <= 128;
     }
   }
 }

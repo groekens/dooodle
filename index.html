@@ -11,6 +11,15 @@
 <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png" />
 <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
 <title>Dooodle</title>
+<meta name="description" content="Créez un sondage de dates en 30 secondes et partagez le lien. Sans compte, sans pub." />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Dooodle" />
+<meta property="og:title" content="Dooodle, trouvez la date parfaite" />
+<meta property="og:description" content="Indiquez vos disponibilités en quelques secondes. Sans compte, sans pub." />
+<meta property="og:image" content="https://doodle.nuxo.be/images/og.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -41,6 +50,10 @@
   .lang-btn { padding: 5px 9px; background: none; border: none; font-family: var(--font); font-size: 0.75rem; font-weight: 600; cursor: pointer; color: var(--ink-muted); transition: background 0.12s, color 0.12s; letter-spacing: 0.03em; }
   .lang-btn:first-child { border-right: 1px solid var(--border); }
   .lang-btn.active { background: var(--ink); color: white; }
+  .account-link { margin-left: auto; font-size: 0.8rem; font-weight: 600; color: var(--ink-soft); text-decoration: none; padding: 5px 10px; border: 1px solid var(--border); border-radius: 8px; white-space: nowrap; flex-shrink: 0; }
+  .account-link:hover { background: var(--paper); color: var(--ink); }
+  .account-link[hidden] { display: none; }
+  .account-link:not([hidden]) + .lang-toggle { margin-left: 0; }
   @media (max-width: 480px) {
     .tagline { display: none; }
     header { padding: 0.9rem 1rem; padding-top: calc(0.9rem + var(--safe-top)); }
@@ -122,6 +135,7 @@
 <header>
   <div class="logo">Do<span>oo</span>dle</div>
   <span class="tagline" id="tagline"></span>
+  <a class="account-link" id="my-polls-link" href="sondages.html" hidden></a>
   <div class="lang-toggle">
     <button class="lang-btn" id="lang-fr">FR</button>
     <button class="lang-btn" id="lang-en">EN</button>
@@ -181,7 +195,9 @@
 <script src="i18n.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="firebase-config.js"></script>
+<script src="auth.js"></script>
 <script>
   const selectedDates = new Set();
   const today = new Date(); today.setHours(0,0,0,0);
@@ -220,6 +236,7 @@
     document.getElementById('btn-create').textContent = t().btnCreate;
     document.getElementById('loading-text').textContent = t().loadingCreate;
     document.getElementById('footer-tagline').textContent = t().footer;
+    document.getElementById('my-polls-link').textContent = t().btnMyPolls;
     renderCalendar();
     renderChips();
   }
@@ -282,8 +299,12 @@
       const slug=toSlug(title);
       const pollData={slug,title,dates:sortedDates,votes:initialVotes,createdAt:new Date().toISOString()};
       if(creatorName) pollData.lastVoter=creatorName;
+      // The organiser is whoever holds this session: it is what allows announcing the date later
+      const owner=await ensureOwnerSession();
+      if(owner) pollData.ownerUid=owner.uid;
       await db.collection('polls').doc(slug).set(pollData);
-      window.location.href='poll.html?id='+slug;
+      if(creatorName) rememberVoter(slug, creatorName);
+      window.location.href='poll.html?id='+slug+'&created=1';
     } catch(e) {
       console.error(e);
       document.getElementById('loading').classList.remove('visible');
@@ -292,7 +313,19 @@
     }
   });
 
+  // Remembered on this device only: saves retyping, never shared
+  function rememberVoter(pollId, name) {
+    try { localStorage.setItem('dooodle-voter-'+pollId, name); localStorage.setItem('dooodle-name', name); } catch(e) {}
+  }
+
   applyTranslations();
+
+  authReady.then(user => {
+    document.getElementById('my-polls-link').hidden = !user;
+    const input = document.getElementById('creator-name');
+    let known = ''; try { known = localStorage.getItem('dooodle-name') || ''; } catch(e) {}
+    if (!input.value) input.value = known || firstName(user);
+  });
 </script>
 </body>
 </html>

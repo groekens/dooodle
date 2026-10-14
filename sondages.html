@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="robots" content="noindex" />
+<link rel="manifest" href="manifest.json" />
+<link rel="icon" type="image/x-icon" href="images/favicon.ico" />
+<link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png" />
+<link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+<title>Dooodle</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --ink: #1a1a2e; --ink-soft: #4a4a6a; --ink-muted: #9090b0;
+    --paper: #fafaf7; --surface: #ffffff;
+    --accent: #ff6b35; --accent-light: #fff0eb;
+    --green: #2d9c6e; --green-light: #e8f7f1; --green-dark: #1f7a54;
+    --border: #e8e8f0; --radius: 12px; --radius-lg: 20px;
+    --font: 'Manrope', sans-serif;
+    --safe-top: env(safe-area-inset-top, 0px);
+  }
+  html { font-size: 17px; }
+  body { font-family: var(--font); background: var(--paper); color: var(--ink); min-height: 100vh; display: flex; flex-direction: column; }
+
+  header {
+    padding: 1rem 1.25rem;
+    padding-top: calc(1rem + var(--safe-top));
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid var(--border); background: var(--surface);
+    gap: 8px;
+  }
+  .logo { font-family: var(--font); font-weight: 800; font-size: 1.4rem; color: var(--ink); text-decoration: none; letter-spacing: -0.5px; flex-shrink: 0; }
+  .logo span { color: var(--accent); }
+  .header-right { display: flex; align-items: center; gap: 8px; }
+  .btn-new-poll {
+    padding: 0.5rem 0.9rem;
+    background: var(--accent); color: white; border: none; border-radius: var(--radius);
+    font-family: var(--font); font-size: 0.82rem; font-weight: 600; cursor: pointer;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 4px;
+    transition: background 0.15s; white-space: nowrap; flex-shrink: 0;
+  }
+  .btn-new-poll:hover { background: #e85a24; }
+  .lang-toggle { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; flex-shrink: 0; }
+  .lang-btn { padding: 5px 9px; background: none; border: none; font-family: var(--font); font-size: 0.75rem; font-weight: 600; cursor: pointer; color: var(--ink-muted); transition: background 0.12s, color 0.12s; letter-spacing: 0.03em; }
+  .lang-btn:first-child { border-right: 1px solid var(--border); }
+  .lang-btn.active { background: var(--ink); color: white; }
+  @media (max-width: 480px) {
+    header { padding: 0.9rem 1rem; padding-top: calc(0.9rem + var(--safe-top)); }
+    .logo { font-size: 1.25rem; }
+    .btn-new-poll { font-size: 0.78rem; padding: 0.45rem 0.75rem; }
+  }
+
+  .page-wrap { max-width: 640px; width: 100%; margin: 0 auto; padding: 2rem 1.5rem 3rem; flex: 1; display: flex; flex-direction: column; }
+  h1 { font-size: 2rem; font-weight: 700; letter-spacing: -0.3px; margin-bottom: 1.25rem; }
+  .section-label { font-size: 0.74rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-soft); margin: 1.1rem 0 0.6rem; }
+
+  .poll-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 0.9rem 1.1rem; margin-bottom: 8px; display: flex; flex-direction: column; gap: 7px; }
+  .poll-card-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .poll-title { font-size: 1rem; font-weight: 700; color: var(--ink); text-decoration: none; min-width: 0; overflow-wrap: anywhere; }
+  .poll-title:hover { color: #c2410c; }
+  .status { flex-shrink: 0; padding: 2px 9px; border-radius: 999px; font-size: 0.72rem; font-weight: 700; background: var(--accent-light); color: #c2410c; }
+  .status.closed { background: var(--green-light); color: var(--green-dark); }
+  .poll-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 14px; font-size: 0.8rem; color: var(--ink-soft); }
+  .poll-meta b { color: var(--green-dark); }
+  .btn-delete { margin-left: auto; background: none; border: none; padding: 0; font-family: var(--font); font-size: 0.76rem; font-weight: 600; color: var(--ink-soft); cursor: pointer; text-decoration: underline; }
+  .btn-delete:hover { color: #c0392b; }
+
+  .info-card { background: var(--surface); border: 1.5px solid var(--ink); border-radius: var(--radius-lg); padding: 1rem 1.25rem; margin-top: 1.25rem; display: flex; flex-direction: column; gap: 12px; }
+  .info-text { font-size: 0.85rem; color: var(--ink-soft); line-height: 1.5; }
+  .btn-google { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 0.75rem; border: 1.5px solid #d6d6e0; border-radius: var(--radius); background: var(--surface); color: var(--ink); font-family: var(--font); font-size: 0.92rem; font-weight: 700; cursor: pointer; transition: background 0.12s; }
+  .btn-google:hover { background: var(--paper); }
+  .btn-google:disabled { opacity: 0.6; cursor: default; }
+  .g-badge { width: 22px; height: 22px; border-radius: 50%; background: var(--ink); color: white; font-size: 0.78rem; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+  .msg-error { text-align: center; font-size: 0.8rem; color: #c0392b; }
+  .msg-error:empty { display: none; }
+  .empty-msg { text-align: center; padding: 2.5rem 0 1rem; color: var(--ink-soft); font-size: 0.92rem; }
+
+  .account-row { margin-top: auto; padding-top: 1rem; display: flex; align-items: center; justify-content: space-between; gap: 10px; border-top: 1px solid var(--border); font-size: 0.8rem; color: var(--ink-soft); }
+  .account-row:empty { display: none; }
+  .link-btn { background: none; border: none; padding: 0; font-family: var(--font); font-size: 0.8rem; font-weight: 600; color: #c2410c; cursor: pointer; text-decoration: underline; }
+
+  .spinner { width: 34px; height: 34px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; margin: 3rem auto 16px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .site-footer { padding: 1rem 1.25rem; text-align: center; font-size: 0.73rem; color: var(--ink-muted); border-top: 1px solid var(--border); }
+</style>
+</head>
+<body>
+
+<header>
+  <a class="logo" href="index.html">Do<span>oo</span>dle</a>
+  <div class="header-right">
+    <a class="btn-new-poll" id="btn-new-poll" href="index.html"></a>
+    <div class="lang-toggle">
+      <button class="lang-btn" id="lang-fr">FR</button>
+      <button class="lang-btn" id="lang-en">EN</button>
+    </div>
+  </div>
+</header>
+
+<div class="page-wrap">
+  <h1 id="page-title"></h1>
+  <div id="content"><div class="spinner"></div></div>
+  <div class="account-row" id="account-row"></div>
+</div>
+
+<footer class="site-footer">
+  <span id="footer-tagline"></span>
+</footer>
+
+<script src="i18n.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="auth.js"></script>
+<script>
+  let polls = null;      // null = not loaded yet
+  let loadError = false;
+  let loadedFor = null;  // uid the list was loaded for
+
+  function escHtml(str) { return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function formatDateShort(str) { return new Date(str+'T12:00:00').toLocaleDateString(t().locale,{weekday:'short',day:'numeric',month:'short'}); }
+  function isClosed(p) { return p.closed === true && (p.dates || []).includes(p.finalDate); }
+
+  // Same ranking as the poll page: yes=1, maybe=0.5, then number of "yes"
+  function leadingDate(p) {
+    const votes = Object.values(p.votes || {});
+    if (votes.length === 0) return null;
+    const score = d => votes.reduce((acc, v) => {
+      const state = Array.isArray(v) ? (v.includes(d) ? 'yes' : null) : (v || {})[d];
+      return [acc[0] + (state === 'yes' ? 1 : state === 'maybe' ? 0.5 : 0), acc[1] + (state === 'yes' ? 1 : 0)];
+    }, [0, 0]);
+    const ranked = p.dates.map(d => ({ d, s: score(d) })).sort((a, b) => b.s[0] - a.s[0] || b.s[1] - a.s[1]);
+    return ranked[0].s[0] > 0 ? ranked[0].d : null;
+  }
+
+  async function loadPolls(user) {
+    loadedFor = user.uid; polls = null; loadError = false;
+    render();
+    try {
+      // The security rules only accept this exact filter: one's own polls
+      const snap = await db.collection('polls').where('ownerUid', '==', user.uid).get();
+      if (loadedFor !== user.uid) return;
+      polls = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+        .sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt)));
+    } catch(e) { console.error(e); loadError = true; polls = []; }
+    render();
+  }
+
+  function cardHtml(p) {
+    const closed = isClosed(p);
+    const voters = Object.keys(p.votes || {}).length;
+    const date = closed ? p.finalDate : leadingDate(p);
+    return `<div class="poll-card">
+      <div class="poll-card-top">
+        <a class="poll-title" href="poll.html?id=${encodeURIComponent(p.id)}">${escHtml(p.title)}</a>
+        <span class="status ${closed ? 'closed' : ''}">${closed ? t().closedPill : t().statusOpen}</span>
+      </div>
+      <div class="poll-meta">
+        <span>${t().participants(voters)}</span>
+        ${date ? `<span>${closed ? t().retained : t().leading} : <b>${escHtml(formatDateShort(date))}</b></span>` : ''}
+        <button class="btn-delete" data-delete="${escHtml(p.id)}">${t().btnDelete}</button>
+      </div>
+    </div>`;
+  }
+
+  function googleButtonHtml() {
+    return `<button class="btn-google" id="btn-google"><span class="g-badge">G</span>${t().btnGoogle}</button><div class="msg-error" id="google-msg"></div>`;
+  }
+
+  function render() {
+    const user = auth.currentUser;
+    const content = document.getElementById('content');
+    const account = document.getElementById('account-row');
+    account.innerHTML = '';
+
+    if (!user) {
+      content.innerHTML = `<div class="info-card"><div class="info-text">${t().signInPrompt}</div>${googleButtonHtml()}</div>`;
+    } else if (polls === null) {
+      content.innerHTML = '<div class="spinner"></div>';
+    } else {
+      const open = polls.filter(p => !isClosed(p)), closed = polls.filter(isClosed);
+      content.innerHTML =
+        (loadError ? `<div class="empty-msg">${t().errLoadPolls}</div>` : polls.length === 0 ? `<div class="empty-msg">${t().noPolls}</div>` : '') +
+        (open.length ? `<div class="section-label">${t().sectionOpen}</div>${open.map(cardHtml).join('')}` : '') +
+        (closed.length ? `<div class="section-label">${t().sectionClosed}</div>${closed.map(cardHtml).join('')}` : '') +
+        (user.isAnonymous ? `<div class="info-card"><div class="info-text">${t().myPollsDeviceHint}</div>${googleButtonHtml()}</div>` : '');
+      if (isGoogleUser(user)) {
+        account.innerHTML = `<span>${escHtml(t().signedInAs(displayName(user)))}</span><button class="link-btn" id="btn-signout">${t().btnSignOut}</button>`;
+      }
+    }
+
+    document.getElementById('btn-google')?.addEventListener('click', connectGoogle);
+    document.getElementById('btn-signout')?.addEventListener('click', () => auth.signOut());
+    content.querySelectorAll('[data-delete]').forEach(btn => btn.addEventListener('click', () => deletePoll(btn.dataset.delete)));
+  }
+
+  async function connectGoogle() {
+    const btn = document.getElementById('btn-google');
+    const msg = document.getElementById('google-msg');
+    btn.disabled = true; msg.textContent = '';
+    try {
+      const user = await signInWithGoogle();
+      // Linking keeps the same session, so no auth event fires: reload by hand
+      if (user) { loadPolls(auth.currentUser); return; }
+    } catch(e) {
+      if (!isUserCancel(e)) { console.error(e); msg.textContent = t().errGoogle; }
+    }
+    btn.disabled = false;
+  }
+
+  async function deletePoll(id) {
+    const p = polls.find(x => x.id === id);
+    if (!p || !confirm(t().confirmDelete(p.title))) return;
+    try {
+      await db.collection('polls').doc(id).delete();
+      polls = polls.filter(x => x.id !== id);
+      render();
+    } catch(e) { console.error(e); alert(t().errOwnerAction); }
+  }
+
+  function applyStaticTranslations() {
+    const lang = getLang();
+    document.documentElement.lang = lang;
+    document.title = `${t().btnMyPolls} | Dooodle`;
+    document.getElementById('lang-fr').classList.toggle('active', lang==='fr');
+    document.getElementById('lang-en').classList.toggle('active', lang==='en');
+    document.getElementById('btn-new-poll').textContent = t().btnNewPoll;
+    document.getElementById('page-title').textContent = t().btnMyPolls;
+    document.getElementById('footer-tagline').textContent = t().footer;
+  }
+
+  document.getElementById('lang-fr').addEventListener('click', () => { setLang('fr'); applyStaticTranslations(); render(); });
+  document.getElementById('lang-en').addEventListener('click', () => { setLang('en'); applyStaticTranslations(); render(); });
+
+  applyStaticTranslations();
+  auth.onAuthStateChanged(user => {
+    if (user) loadPolls(user);
+    else { polls = null; loadedFor = null; render(); }
+  });
+</script>
+</body>
+</html>
