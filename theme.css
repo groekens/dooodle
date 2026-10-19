@@ -9,6 +9,7 @@
   --ink: #1a1233;
   --ink-soft: #4b4170;
   --ink-muted: #7d73a3;
+  --ink-label: #4b4170;   /* libellés des champs, entre ink et ink-soft en sombre */
   --line: #ddd4fb;
   --edge: #1a1233;        /* ombre décalée des cartes */
   --edge-line: #1a1233;   /* trait des cartes */
@@ -49,7 +50,7 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --bg: #17112b; --surface: #241b40; --field: #1d1636;
-    --ink: #f5f1ff; --ink-soft: #c8bff0; --ink-muted: #9488c4; --line: #3a2f63;
+    --ink: #f5f1ff; --ink-soft: #c8bff0; --ink-muted: #9488c4; --ink-label: #e2dbff; --line: #3a2f63;
     --edge: #0a0614; --edge-line: #4b3f86; --action: #ffcf3f; --on-action: #1a1233;
     --pop: #ff6fa8; --on-pop: #2a0716; --pop-soft: rgba(255, 111, 168, 0.18); --pop-ink: #ff9cc4;
     --yes: #2fd08b; --on-yes: #06291a; --yes-soft: rgba(47, 208, 139, 0.16); --yes-ink: #6fe3b0;
@@ -61,7 +62,7 @@
 }
 :root[data-theme="dark"] {
   --bg: #17112b; --surface: #241b40; --field: #1d1636;
-  --ink: #f5f1ff; --ink-soft: #c8bff0; --ink-muted: #9488c4; --line: #3a2f63;
+  --ink: #f5f1ff; --ink-soft: #c8bff0; --ink-muted: #9488c4; --ink-label: #e2dbff; --line: #3a2f63;
   --edge: #0a0614; --edge-line: #4b3f86; --action: #ffcf3f; --on-action: #1a1233;
   --pop: #ff6fa8; --on-pop: #2a0716; --pop-soft: rgba(255, 111, 168, 0.18); --pop-ink: #ff9cc4;
   --yes: #2fd08b; --on-yes: #06291a; --yes-soft: rgba(47, 208, 139, 0.16); --yes-ink: #6fe3b0;
@@ -131,7 +132,7 @@ button, input { font-family: inherit; }
 }
 .field-label {
   display: block; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;
-  color: var(--ink-muted); margin-bottom: 8px;
+  color: var(--ink-label); margin-bottom: 8px;
 }
 input[type="text"] {
   width: 100%; padding: 0.75rem 0.95rem; border: 2px solid var(--line); border-radius: var(--radius);
