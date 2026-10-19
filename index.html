@@ -52,8 +52,7 @@
   .lang-btn.active { background: var(--ink); color: white; }
   .account-link { margin-left: auto; font-size: 0.8rem; font-weight: 600; color: var(--ink-soft); text-decoration: none; padding: 5px 10px; border: 1px solid var(--border); border-radius: 8px; white-space: nowrap; flex-shrink: 0; }
   .account-link:hover { background: var(--paper); color: var(--ink); }
-  .account-link[hidden] { display: none; }
-  .account-link:not([hidden]) + .lang-toggle { margin-left: 0; }
+  .account-link + .lang-toggle { margin-left: 0; }
   @media (max-width: 480px) {
     .tagline { display: none; }
     header { padding: 0.9rem 1rem; padding-top: calc(0.9rem + var(--safe-top)); }
@@ -135,7 +134,7 @@
 <header>
   <div class="logo">Do<span>oo</span>dle</div>
   <span class="tagline" id="tagline"></span>
-  <a class="account-link" id="my-polls-link" href="sondages.html" hidden></a>
+  <a class="account-link" id="my-polls-link" href="sondages.html"></a>
   <div class="lang-toggle">
     <button class="lang-btn" id="lang-fr">FR</button>
     <button class="lang-btn" id="lang-en">EN</button>
@@ -321,7 +320,6 @@
   applyTranslations();
 
   authReady.then(user => {
-    document.getElementById('my-polls-link').hidden = !user;
     const input = document.getElementById('creator-name');
     let known = ''; try { known = localStorage.getItem('dooodle-name') || ''; } catch(e) {}
     if (!input.value) input.value = known || firstName(user);
