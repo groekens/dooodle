@@ -4,8 +4,8 @@
   "description": "Trouvez la date parfaite",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#fafaf7",
-  "theme_color": "#ffffff",
+  "background_color": "#ece6ff",
+  "theme_color": "#ece6ff",
   "icons": [
     {
       "src": "images/android-chrome-192x192.png",

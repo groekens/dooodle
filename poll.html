@@ -22,326 +22,216 @@
 <meta name="twitter:card" content="summary_large_image" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&display=swap" rel="stylesheet" />
+<script src="theme.js?v=20261019a"></script>
+<link rel="stylesheet" href="theme.css?v=20261019a" />
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root {
-    --ink: #1a1a2e; --ink-soft: #4a4a6a; --ink-muted: #9090b0;
-    --paper: #fafaf7; --surface: #ffffff;
-    --accent: #ff6b35; --accent-light: #fff0eb;
-    --green: #2d9c6e; --green-light: #e8f7f1; --green-dark: #1f7a54;
-    --amber: #d97706; --amber-light: #fef3c7;
-    --border: #e8e8f0; --radius: 12px; --radius-lg: 20px;
-    --font: 'Manrope', sans-serif;
-    --safe-top: env(safe-area-inset-top, 0px);
-  }
-  html { font-size: 17px; }
-  body { font-family: var(--font); background: var(--paper); color: var(--ink); min-height: 100vh; }
+  .page-wrap { max-width: 640px; margin: 0 auto; padding: 1rem 1.25rem 2rem; width: 100%; }
+  #poll-content { display: flex; flex-direction: column; gap: 1.1rem; }
 
-  header {
-    padding: 1rem 1.25rem;
-    padding-top: calc(1rem + var(--safe-top));
-    display: flex; align-items: center; justify-content: space-between;
-    border-bottom: 1px solid var(--border); background: var(--surface);
-    gap: 8px;
-  }
-  .header-left { display: flex; align-items: center; gap: 8px; min-width: 0; }
-  .logo { font-family: var(--font); font-weight: 800; font-size: 1.4rem; color: var(--ink); text-decoration: none; letter-spacing: -0.5px; flex-shrink: 0; }
-  .logo span { color: var(--accent); }
-  .btn-new-poll {
-    padding: 0.5rem 0.9rem;
-    background: var(--accent); color: white; border: none; border-radius: var(--radius);
-    font-family: var(--font); font-size: 0.82rem; font-weight: 600; cursor: pointer;
-    text-decoration: none; display: inline-flex; align-items: center; gap: 4px;
-    transition: background 0.15s; white-space: nowrap; flex-shrink: 0;
-  }
-  .btn-new-poll:hover { background: #e85a24; }
-  .lang-toggle { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; flex-shrink: 0; }
-  .lang-btn { padding: 5px 9px; background: none; border: none; font-family: var(--font); font-size: 0.75rem; font-weight: 600; cursor: pointer; color: var(--ink-muted); transition: background 0.12s, color 0.12s; letter-spacing: 0.03em; }
-  .lang-btn:first-child { border-right: 1px solid var(--border); }
-  .lang-btn.active { background: var(--ink); color: white; }
-  @media (max-width: 480px) {
-    header { padding: 0.9rem 1rem; padding-top: calc(0.9rem + var(--safe-top)); }
-    .logo { font-size: 1.25rem; }
-    .btn-new-poll { font-size: 0.78rem; padding: 0.45rem 0.75rem; }
-  }
+  .hdr-pill .short { display: none; }
+  @media (max-width: 430px) { .hdr-pill .long { display: none; } .hdr-pill .short { display: inline; } }
 
-  .page-wrap { max-width: 640px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
-
-  /* EVENT HEADER */
-  .event-header { margin-bottom: 2rem; }
-  .event-title {
-    font-family: var(--font);
-    font-size: 2rem; font-weight: 700; letter-spacing: -0.3px;
-    color: var(--ink); margin-bottom: 0.5rem; line-height: 1.2;
-  }
-  .event-meta { font-size: 0.85rem; color: var(--ink-muted); display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-  .meta-pill {
-    display: inline-flex; align-items: center; gap: 5px;
-    padding: 3px 10px; background: var(--paper); border: 1px solid var(--border);
-    border-radius: 999px; font-size: 0.8rem; color: var(--ink-soft);
-  }
-
-  /* SHARE SECTION */
-  .share-section {
-    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg);
-    padding: 1rem 1.25rem; margin-bottom: 1.75rem;
-  }
-  .share-intro { font-size: 0.85rem; color: var(--ink-soft); margin-bottom: 10px; line-height: 1.5; }
-  .share-intro strong { color: var(--ink); font-weight: 600; }
-  .share-row { display: flex; align-items: center; gap: 8px; }
-  .share-url { flex: 1; font-family: monospace; font-size: 0.78rem; color: var(--ink-soft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; background: var(--paper); border: 1px solid var(--border); border-radius: 8px; padding: 7px 10px; }
-  .btn-copy {
-    padding: 7px 14px; background: var(--ink); color: white; border: none; border-radius: 8px;
-    font-family: var(--font); font-size: 0.82rem; font-weight: 600; cursor: pointer;
-    white-space: nowrap; transition: background 0.15s; flex-shrink: 0;
-  }
-  .btn-copy:hover { background: #333; }
-  .btn-copy.copied { background: var(--green); }
-  .btn-whatsapp {
-    padding: 7px 14px; background: #25D366; color: white; border: none; border-radius: 8px;
-    font-family: var(--font); font-size: 0.82rem; font-weight: 600; cursor: pointer;
-    white-space: nowrap; transition: background 0.15s; flex-shrink: 0;
-    text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
-  }
-  .btn-whatsapp:hover { background: #1dba57; }
-  .btn-whatsapp svg { width: 15px; height: 15px; flex-shrink: 0; }
-
-  /* TABS */
-  .tabs { display: flex; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 1.5rem; background: var(--surface); }
-  .tab { flex: 1; padding: 0.7rem; background: none; border: none; font-family: var(--font); font-size: 0.92rem; font-weight: 400; color: var(--ink-muted); cursor: pointer; transition: background 0.12s, color 0.12s; }
-  .tab:not(:last-child) { border-right: 1px solid var(--border); }
-  .tab.active { background: var(--ink); color: white; font-weight: 500; }
-  .tab:hover:not(.active) { background: var(--paper); color: var(--ink-soft); }
-
-  /* VOTE TAB */
-  .vote-name-row { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem 1.5rem; margin-bottom: 1rem; }
-  .field-label { font-size: 0.74rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-muted); display: block; margin-bottom: 7px; }
-  input[type="text"] {
-    width: 100%; padding: 0.75rem 1rem; border: 1.5px solid var(--border); border-radius: var(--radius);
-    font-family: var(--font); font-size: 1.05rem; color: var(--ink);
-    background: var(--paper); outline: none; transition: border-color 0.15s;
-  }
-  input[type="text"]:focus { border-color: var(--accent); background: var(--surface); }
-
-  /* VOTE CALENDAR */
-  .vote-cal-outer {
-    display: flex; align-items: stretch;
-    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg);
-    overflow: hidden; margin-bottom: 1.25rem;
-  }
-  .vote-cal-inner { flex: 1; padding: 1.25rem 1rem; min-width: 0; }
-  .vote-cal-month { font-family: var(--font); font-size: 1rem; font-weight: 700; color: var(--ink); text-transform: capitalize; text-align: center; margin-bottom: 12px; }
-  .cal-side-btn {
-    width: 44px; flex-shrink: 0; background: none; border: none;
-    cursor: pointer; color: var(--ink-muted); font-size: 1.7rem; font-family: var(--font);
-    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px;
-    transition: background 0.12s, color 0.12s;
-  }
-  #vcal-prev { border-right: 1px solid var(--border); }
-  #vcal-next { border-left: 1px solid var(--border); }
-  .cal-side-btn:disabled { opacity: 0.2; cursor: default; }
-  .cal-side-btn.has-dates { background: var(--accent-light); color: var(--accent); }
-  .cal-side-btn.has-dates:hover:not(:disabled) { background: var(--accent); color: white; }
-  .cal-side-label { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.03em; }
-  .vote-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
-  .vcal-header { text-align: center; font-size: 0.7rem; font-weight: 600; color: var(--ink-muted); padding: 2px 0 6px; text-transform: uppercase; letter-spacing: 0.04em; }
-  .vcal-day {
-    aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
-    border-radius: 7px; font-size: 0.88rem; border: 1.5px solid transparent;
-    transition: background 0.1s, border-color 0.1s, color 0.1s; position: relative;
-  }
-  .vcal-day.inactive { color: var(--ink-muted); opacity: 0.3; }
-  .vcal-day.proposed { color: var(--ink); cursor: pointer; font-weight: 500; border-color: var(--border); background: var(--paper); }
-  @media (hover: hover) {
-    .vcal-day.proposed:not(.yes):not(.maybe):hover { border-color: var(--green); background: var(--green-light); color: var(--green); }
-  }
-  .vcal-day.proposed.yes { background: var(--green); border-color: var(--green); color: white; font-weight: 600; }
-  .vcal-day.proposed.maybe { background: var(--amber); border-color: var(--amber); color: white; font-weight: 600; }
-  .vcal-day.proposed.yes::after { content:''; position:absolute; bottom:3px; left:50%; transform:translateX(-50%); width:3px; height:3px; border-radius:50%; background:rgba(255,255,255,0.7); }
-  .vcal-day.proposed.maybe::after { content:'?'; position:absolute; bottom:1px; right:3px; font-size:0.6rem; font-weight:700; color:rgba(255,255,255,0.85); }
-
-  /* LEGEND */
-  .vote-legend { display: flex; gap: 12px; flex-wrap: wrap; margin: 0.5rem 0 1rem; font-size: 0.78rem; color: var(--ink-soft); }
-  .legend-item { display: inline-flex; align-items: center; gap: 6px; }
-  .legend-swatch { width: 14px; height: 14px; border-radius: 4px; border: 1.5px solid var(--border); flex-shrink: 0; }
-  .legend-swatch.yes { background: var(--green); border-color: var(--green); }
-  .legend-swatch.maybe { background: var(--amber); border-color: var(--amber); }
-
-  .btn-submit {
-    width: 100%; padding: 0.95rem; background: var(--accent); color: white; border: none; border-radius: var(--radius-lg);
-    font-family: var(--font); font-size: 1rem; font-weight: 700; cursor: pointer;
-    transition: background 0.15s, transform 0.1s; box-shadow: 0 4px 18px rgba(255,107,53,0.22);
-  }
-  .btn-submit:hover { background: #e85a24; }
-  .btn-submit:active { transform: scale(0.98); }
-  .btn-submit:disabled { background: var(--ink-muted); box-shadow: none; cursor: not-allowed; }
-  .vote-msg { text-align: center; font-size: 0.88rem; color: var(--green); font-weight: 500; margin-top: 10px; min-height: 20px; }
-  .vote-msg.error { color: #c0392b; }
-
-  /* RESULTS TAB */
-  .results-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
-  .result-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem; margin-bottom: 8px; }
-  .result-item.top { border-color: var(--green); border-width: 1.5px; }
-  .result-top-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-  .rank-num { font-family: var(--font); font-size: 0.82rem; font-weight: 700; color: var(--ink-muted); width: 20px; flex-shrink: 0; }
-  .rank-num.gold { color: var(--accent); }
-  .result-date-label { font-size: 0.98rem; font-weight: 500; color: var(--ink); flex: 1; }
-  .result-score { font-size: 0.85rem; color: var(--ink-soft); font-weight: 500; }
-  .result-score .score-yes { color: var(--green); font-weight: 700; }
-  .result-score .score-maybe { color: var(--amber); font-weight: 600; margin-left: 1px; }
-  .result-score .score-total { color: var(--ink-muted); font-weight: 400; }
-  .result-bar-wrap { height: 5px; background: var(--border); border-radius: 999px; overflow: hidden; margin-bottom: 8px; }
-  .result-bar { height: 100%; border-radius: 999px; background: var(--ink-muted); transition: width 0.5s ease; }
-  .result-item.top .result-bar { background: var(--green); }
-  .result-voters { display: flex; flex-wrap: wrap; gap: 5px; }
-  .voter-pill { display: inline-block; padding: 2px 9px; background: var(--green-light); color: var(--green); border-radius: 999px; font-size: 0.78rem; font-weight: 500; }
-  .voter-pill.maybe { background: var(--amber-light); color: var(--amber); }
-  .voter-pill.maybe::after { content: ' ?'; opacity: 0.7; }
-  .result-bar-stack { display: flex; height: 5px; border-radius: 999px; overflow: hidden; background: var(--border); margin-bottom: 8px; }
-  .result-bar-yes { height: 100%; background: var(--ink-muted); transition: width 0.5s ease; }
-  .result-bar-maybe { height: 100%; background: var(--amber); opacity: 0.55; transition: width 0.5s ease; }
-  .result-item.top .result-bar-yes { background: var(--green); }
-  .no-votes-msg { text-align: center; padding: 3rem 0; color: var(--ink-muted); font-size: 0.92rem; }
-
-  /* PARTICIPANTS TAB */
-  .participant-item { display: flex; align-items: center; gap: 12px; padding: 0.9rem 1.25rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 8px; }
-  .avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--accent-light); color: var(--accent); font-family: var(--font); font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-  .participant-name { font-size: 0.98rem; font-weight: 500; color: var(--ink); }
-  .participant-dates-summary { margin-left: auto; font-size: 0.82rem; color: var(--ink-muted); }
-
-  /* STATES */
-  .state-screen { text-align: center; padding: 5rem 2rem; }
-  .spinner { width: 34px; height: 34px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; margin: 0 auto 16px; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .state-screen p { color: var(--ink-muted); font-size: 0.92rem; }
-  .state-screen h2 { font-family: var(--font); font-size: 1.4rem; margin-bottom: 8px; }
-
-  .site-footer { padding: 1rem 1.25rem; text-align: center; font-size: 0.73rem; color: var(--ink-muted); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 10px 20px; margin-top: 2rem; }
-  .powered-by-wrap { text-align: center; margin-top: 14px; }
-  .powered-by { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; color: var(--ink-muted); transition: opacity 0.15s; font-size: 0.72rem; font-weight: 500; }
-  .powered-by:hover { opacity: 0.7; }
-  .powered-by img { height: 22px; width: auto; display: block; }
-
-  .edit-hint {
-    font-size: 0.78rem; color: var(--ink-muted);
-    margin-top: 8px; padding-top: 8px;
-    border-top: 1px solid var(--border);
-  }
-
-  /* HEADER ACCOUNT */
-  .header-right { display: flex; align-items: center; gap: 8px; }
-  .account-link { width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--border); background: var(--surface); color: var(--ink-soft); display: flex; align-items: center; justify-content: center; flex-shrink: 0; text-decoration: none; transition: background 0.12s, color 0.12s; }
-  .account-link:hover { background: var(--paper); color: var(--ink); }
-  .account-link[hidden] { display: none; }
-  .account-link svg { width: 17px; height: 17px; }
-  .btn-new-poll .short { display: none; }
-  @media (max-width: 430px) {
-    .btn-new-poll .long { display: none; }
-    .btn-new-poll .short { display: inline; }
-  }
-
-  .link-btn { background: none; border: none; padding: 0; font-family: var(--font); font-size: 0.8rem; font-weight: 600; color: #c2410c; cursor: pointer; text-decoration: underline; }
-  .link-btn:hover { color: #9a3412; }
-
-  /* CREATED + ORGANISER */
-  .created-banner { display: flex; align-items: center; gap: 8px; font-size: 0.92rem; font-weight: 700; color: var(--green-dark); margin-bottom: 0.9rem; }
-  .created-banner svg { width: 26px; height: 26px; padding: 5px; border-radius: 50%; background: var(--green-light); }
-  .organizer-badge { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; padding: 4px 11px; border-radius: 999px; background: var(--ink); color: white; font-size: 0.74rem; font-weight: 600; }
+  /* EN-TÊTE DU SONDAGE */
+  .event-header { display: flex; flex-direction: column; gap: 0.55rem; }
+  .event-title { font-size: clamp(1.8rem, 7vw, 2.35rem); font-weight: 800; letter-spacing: -0.035em; line-height: 1.02; text-wrap: balance; overflow-wrap: anywhere; }
+  .event-meta { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .meta-pill { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; background: var(--surface); border: 2px solid var(--line); border-radius: 999px; font-size: 0.78rem; font-weight: 600; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+  .meta-pill.closed { background: var(--yes); border-color: var(--yes); color: var(--on-yes); font-weight: 800; }
+  .organizer-badge { align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; padding: 4px 11px; border-radius: 999px; background: var(--maybe); color: var(--on-maybe); font-size: 0.76rem; font-weight: 800; }
   .organizer-badge svg { width: 13px; height: 13px; }
-  .meta-pill.closed { background: var(--green-light); border-color: var(--green-light); color: var(--green-dark); font-weight: 600; }
+  .created-banner { display: flex; align-items: center; gap: 8px; font-size: 0.95rem; font-weight: 800; color: var(--yes-ink); }
+  .created-banner svg { width: 28px; height: 28px; padding: 5px; border-radius: 50%; background: var(--yes); color: var(--on-yes); animation: gm-pop var(--d-slow) var(--ease-spring); }
 
-  .device-card { background: var(--surface); border: 1.5px solid var(--ink); border-radius: var(--radius-lg); padding: 1rem 1.25rem; margin-bottom: 1.75rem; display: flex; flex-direction: column; gap: 12px; }
-  .device-card-top { display: flex; align-items: flex-start; gap: 12px; }
-  .device-icon { width: 38px; height: 38px; flex-shrink: 0; border-radius: 10px; background: var(--accent-light); color: #c2410c; display: flex; align-items: center; justify-content: center; }
-  .device-icon svg { width: 20px; height: 20px; }
-  .device-title { font-size: 0.92rem; font-weight: 700; margin-bottom: 3px; }
-  .device-text { font-size: 0.8rem; color: var(--ink-soft); line-height: 1.45; }
-  .btn-google { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 0.75rem; border: 1.5px solid #d6d6e0; border-radius: var(--radius); background: var(--surface); color: var(--ink); font-family: var(--font); font-size: 0.92rem; font-weight: 700; cursor: pointer; transition: background 0.12s; }
-  .btn-google:hover { background: var(--paper); }
-  .btn-google:disabled { opacity: 0.6; cursor: default; }
-  .g-badge { width: 22px; height: 22px; border-radius: 50%; background: var(--ink); color: white; font-size: 0.78rem; font-weight: 800; display: flex; align-items: center; justify-content: center; }
-  .device-card .link-btn { align-self: center; color: var(--ink-soft); text-decoration: none; }
-  .device-msg { text-align: center; font-size: 0.8rem; color: #c0392b; }
-  .device-msg:empty { display: none; }
+  /* PARTAGE */
+  .share-section { background: var(--surface); border: 2px solid var(--edge-line); border-radius: var(--radius-lg); box-shadow: 4px 4px 0 var(--edge); padding: 1rem 1.1rem; display: flex; flex-direction: column; gap: 10px; }
+  .share-intro { font-size: 0.86rem; color: var(--ink-soft); line-height: 1.45; }
+  .share-intro strong { color: var(--ink); font-weight: 800; }
+  .share-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .share-url { flex: 1 1 100%; min-width: 0; font-size: 0.78rem; font-weight: 500; color: var(--ink-soft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; background: var(--field); border: 2px solid var(--line); border-radius: 10px; padding: 7px 10px; }
+  .btn-copy, .btn-whatsapp { flex: 1; padding: 9px 14px; border: 2px solid var(--edge); border-radius: 12px; font-size: 0.88rem; font-weight: 800; cursor: pointer; white-space: nowrap; display: inline-flex; align-items: center; justify-content: center; gap: 6px; text-decoration: none; transition: transform var(--d-fast) var(--ease-out), background-color var(--d-base) var(--ease-out); }
+  .btn-copy { background: var(--action); color: var(--on-action); }
+  .btn-copy.copied { background: var(--yes); color: var(--on-yes); }
+  .btn-whatsapp { background: #25D366; color: #0b2e18; }
+  .btn-copy:active, .btn-whatsapp:active { transform: scale(0.96); }
+  .btn-whatsapp svg { width: 16px; height: 16px; flex-shrink: 0; }
 
-  /* WELCOME BACK */
-  .welcome-card { background: var(--surface); border: 1.5px solid var(--green); border-radius: var(--radius-lg); padding: 1rem 1.25rem; margin-bottom: 1rem; display: flex; gap: 12px; align-items: flex-start; }
-  .welcome-avatar { width: 40px; height: 40px; flex-shrink: 0; border-radius: 50%; background: var(--green-light); color: var(--green-dark); font-weight: 700; display: flex; align-items: center; justify-content: center; }
-  .welcome-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 3px; }
-  .welcome-text { font-size: 0.8rem; color: var(--ink-soft); line-height: 1.45; margin-bottom: 5px; }
+  /* ONGLETS : la pastille glisse sous l'onglet actif */
+  .tabs { position: relative; border-color: var(--edge-line); display: flex; padding: 4px; border-radius: 999px; background: var(--surface); border: 2px solid var(--edge); }
+  .tab { position: relative; z-index: 1; flex: 1; padding: 0.55rem 0.4rem; background: none; border: none; font-size: 0.9rem; font-weight: 700; color: var(--ink-soft); cursor: pointer; border-radius: 999px; transition: color var(--d-base) var(--ease-out); white-space: nowrap; }
+  .tab.active { color: var(--on-action); }
+  .tab-indicator { position: absolute; z-index: 0; top: 4px; bottom: 4px; left: 0; width: 0; border-radius: 999px; background: var(--action); transition: transform var(--d-base) var(--ease-out), width var(--d-base) var(--ease-out); }
 
-  /* CLOSED POLL */
-  .final-banner { background: var(--green-dark); color: white; border-radius: var(--radius-lg); padding: 1.3rem 1.25rem; margin-bottom: 1rem; display: flex; flex-direction: column; gap: 12px; }
-  .final-label { display: flex; align-items: center; gap: 8px; font-size: 0.78rem; font-weight: 600; opacity: 0.92; }
-  .final-label svg { width: 16px; height: 16px; }
-  .final-date { font-size: 1.65rem; font-weight: 800; letter-spacing: -0.5px; line-height: 1.15; }
-  .final-counts { font-size: 0.85rem; opacity: 0.92; }
-  .btn-calendar { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 0.75rem; background: white; color: var(--green-dark); border: none; border-radius: var(--radius); font-family: var(--font); font-size: 0.9rem; font-weight: 700; cursor: pointer; }
-  .btn-calendar svg { width: 17px; height: 17px; }
-  .btn-reopen { padding: 0.6rem; background: none; color: white; border: 1.5px solid rgba(255,255,255,0.55); border-radius: var(--radius); font-family: var(--font); font-size: 0.85rem; font-weight: 600; cursor: pointer; }
-  .btn-reopen:hover { background: rgba(255,255,255,0.12); }
-  .who-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 0.9rem 1.1rem; margin-bottom: 1.75rem; }
-  .who-card .field-label { margin-bottom: 9px; }
+  /* VOTE */
+  #tab-vote, #tab-participants, #tab-results { display: flex; flex-direction: column; gap: 1rem; }
+  .vote-name-row { background: var(--surface); border: 2px solid var(--edge-line); border-radius: var(--radius-lg); box-shadow: 4px 4px 0 var(--edge); padding: 1rem 1.1rem; }
+  .edit-hint { font-size: 0.78rem; color: var(--ink-muted); margin-top: 8px; }
+  .cal-tip { font-size: 0.85rem; color: var(--ink-soft); }
 
-  /* RESULTS: VIEW TOGGLE, ORGANISER CHOICE, TABLE */
-  .results-header { flex-wrap: wrap; gap: 10px; }
-  .view-toggle { display: flex; background: #ededf3; border-radius: 10px; padding: 3px; }
-  .view-btn { padding: 5px 13px; background: none; border: none; border-radius: 8px; font-family: var(--font); font-size: 0.78rem; font-weight: 600; color: var(--ink-soft); cursor: pointer; }
-  .view-btn.active { background: var(--surface); color: var(--ink); box-shadow: 0 1px 2px rgba(26,26,46,0.12); }
-  .choose-hint { font-size: 0.82rem; color: var(--ink-soft); margin-bottom: 0.75rem; }
+  .vote-cal-outer { background: var(--surface); border: 2px solid var(--edge-line); border-radius: var(--radius-lg); box-shadow: 4px 4px 0 var(--edge); padding: 1rem 1rem 1.1rem; display: flex; flex-direction: column; gap: 10px; }
+  .vote-cal-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .vote-cal-month { font-size: 1.05rem; font-weight: 800; letter-spacing: -0.01em; }
+  .cal-side-btn { width: auto; min-width: 34px; height: 34px; padding: 0 9px; border-radius: 999px; border: 2px solid var(--ink); background: var(--surface); color: var(--ink); font-size: 0.78rem; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 4px; transition: transform var(--d-fast) var(--ease-out); }
+  .cal-side-btn .arr { display: flex; }
+  .cal-side-btn:disabled { opacity: 0.25; cursor: default; }
+  .cal-side-btn:active:not(:disabled) { transform: scale(0.92); }
+  .cal-side-btn.has-dates { background: var(--pop); border-color: var(--pop); color: var(--on-pop); }
+  .cal-side-label:empty { display: none; }
+  .vote-cal-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
+  .vcal-header { text-align: center; font-size: 0.68rem; font-weight: 700; color: var(--ink-muted); padding: 2px 0 6px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .vcal-day { aspect-ratio: 1; max-width: 100%; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 0.92rem; font-weight: 600; border: 2px solid transparent; position: relative; font-variant-numeric: tabular-nums; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; transition: background-color var(--d-fast) var(--ease-out), border-color var(--d-fast) var(--ease-out), color var(--d-fast) var(--ease-out); }
+  .vcal-day.inactive { color: var(--ink-muted); opacity: 0.35; }
+  .vcal-day.proposed { cursor: pointer; color: var(--ink); background: var(--field); border-color: var(--ink); font-weight: 800; }
+  @media (hover: hover) { .vcal-day.proposed:not(.yes):not(.maybe):hover { background: var(--yes-soft); border-color: var(--yes); } }
+  .vcal-day.proposed.yes { background: var(--yes); border-color: var(--yes); color: var(--on-yes); }
+  .vcal-day.proposed.maybe { background: var(--maybe); border-color: var(--maybe); color: var(--on-maybe); }
+  .vcal-day.pop { animation: gm-pop var(--d-slow) var(--ease-spring); }
+
+  .vote-legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 0.8rem; color: var(--ink-soft); }
+  .legend-item { display: inline-flex; align-items: center; gap: 6px; }
+  .legend-swatch { width: 13px; height: 13px; border-radius: 50%; flex-shrink: 0; border: 2px solid var(--ink); background: var(--field); }
+  .legend-swatch.yes { background: var(--yes); border-color: var(--yes); }
+  .legend-swatch.maybe { background: var(--maybe); border-color: var(--maybe); }
+  .legend-swatch.no { background: var(--no); border-color: var(--no); }
+
+  .btn-submit { width: 100%; padding: 1rem 1.1rem; border: 2px solid var(--edge); border-radius: var(--radius-lg); background: var(--action); color: var(--on-action); font-size: 1.02rem; font-weight: 800; cursor: pointer; box-shadow: 4px 4px 0 var(--pop); transition: transform var(--d-fast) var(--ease-out), box-shadow var(--d-fast) var(--ease-out), background-color var(--d-base) var(--ease-out), color var(--d-base) var(--ease-out); }
+  .btn-submit:active:not(:disabled) { transform: translate(3px, 3px); box-shadow: 1px 1px 0 var(--pop); }
+  .btn-submit:disabled { opacity: 0.7; cursor: default; }
+  .btn-submit.done { background: var(--yes); color: var(--on-yes); }
+  .vote-msg { text-align: center; font-size: 0.88rem; font-weight: 700; color: var(--yes-ink); min-height: 1.3em; margin-top: -0.4rem; }
+  .vote-msg.error { color: var(--no-ink); }
+
+  /* RÉSULTATS */
+  .results-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+  .results-count { font-size: 0.85rem; font-weight: 600; color: var(--ink-soft); }
+  .view-toggle { display: flex; background: var(--surface); border: 2px solid var(--line); border-radius: 999px; padding: 3px; }
+  .view-btn { padding: 5px 13px; background: none; border: none; border-radius: 999px; font-size: 0.8rem; font-weight: 700; color: var(--ink-soft); cursor: pointer; }
+  .view-btn.active { background: var(--ink); color: var(--bg); }
+  .choose-hint { font-size: 0.85rem; color: var(--ink-soft); }
+  .results-list { display: flex; flex-direction: column; gap: 10px; }
+  .result-item { background: var(--surface); border: 2px solid var(--line); border-radius: var(--radius-lg); padding: 0.9rem 1.05rem; display: flex; flex-direction: column; gap: 8px; }
+  .result-item.top { border-color: var(--edge); box-shadow: 4px 4px 0 var(--yes); }
+  .result-top-row { display: flex; align-items: center; gap: 10px; }
+  .rank-num { width: 26px; height: 26px; flex-shrink: 0; border-radius: 50%; background: var(--field); color: var(--ink-soft); font-size: 0.78rem; font-weight: 800; display: flex; align-items: center; justify-content: center; font-variant-numeric: tabular-nums; }
+  .rank-num.gold { background: var(--maybe); color: var(--on-maybe); }
+  .result-date-label { font-size: 1rem; font-weight: 800; flex: 1; min-width: 0; }
+  .result-score { font-size: 0.88rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .score-yes { color: var(--yes-ink); font-weight: 800; }
+  .score-maybe { color: var(--maybe-ink); font-weight: 800; margin-left: 1px; }
+  .score-total { color: var(--ink-muted); }
+  .result-bar-stack { display: flex; height: 8px; border-radius: 999px; overflow: hidden; background: var(--field); }
+  .result-bar-yes { height: 100%; background: var(--yes); transition: width var(--d-slow) var(--ease-out); }
+  .result-bar-maybe { height: 100%; background: var(--maybe); transition: width var(--d-slow) var(--ease-out); }
+  .results-list.grow .result-bar-yes, .results-list.grow .result-bar-maybe { animation: bar-grow var(--d-slow) var(--ease-out) both; transform-origin: left; }
+  .results-list.grow .result-item:nth-child(2) .result-bar-stack > * { animation-delay: .04s; }
+  .results-list.grow .result-item:nth-child(3) .result-bar-stack > * { animation-delay: .08s; }
+  .results-list.grow .result-item:nth-child(n+4) .result-bar-stack > * { animation-delay: .12s; }
+  @keyframes bar-grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  .result-voters { display: flex; flex-wrap: wrap; gap: 5px; min-width: 0; }
+  .voter-pill { display: inline-block; padding: 2px 9px; background: var(--yes-soft); color: var(--yes-ink); border-radius: 999px; font-size: 0.78rem; font-weight: 700; }
+  .voter-pill.maybe { background: var(--maybe-soft); color: var(--maybe-ink); }
+  .voter-pill.maybe::after { content: ' ?'; opacity: 0.7; }
+  .nobody { font-size: 0.82rem; color: var(--ink-muted); }
+  .no-votes-msg { text-align: center; padding: 2.5rem 1rem; color: var(--ink-soft); font-size: 0.95rem; line-height: 1.6; }
   .result-bottom-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 8px; }
-  .btn-choose { flex-shrink: 0; padding: 6px 12px; border: 1.5px solid var(--border); border-radius: 8px; background: var(--surface); color: var(--ink); font-family: var(--font); font-size: 0.78rem; font-weight: 600; cursor: pointer; }
-  .btn-choose.chosen { background: var(--green); border-color: var(--green); color: white; font-weight: 700; }
-  .announce-block { margin-top: 1rem; }
-  .announce-inline { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 6px; }
-  .announce-inline .btn-submit { padding: 0.8rem; font-size: 0.95rem; }
-  .announce-inline .announce-hint { margin-top: 2px; }
+  .btn-choose { flex-shrink: 0; padding: 6px 13px; border: 2px solid var(--ink); border-radius: 999px; background: var(--surface); color: var(--ink); font-size: 0.8rem; font-weight: 800; cursor: pointer; }
+  .announce-block { display: flex; flex-direction: column; gap: 6px; }
+  .announce-inline { margin-top: 4px; padding-top: 12px; border-top: 2px dashed var(--line); display: flex; flex-direction: column; gap: 8px; }
+  .announce-inline .btn-submit { padding: 0.85rem; font-size: 0.95rem; }
   .announce-inline .link-btn { align-self: center; color: var(--ink-soft); text-decoration: none; }
-  .announce-hint { text-align: center; font-size: 0.75rem; color: var(--ink-soft); margin-top: 8px; line-height: 1.5; }
+  .announce-hint { text-align: center; font-size: 0.76rem; color: var(--ink-soft); line-height: 1.5; }
 
-  .table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .table-wrap { background: var(--surface); border: 2px solid var(--edge); border-radius: var(--radius-lg); overflow-x: auto; -webkit-overflow-scrolling: touch; }
   .vote-table { border-collapse: collapse; width: 100%; }
   .vote-table th, .vote-table td { padding: 6px 4px; text-align: center; min-width: 52px; }
-  .vote-table thead th { padding: 9px 4px 7px; color: var(--ink-soft); font-weight: 400; border-bottom: 1px solid var(--border); }
-  .vote-table .col-dow { display: block; font-size: 0.64rem; font-weight: 600; text-transform: uppercase; }
-  .vote-table .col-day { display: block; font-size: 1.05rem; font-weight: 800; line-height: 1.1; }
+  .vote-table thead th { padding: 9px 4px 7px; color: var(--ink-soft); font-weight: 400; border-bottom: 2px solid var(--line); }
+  .vote-table .col-dow { display: block; font-size: 0.64rem; font-weight: 700; text-transform: uppercase; }
+  .vote-table .col-day { display: block; font-size: 1.1rem; font-weight: 800; line-height: 1.1; color: var(--ink); }
   .vote-table .col-month { display: block; font-size: 0.64rem; }
-  .vote-table thead th.best { background: var(--green); color: white; }
-  .vote-table td.best, .vote-table tfoot th.best { background: #f1faf6; }
-  .vote-table .row-name { position: sticky; left: 0; z-index: 1; background: var(--surface); text-align: left; padding-left: 12px; font-size: 0.85rem; font-weight: 600; white-space: nowrap; max-width: 104px; min-width: 88px; overflow: hidden; text-overflow: ellipsis; }
-  .vote-table tbody tr { border-bottom: 1px solid #f0f0f5; }
-  .vote-table .cell { display: inline-flex; width: 28px; height: 28px; border-radius: 7px; align-items: center; justify-content: center; font-size: 0.82rem; font-weight: 800; color: white; background: #f0f0f5; }
-  .vote-table .cell.yes { background: var(--green); }
-  .vote-table .cell.maybe { background: var(--amber); }
-  .vote-table tfoot th, .vote-table tfoot td { padding: 10px 4px; font-size: 0.82rem; font-weight: 800; color: var(--ink-soft); }
-  .vote-table tfoot td.best { color: var(--green-dark); }
-  .vote-table tfoot .row-name { font-weight: 700; }
-  .table-legend { margin-top: 0.75rem; }
-  .legend-swatch.no { background: #f0f0f5; border-color: #f0f0f5; }
+  .vote-table thead th.best { background: var(--yes); color: var(--on-yes); }
+  .vote-table thead th.best .col-day { color: var(--on-yes); }
+  .vote-table td.best, .vote-table tfoot th.best { background: var(--yes-soft); }
+  .vote-table .row-name { position: sticky; left: 0; z-index: 1; background: var(--surface); text-align: left; padding-left: 12px; font-size: 0.85rem; font-weight: 700; color: var(--ink); white-space: nowrap; max-width: 104px; min-width: 88px; overflow: hidden; text-overflow: ellipsis; }
+  .vote-table tbody tr { border-bottom: 1px solid var(--line); }
+  .vote-table .cell { display: inline-flex; width: 28px; height: 28px; border-radius: 50%; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 800; background: var(--no-soft); color: var(--no-ink); }
+  .vote-table .cell.yes { background: var(--yes); color: var(--on-yes); }
+  .vote-table .cell.maybe { background: var(--maybe); color: var(--on-maybe); }
+  .vote-table tfoot th, .vote-table tfoot td { padding: 10px 4px; font-size: 0.82rem; font-weight: 800; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+  .vote-table tfoot td.best { color: var(--yes-ink); }
+
+  /* PARTICIPANTS */
+  .participant-item { display: flex; align-items: center; gap: 12px; padding: 0.75rem 1rem; background: var(--surface); border: 2px solid var(--line); border-radius: var(--radius-lg); }
+  .avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--pop-soft); color: var(--pop-ink); font-size: 0.85rem; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .participant-name { font-size: 0.98rem; font-weight: 700; overflow-wrap: anywhere; }
+  .participant-dates-summary { margin-left: auto; font-size: 0.8rem; font-weight: 600; color: var(--ink-muted); white-space: nowrap; }
+
+  /* ÉTATS */
+  .state-screen { text-align: center; padding: 5rem 1rem; display: flex; flex-direction: column; align-items: center; gap: 14px; }
+  .state-screen p { color: var(--ink-soft); font-size: 0.95rem; }
+  .state-screen h2 { font-size: 1.6rem; font-weight: 800; letter-spacing: -0.02em; }
+
+  /* ORGANISATEUR SANS COMPTE */
+  .device-card { background: var(--surface); border: 2px solid var(--edge-line); border-radius: var(--radius-lg); box-shadow: 4px 4px 0 var(--maybe); padding: 1rem 1.1rem; display: flex; flex-direction: column; gap: 12px; }
+  .device-card-top { display: flex; align-items: flex-start; gap: 12px; }
+  .device-icon { width: 40px; height: 40px; flex-shrink: 0; border-radius: 50%; background: var(--maybe); color: var(--on-maybe); display: flex; align-items: center; justify-content: center; }
+  .device-icon svg { width: 20px; height: 20px; }
+  .device-title { font-size: 0.95rem; font-weight: 800; margin-bottom: 3px; }
+  .device-text { font-size: 0.82rem; color: var(--ink-soft); line-height: 1.45; }
+  .btn-google { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 0.75rem; border: 2px solid var(--ink); border-radius: 999px; background: var(--surface); color: var(--ink); font-size: 0.92rem; font-weight: 800; cursor: pointer; }
+  .btn-google:disabled { opacity: 0.6; cursor: default; }
+  .g-badge { width: 22px; height: 22px; border-radius: 50%; background: var(--ink); color: var(--bg); font-size: 0.78rem; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+  .device-card .link-btn { align-self: center; color: var(--ink-soft); text-decoration: none; }
+  .device-msg { text-align: center; font-size: 0.8rem; font-weight: 600; color: var(--no-ink); }
+  .device-msg:empty { display: none; }
+
+  /* VOTANT DE RETOUR */
+  .welcome-card { background: var(--surface); border: 2px solid var(--edge-line); border-radius: var(--radius-lg); box-shadow: 4px 4px 0 var(--yes); padding: 1rem 1.1rem; display: flex; gap: 12px; align-items: flex-start; }
+  .welcome-avatar { width: 42px; height: 42px; flex-shrink: 0; border-radius: 50%; background: var(--yes); color: var(--on-yes); font-weight: 800; display: flex; align-items: center; justify-content: center; }
+  .welcome-title { font-size: 1rem; font-weight: 800; margin-bottom: 3px; }
+  .welcome-text { font-size: 0.82rem; color: var(--ink-soft); line-height: 1.45; margin-bottom: 6px; }
+
+  /* SONDAGE CLÔTURÉ */
+  .final-banner { position: relative; background: var(--yes); color: var(--on-yes); border: 2px solid var(--edge-line); border-radius: var(--radius-lg); box-shadow: 4px 4px 0 var(--edge); padding: 1.2rem 1.15rem; display: flex; flex-direction: column; gap: 10px; }
+  .final-banner.celebrate { animation: banner-slap var(--d-slow) var(--ease-spring); }
+  @keyframes banner-slap { 0% { transform: scale(0.9) rotate(-2deg); } 100% { transform: none; } }
+  .final-label { display: flex; align-items: center; gap: 8px; font-size: 0.8rem; font-weight: 700; }
+  .final-label svg { width: 16px; height: 16px; }
+  .final-date { font-size: 1.75rem; font-weight: 800; letter-spacing: -0.03em; line-height: 1.05; text-wrap: balance; }
+  .final-counts { font-size: 0.88rem; font-weight: 600; }
+  .btn-calendar { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 0.8rem; background: var(--surface); color: var(--ink); border: 2px solid var(--edge); border-radius: 999px; font-size: 0.92rem; font-weight: 800; cursor: pointer; }
+  .btn-calendar svg { width: 17px; height: 17px; }
+  .btn-reopen { padding: 0.6rem; background: none; color: inherit; border: 2px solid currentColor; border-radius: 999px; font-size: 0.85rem; font-weight: 700; cursor: pointer; opacity: 0.85; }
+  .final-banner .device-msg { color: inherit; }
+  .who-card { background: var(--surface); border: 2px solid var(--line); border-radius: var(--radius-lg); padding: 0.9rem 1.1rem; }
+
+  /* Célébration à l'annonce : des gommettes éclatent depuis la bannière */
+  .confetti { position: absolute; inset: 0; pointer-events: none; overflow: visible; }
+  .confetti i { position: absolute; left: 50%; top: 40%; width: 12px; height: 12px; border-radius: 50%; animation: confetti-burst 0.9s var(--ease-out) forwards; }
+  @keyframes confetti-burst {
+    0% { transform: translate(-50%, -50%) scale(0.3); opacity: 1; }
+    70% { opacity: 1; }
+    100% { transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y))) scale(1); opacity: 0; }
+  }
 </style>
 </head>
 <body>
 
-<header>
-  <div class="header-left">
-    <a class="logo" href="index.html">Do<span>oo</span>dle</a>
-  </div>
-  <div class="header-right">
-    <a class="btn-new-poll" id="btn-new-poll" href="index.html"></a>
-    <a class="account-link" id="account-link" href="sondages.html" hidden>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c1-4.2 4.1-6.5 8-6.5s7 2.3 8 6.5"></path></svg>
-    </a>
-    <div class="lang-toggle">
-      <button class="lang-btn" id="lang-fr">FR</button>
-      <button class="lang-btn" id="lang-en">EN</button>
-    </div>
+<header class="site-header">
+  <a class="logo intro" href="index.html" aria-label="Dooodle">D<span class="dot y"></span><span class="dot m"></span><span class="dot n"></span>dle</a>
+  <span class="spacer"></span>
+  <a class="hdr-pill primary" id="btn-new-poll" href="index.html"></a>
+  <a class="hdr-icon" id="account-link" href="sondages.html" hidden>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c1-4.2 4.1-6.5 8-6.5s7 2.3 8 6.5"></path></svg>
+  </a>
+  <div class="lang-toggle">
+    <button class="lang-btn" id="lang-fr">FR</button>
+    <button class="lang-btn" id="lang-en">EN</button>
   </div>
 </header>
 
 <div class="page-wrap">
   <div class="state-screen" id="loading-screen">
-    <div class="spinner"></div>
+    <div class="loader"><span></span><span></span><span></span></div>
     <p id="loading-poll-text"></p>
   </div>
   <div class="state-screen" id="error-screen" style="display:none;">
@@ -352,10 +242,12 @@
 </div>
 
 <footer class="site-footer">
+  <div class="theme-switch" id="theme-switch"></div>
+  <a class="powered-by" href="https://nuxo.be" target="_blank" rel="noopener">Powered by <img src="images/nuxo-logo.svg" alt="Nuxo"></a>
   <span id="footer-tagline"></span>
 </footer>
 
-<script src="i18n.js?v=20261014b"></script>
+<script src="i18n.js?v=20261019a"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
@@ -440,7 +332,9 @@
       } else if (errorShown || layoutKey(previous) !== layoutKey(poll)) {
         // Also back from a deletion that the server refused: rebuild the hidden page
         errorShown = false;
+        const justAnnounced = previous.closed !== true && isClosed();
         rerender();
+        if (justAnnounced) celebrate();
       } else {
         // Live update: refresh counts + the currently visible data tab,
         // WITHOUT touching the vote calendar (preserves the user's in-progress selection).
@@ -456,7 +350,7 @@
     const voters = Object.keys(poll.votes||{});
     const pill = document.getElementById('voters-pill');
     const cnt = document.getElementById('participants-count');
-    if(pill) pill.textContent = `👤 ${t().participants(voters.length)}`;
+    if(pill) pill.textContent = t().participants(voters.length);
     if(cnt) cnt.textContent = `(${voters.length})`;
   }
 
@@ -539,24 +433,25 @@
           <input type="text" id="voter-name" placeholder="${t().placeholderName}" maxlength="40" />
           <div class="edit-hint" id="edit-hint">${t().editHint}</div>
         </div>
-        <p style="font-size:0.85rem;color:var(--ink-muted);margin-bottom:0.5rem;">${t().calTip}</p>
-        <div class="vote-legend">
-          <span class="legend-item"><span class="legend-swatch yes"></span>${t().legendYes}</span>
-          <span class="legend-item"><span class="legend-swatch maybe"></span>${t().legendMaybe}</span>
-        </div>
+        <p class="cal-tip">${t().calTip}</p>
         <div class="vote-cal-outer">
-          <button class="cal-side-btn" id="vcal-prev">
-            <span>&#8249;</span>
-            <span class="cal-side-label" id="vcal-prev-label"></span>
-          </button>
-          <div class="vote-cal-inner">
+          <div class="vote-cal-top">
+            <button class="cal-side-btn" id="vcal-prev" aria-label="‹">
+              <span class="arr"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></span>
+              <span class="cal-side-label" id="vcal-prev-label"></span>
+            </button>
             <div class="vote-cal-month" id="vcal-month-label"></div>
-            <div class="vote-cal-grid" id="vcal-grid"></div>
+            <button class="cal-side-btn" id="vcal-next" aria-label="›">
+              <span class="cal-side-label" id="vcal-next-label"></span>
+              <span class="arr"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></span>
+            </button>
           </div>
-          <button class="cal-side-btn" id="vcal-next">
-            <span>&#8250;</span>
-            <span class="cal-side-label" id="vcal-next-label"></span>
-          </button>
+          <div class="vote-cal-grid" id="vcal-grid"></div>
+          <div class="vote-legend">
+            <span class="legend-item"><span class="legend-swatch yes"></span>${t().legendYes}</span>
+            <span class="legend-item"><span class="legend-swatch maybe"></span>${t().legendMaybe}</span>
+            <span class="legend-item"><span class="legend-swatch"></span>${t().legendNo}</span>
+          </div>
         </div>
         <button class="btn-submit" id="btn-submit">${t().btnSubmit}</button>
         <div class="vote-msg" id="vote-msg"></div>`;
@@ -568,7 +463,7 @@
     // A rejected write can briefly make the poll look deleted: clear that state when it comes back
     document.getElementById('error-screen').style.display='none';
     const content = document.getElementById('poll-content');
-    content.style.display='block';
+    content.style.display='';
 
     const voters = Object.keys(poll.votes||{});
     const dateCount = poll.dates.length;
@@ -580,8 +475,8 @@
       <div class="event-header">
         <div class="event-title">${escHtml(poll.title)}</div>
         <div class="event-meta">
-          <span class="meta-pill">📅 ${t().dateProposed(dateCount)}</span>
-          <span class="meta-pill" id="voters-pill">👤 ${t().participants(voters.length)}</span>
+          <span class="meta-pill">${t().dateProposed(dateCount)}</span>
+          <span class="meta-pill" id="voters-pill">${t().participants(voters.length)}</span>
           ${closed ? `<span class="meta-pill closed">${t().closedPill}</span>` : ''}
         </div>
         ${owner ? `<div class="organizer-badge">${ICON_STAR}${t().organizerBadge}</div>` : ''}
@@ -589,17 +484,13 @@
       ${closed ? finalBannerHtml(owner) : shareSectionHtml()}
       ${showDeviceCard ? deviceCardHtml() : ''}
       <div class="tabs">
+        <span class="tab-indicator" aria-hidden="true"></span>
         <button class="tab active" id="tab-btn-vote">${t().tabVote}</button>
         <button class="tab" id="tab-btn-participants">${t().tabParticipants} <span id="participants-count">(${voters.length})</span></button>
         <button class="tab" id="tab-btn-results">${t().tabResults}</button>
       </div>
       <div id="tab-vote">
         ${closed ? `<div class="no-votes-msg">${t().votesClosed}</div>` : voteFormHtml()}
-        <div class="powered-by-wrap">
-          <a class="powered-by" href="https://nuxo.be" target="_blank" rel="noopener">
-            Powered by <img src="images/nuxo-logo.svg" alt="Nuxo">
-          </a>
-        </div>
       </div>
       <div id="tab-participants" style="display:none;"></div>
       <div id="tab-results" style="display:none;"></div>
@@ -627,6 +518,12 @@
       initVoteCalendar();
       applyWelcomeState();
     }
+    // First placement without sliding, then again once the font is in (tab widths change)
+    const pill = content.querySelector('.tab-indicator');
+    pill.style.transition = 'none';
+    moveTabIndicator();
+    requestAnimationFrame(() => { pill.style.transition = ''; });
+    document.fonts?.ready.then(moveTabIndicator);
   }
 
   // Rebuilds the page (language, organiser session, poll closed or reopened)
@@ -658,7 +555,7 @@
     if (!card || !row || !btn) return;
     card.style.display = welcomeName ? 'flex' : 'none';
     row.style.display = welcomeName ? 'none' : '';
-    btn.textContent = welcomeName ? t().btnUpdate : t().btnSubmit;
+    if (!btn.classList.contains('done')) btn.textContent = welcomeName ? t().btnUpdate : t().btnSubmit;
     if (welcomeName) {
       document.getElementById('voter-name').value = welcomeName;
       document.getElementById('welcome-avatar').textContent = getInitials(welcomeName);
@@ -862,9 +759,9 @@
       else if (current === 'yes') selectedDates.set(k, 'maybe');
       else selectedDates.delete(k);
       // Update only this cell's state classes
-      el.classList.remove('yes', 'maybe');
+      el.classList.remove('yes', 'maybe', 'pop');
       const newState = selectedDates.get(k);
-      if (newState) el.classList.add(newState);
+      if (newState) { el.classList.add(newState); void el.offsetWidth; el.classList.add('pop'); }
     };
   }
 
@@ -890,6 +787,7 @@
       if (!poll.votes) poll.votes = {};
       poll.votes[name] = voteData;
       showVoteMsg(t().successVote(name));
+      flashDone(btn);
       // This device now belongs to that voter: next visit starts from their dates
       rememberVoter(name);
       welcomeName = name;
@@ -916,10 +814,46 @@
     ['vote','participants','results'].forEach(name => {
       document.getElementById(`tab-btn-${name}`)?.classList.toggle('active', name===tab);
       const pane=document.getElementById(`tab-${name}`);
-      if(pane) pane.style.display = name===tab ? 'block' : 'none';
+      if(pane) pane.style.display = name===tab ? '' : 'none';
     });
+    moveTabIndicator();
     if(tab==='participants') renderParticipants();
-    if(tab==='results') renderResults();
+    if(tab==='results') renderResults(true);
+  }
+
+  // The dark pill slides under the active tab
+  function moveTabIndicator() {
+    const bar = document.querySelector('.tabs');
+    const active = bar?.querySelector('.tab.active');
+    const pill = bar?.querySelector('.tab-indicator');
+    if (!active || !pill) return;
+    pill.style.width = active.offsetWidth + 'px';
+    pill.style.transform = `translateX(${active.offsetLeft}px)`;
+  }
+  window.addEventListener('resize', moveTabIndicator);
+
+  // The save button turns green for a moment: the vote went through
+  function flashDone(btn) {
+    btn.classList.add('done');
+    btn.textContent = '✓';
+    setTimeout(() => { btn.classList.remove('done'); applyWelcomeState(); }, 1400);
+  }
+
+  // Announced date: a handful of stickers burst out of the banner
+  function celebrate() {
+    const banner = document.querySelector('.final-banner');
+    if (!banner || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    banner.classList.add('celebrate');
+    const colors = ['var(--maybe)', 'var(--no)', 'var(--pop)', 'var(--surface)']; // no green: the banner is green
+    const layer = document.createElement('div');
+    layer.className = 'confetti';
+    layer.innerHTML = Array.from({ length: 18 }, (_, i) => {
+      const angle = (i / 18) * Math.PI * 2 + Math.random() * 0.3;
+      const dist = 90 + Math.random() * 70;
+      return `<i style="background:${colors[i % colors.length]};--x:${Math.round(Math.cos(angle) * dist)}px;--y:${Math.round(Math.sin(angle) * dist * 0.7)}px;animation-delay:${Math.round(Math.random() * 80)}ms"></i>`;
+    }).join('');
+    banner.appendChild(layer);
+    setTimeout(() => layer.remove(), 1200);
   }
 
   function renderParticipants(){
@@ -951,7 +885,7 @@
     }).sort((a, b) => b.score - a.score || b.yes.length - a.yes.length);
   }
 
-  function renderResults(){
+  function renderResults(animate){
     const el=document.getElementById('tab-results'); if(!el) return;
     const votes=poll.votes||{}, totalVoters=Object.keys(votes).length;
     if(totalVoters===0){el.innerHTML=`<div class="no-votes-msg">${t().noVotes}</div>`;return;}
@@ -966,14 +900,14 @@
 
     el.innerHTML = `
       <div class="results-header">
-        <span style="font-size:0.85rem;color:var(--ink-muted);">${t().voted(totalVoters)}</span>
+        <span class="results-count">${t().voted(totalVoters)}</span>
         <div class="view-toggle">
           <button class="view-btn ${resultsView==='ranking'?'active':''}" data-view="ranking">${t().viewRanking}</button>
           <button class="view-btn ${resultsView==='table'?'active':''}" data-view="table">${t().viewTable}</button>
         </div>
       </div>
       ${choosing ? `<p class="choose-hint">${t().chooseHint}</p>` : ''}
-      ${resultsView === 'table' ? tableHtml(scores, highlighted, choosing) : rankingHtml(scores, highlighted, choosing, totalVoters, picked)}
+      ${resultsView === 'table' ? tableHtml(scores, highlighted, choosing) : `<div class="results-list${animate ? ' grow' : ''}">${rankingHtml(scores, highlighted, choosing, totalVoters, picked)}</div>`}
       ${picked && resultsView === 'table' ? `
         <div class="announce-block">
           <button class="btn-submit" id="btn-announce">${escHtml(t().btnAnnounce(formatDateNoYear(chosenDate)))}</button>
@@ -984,7 +918,7 @@
     el.querySelectorAll('.view-btn').forEach(btn => btn.addEventListener('click', () => {
       resultsView = btn.dataset.view;
       store.set('dooodle-results-view', resultsView);
-      renderResults();
+      renderResults(true);
     }));
     el.querySelectorAll('[data-choose]').forEach(btn => btn.addEventListener('click', () => {
       chosenDate = btn.dataset.choose;
@@ -1010,10 +944,10 @@
       const voters = `
             ${item.yes.map(n => `<span class="voter-pill">${escHtml(n)}</span>`).join('')}
             ${item.maybe.map(n => `<span class="voter-pill maybe">${escHtml(n)}</span>`).join('')}
-            ${totalCount === 0 ? `<span style="font-size:0.82rem;color:var(--ink-muted)">${t().nobodyAvail}</span>` : ''}`;
+            ${totalCount === 0 ? `<span class="nobody">${t().nobodyAvail}</span>` : ''}`;
       return `<div class="result-item ${isTop ? 'top' : ''}">
           <div class="result-top-row">
-            <span class="rank-num ${i === 0 ? 'gold' : ''}">${i + 1}.</span>
+            <span class="rank-num ${i === 0 ? 'gold' : ''}">${i + 1}</span>
             <span class="result-date-label">${cap(formatDateShort(item.date))}</span>
             <span class="result-score">${scoreText}</span>
           </div>
@@ -1049,7 +983,7 @@
       const v = normalizeVote(votes[name]);
       const cells = poll.dates.map(d => {
         const state = v[d];
-        return `<td${best(d)}><span class="cell ${state || ''}">${state === 'yes' ? '✓' : state === 'maybe' ? '?' : ''}</span></td>`;
+        return `<td${best(d)}><span class="cell ${state || ''}">${state === 'yes' ? '✓' : state === 'maybe' ? '?' : '✕'}</span></td>`;
       }).join('');
       return `<tr><th class="row-name" scope="row">${escHtml(name)}</th>${cells}</tr>`;
     }).join('');
@@ -1092,6 +1026,7 @@
     document.getElementById('err-title').textContent = t().errNotFound;
     document.getElementById('err-sub').textContent = t().errNotFoundSub;
     document.getElementById('footer-tagline').textContent = t().footer;
+    renderThemeSwitch(document.getElementById('theme-switch'));
   }
 
   document.getElementById('lang-fr').addEventListener('click', () => switchLanguage('fr'));
