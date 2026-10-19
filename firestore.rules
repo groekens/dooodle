@@ -68,14 +68,19 @@ service cloud.firestore {
         && request.resource.data.lastVoter in request.resource.data.votes
         && isValidVote(request.resource.data.votes[request.resource.data.lastVoter], resource.data.dates);
 
-      // Organisateur : annoncer une date (closed + finalDate) ou rouvrir (closed = false)
+      // Organisateur : annoncer une date (closed + finalDate, heure finalTime facultative "HH:MM"),
+      // changer l'heure d'une date annoncée, ou rouvrir (closed = false)
       allow update: if
         isOwner(resource.data)
-        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['closed', 'finalDate'])
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['closed', 'finalDate', 'finalTime'])
         && request.resource.data.closed is bool
         && (
-          (request.resource.data.closed == true && request.resource.data.finalDate in resource.data.dates)
-          || (request.resource.data.closed == false && !('finalDate' in request.resource.data))
+          (request.resource.data.closed == true && request.resource.data.finalDate in resource.data.dates
+            && (!('finalTime' in request.resource.data)
+                || (request.resource.data.finalTime is string
+                    && request.resource.data.finalTime.matches('^([01][0-9]|2[0-3]):[0-5][0-9]$'))))
+          || (request.resource.data.closed == false && !('finalDate' in request.resource.data)
+              && !('finalTime' in request.resource.data))
         );
 
       // Organisateur : céder le sondage à un autre compte (rattachement anonyme vers Google)

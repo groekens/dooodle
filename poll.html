@@ -140,6 +140,15 @@
   .announce-inline .btn-submit { padding: 0.85rem; font-size: 0.95rem; }
   .announce-inline .link-btn { align-self: center; color: var(--ink-soft); text-decoration: none; }
   .announce-hint { text-align: center; font-size: 0.76rem; color: var(--ink-soft); line-height: 1.5; }
+  .announce-time { display: flex; flex-direction: column; gap: 6px; margin-bottom: 4px; }
+  .announce-time .field-label { margin-bottom: 0; }
+  .announce-time-hint { font-size: 0.76rem; color: var(--ink-muted); line-height: 1.5; }
+  input[type="time"] {
+    width: 100%; min-height: 2.9rem; padding: 0.6rem 0.95rem; border: 2px solid var(--line); border-radius: var(--radius);
+    font: inherit; font-size: 1.05rem; font-weight: 600; color: var(--ink); background: var(--field); outline: none;
+    -webkit-appearance: none; appearance: none; text-align: left;
+  }
+  input[type="time"]:focus { border-color: var(--pop); background: var(--surface); }
 
   .table-wrap { background: var(--surface); border: 2px solid var(--edge); border-radius: var(--radius-lg); overflow-x: auto; -webkit-overflow-scrolling: touch; }
   .vote-table { border-collapse: collapse; width: 100%; }
@@ -198,6 +207,9 @@
   .final-label svg { width: 16px; height: 16px; }
   .final-date { font-size: 1.75rem; font-weight: 800; letter-spacing: -0.03em; line-height: 1.05; text-wrap: balance; }
   .final-counts { font-size: 0.88rem; font-weight: 600; }
+  .final-time { display: block; font-size: 1.15rem; font-weight: 700; letter-spacing: -0.01em; margin-top: 4px; }
+  .final-time-edit { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 0.85rem; font-weight: 700; }
+  .final-time-edit input[type="time"] { width: auto; min-width: 8.5rem; min-height: 2.5rem; padding: 0.4rem 0.8rem; border-color: var(--edge-line); background: var(--surface); }
   .btn-calendar { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 0.8rem; background: var(--surface); color: var(--ink); border: 2px solid var(--edge); border-radius: 999px; font-size: 0.92rem; font-weight: 800; cursor: pointer; }
   .btn-calendar svg { width: 17px; height: 17px; }
   .btn-reopen { padding: 0.6rem; background: none; color: inherit; border: 2px solid currentColor; border-radius: 999px; font-size: 0.85rem; font-weight: 700; cursor: pointer; opacity: 0.85; }
@@ -247,7 +259,7 @@
   <span id="footer-tagline"></span>
 </footer>
 
-<script src="i18n.js?v=20261019a"></script>
+<script src="i18n.js?v=20261019b"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
@@ -276,6 +288,7 @@
   let currentUser = null;   // organiser session, if any (participants have none)
   let welcomeName = null;   // voter remembered on this device and greeted by name
   let chosenDate = null;    // organiser's pick, before announcing it
+  let chosenTime = '';      // optional time typed with it ("HH:MM")
   let resultsView = store.get('dooodle-results-view') === 'table' ? 'table' : 'ranking';
 
   const ICON_CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"></path></svg>';
@@ -287,6 +300,9 @@
   function isOwner() { return !!(poll && currentUser && poll.ownerUid && poll.ownerUid === currentUser.uid); }
   // A closed poll without a valid final date is treated as open
   function isClosed() { return !!(poll && poll.closed === true && poll.dates.includes(poll.finalDate)); }
+  // Optional time of the announced date, "HH:MM" or '' (all day)
+  const TIME_RE = /^([01]\d|2[0-3]):[0-5]\d$/;
+  function finalTime() { return poll && TIME_RE.test(poll.finalTime || '') ? poll.finalTime : ''; }
 
   /* --- Helpers --- */
   function formatDate(str) { return new Date(str+'T12:00:00').toLocaleDateString(t().locale,{weekday:'long',day:'numeric',month:'long',year:'numeric'}); }
@@ -313,7 +329,7 @@
 
   /* --- Load poll with live updates --- */
   // What changes the page layout (as opposed to a new vote, which only refreshes counts)
-  function layoutKey(p) { return JSON.stringify([p.closed === true, p.finalDate || '', p.ownerUid || '']); }
+  function layoutKey(p) { return JSON.stringify([p.closed === true, p.finalDate || '', p.finalTime || '', p.ownerUid || '']); }
 
   function loadPoll() {
     if(!pollId){showError();return;}
@@ -394,8 +410,12 @@
     return `
       <div class="final-banner">
         <div class="final-label">${ICON_CALENDAR}${t().finalDateLabel}</div>
-        <div class="final-date">${escHtml(cap(formatDate(poll.finalDate)))}</div>
+        <div class="final-date">${escHtml(cap(formatDate(poll.finalDate)))}${finalTime() ? `<span class="final-time">${t().finalAt(finalTime())}</span>` : ''}</div>
         <div class="final-counts">${t().finalCounts(yes.length, maybe.length)}</div>
+        ${owner ? `
+        <label class="final-time-edit">${t().labelEditTime}
+          <input type="time" id="final-time-edit" value="${finalTime()}" />
+        </label>` : ''}
         <button class="btn-calendar" id="btn-ics">${ICON_PLUS}${t().btnAddCalendar}</button>
         ${owner ? `<button class="btn-reopen" id="btn-reopen">${t().btnReopen}</button><div class="device-msg" id="owner-msg"></div>` : ''}
       </div>${who}`;
@@ -508,6 +528,7 @@
     on('btn-not-me', forgetVoter);
     on('btn-ics', downloadCalendarFile);
     on('btn-reopen', reopenPoll);
+    document.getElementById('final-time-edit')?.addEventListener('change', saveFinalTime);
     on('btn-google', connectGoogle);
     on('btn-later', () => { store.set('dooodle-later-' + pollId, '1'); rerender(); });
     on('tab-btn-vote', () => switchTab('vote'));
@@ -594,7 +615,8 @@
     const btn = document.getElementById('btn-announce');
     btn.disabled = true;
     try {
-      await db.collection('polls').doc(pollId).update({ closed: true, finalDate: chosenDate });
+      const time = TIME_RE.test(chosenTime) ? chosenTime : firebase.firestore.FieldValue.delete();
+      await db.collection('polls').doc(pollId).update({ closed: true, finalDate: chosenDate, finalTime: time });
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch(e) {
       console.error(e);
@@ -607,7 +629,8 @@
     const btn = document.getElementById('btn-reopen');
     btn.disabled = true;
     try {
-      await db.collection('polls').doc(pollId).update({ closed: false, finalDate: firebase.firestore.FieldValue.delete() });
+      const del = firebase.firestore.FieldValue.delete();
+      await db.collection('polls').doc(pollId).update({ closed: false, finalDate: del, finalTime: del });
     } catch(e) {
       console.error(e);
       btn.disabled = false;
@@ -615,18 +638,46 @@
     }
   }
 
-  // All-day event, opened by the phone's or computer's calendar app
+  // Organiser changes (or clears) the time of an announced date
+  async function saveFinalTime(e) {
+    const input = e.target, value = input.value;
+    if (value && !TIME_RE.test(value)) return;
+    const msg = document.getElementById('owner-msg');
+    input.disabled = true;
+    try {
+      await db.collection('polls').doc(pollId).update({ finalTime: value || firebase.firestore.FieldValue.delete() });
+    } catch(err) {
+      console.error(err);
+      input.disabled = false;
+      input.value = finalTime();
+      if (msg) msg.textContent = t().errOwnerAction;
+    }
+  }
+
+  // Opened by the phone's or computer's calendar app: all day, or 2 hours from the
+  // announced time (floating time, read in the device's own time zone)
   function downloadCalendarFile() {
-    const day = poll.finalDate.replace(/-/g, '');
-    const next = new Date(poll.finalDate + 'T12:00:00'); next.setDate(next.getDate() + 1);
     const pad = n => String(n).padStart(2, '0');
-    const end = `${next.getFullYear()}${pad(next.getMonth()+1)}${pad(next.getDate())}`;
+    const ymd = d => `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}`;
+    const time = finalTime();
+    let start, end;
+    if (time) {
+      const from = new Date(`${poll.finalDate}T${time}:00`);
+      const to = new Date(from.getTime() + 2 * 3600 * 1000);
+      const hms = d => `T${pad(d.getHours())}${pad(d.getMinutes())}00`;
+      start = `DTSTART:${ymd(from)}${hms(from)}`;
+      end = `DTEND:${ymd(to)}${hms(to)}`;
+    } else {
+      const next = new Date(poll.finalDate + 'T12:00:00'); next.setDate(next.getDate() + 1);
+      start = `DTSTART;VALUE=DATE:${poll.finalDate.replace(/-/g, '')}`;
+      end = `DTEND;VALUE=DATE:${ymd(next)}`;
+    }
     const stamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d+/, '');
     const text = str => String(str).replace(/\\/g, '\\\\').replace(/([,;])/g, '\\$1').replace(/\r?\n/g, '\\n');
     const ics = [
       'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Dooodle//doodle.nuxo.be//FR', 'BEGIN:VEVENT',
       `UID:${pollId}@doodle.nuxo.be`, `DTSTAMP:${stamp}`,
-      `DTSTART;VALUE=DATE:${day}`, `DTEND;VALUE=DATE:${end}`,
+      start, end,
       `SUMMARY:${text(poll.title)}`, `URL:${shareUrl}`,
       'END:VEVENT', 'END:VCALENDAR'
     ].join('\r\n');
@@ -910,6 +961,7 @@
       ${resultsView === 'table' ? tableHtml(scores, highlighted, choosing) : `<div class="results-list${animate ? ' grow' : ''}">${rankingHtml(scores, highlighted, choosing, totalVoters, picked)}</div>`}
       ${picked && resultsView === 'table' ? `
         <div class="announce-block">
+          ${announceTimeHtml()}
           <button class="btn-submit" id="btn-announce">${escHtml(t().btnAnnounce(formatDateNoYear(chosenDate)))}</button>
           <div class="announce-hint">${t().announceHint}</div>
           <div class="device-msg" id="owner-msg"></div>
@@ -929,6 +981,17 @@
       renderResults();
     });
     document.getElementById('btn-announce')?.addEventListener('click', announceDate);
+    document.getElementById('announce-time')?.addEventListener('input', e => { chosenTime = e.target.value; });
+  }
+
+  // Optional time, typed before announcing. Kept in chosenTime across re-renders.
+  function announceTimeHtml() {
+    return `
+      <label class="announce-time">
+        <span class="field-label">${t().labelFinalTime}</span>
+        <input type="time" id="announce-time" value="${TIME_RE.test(chosenTime) ? chosenTime : ''}" />
+        <span class="announce-time-hint">${t().finalTimeHint}</span>
+      </label>`;
   }
 
   function rankingHtml(scores, highlighted, choosing, totalVoters, picked) {
@@ -959,6 +1022,7 @@
             // The picked date carries its own announce button: no scrolling to the bottom of the list
             : item.date === picked ? `<div class="result-voters">${voters}</div>
               <div class="announce-inline">
+                ${announceTimeHtml()}
                 <button class="btn-submit" id="btn-announce">${t().btnAnnounceThis}</button>
                 <div class="announce-hint">${t().announceHint}</div>
                 <button class="link-btn" data-unchoose>${t().btnCancel}</button>
