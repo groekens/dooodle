@@ -214,6 +214,18 @@ input[type="text"]:focus { border-color: var(--pop); background: var(--surface);
 .powered-by { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; color: var(--ink-muted); font-size: 0.72rem; font-weight: 600; }
 .powered-by img { height: 22px; width: auto; display: block; background: var(--logo-chip); border-radius: 999px; padding: 0 2px; }
 
+/* ---------- Bannière et guide d'installation (pwa-install.js) en gommettes ----------
+   Sélecteurs préfixés par .pwa-root : ils passent devant les styles injectés par le script. */
+.pwa-root .pwa-banner { border: 2px solid var(--edge-line); box-shadow: 4px 4px 0 var(--edge); }
+.pwa-root .pwa-cta, .pwa-root .pwa-now { font-weight: 800; box-shadow: 3px 3px 0 var(--edge); border: 2px solid var(--edge-line); }
+.pwa-root .pwa-modal { border: 2px solid var(--edge-line); box-shadow: 6px 6px 0 var(--edge); }
+.pwa-root .pwa-head h2 { font-weight: 800; letter-spacing: -0.02em; }
+.pwa-root .pwa-num { background: var(--maybe); color: var(--on-maybe); font-weight: 800; }
+.pwa-root .pwa-step-title { font-weight: 700; }
+.pwa-root .pwa-why { border: 2px dashed var(--line); background: transparent; }
+.pwa-root .pwa-why li::before { content: ''; top: 0.3em; width: 10px; height: 10px; border-radius: 50%; background: var(--yes); }
+.pwa-root .pwa-backdrop { background: rgba(10, 6, 20, 0.55); }
+
 /* ---------- Mouvement : un seul langage, coupé si l'appareil le demande ---------- */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }

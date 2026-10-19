@@ -5,6 +5,8 @@
 //   data-app     nom affiché          data-key   préfixe localStorage
 //   data-icon    icône 192 px         data-accent couleur principale
 //   data-font    police des titres    data-sub-fr / data-sub-en  sous-titre
+// Les couleurs reprennent celles de la page quand elle en déclare (--surface, --ink...),
+// ce qui fait suivre le thème sombre ; sinon, palette claire par défaut.
 (function () {
   const cfg = document.currentScript.dataset;
   const APP = cfg.app;
@@ -110,8 +112,9 @@
   }
 
   const CSS = `
-    .pwa-root { --pwa-accent: ${cfg.accent || '#ef5a46'}; --pwa-font: ${cfg.font ? `'${cfg.font}', ` : ''}system-ui, sans-serif;
-      --pwa-surface: #fff; --pwa-surface2: #f4f3f0; --pwa-surface3: #e6e3de; --pwa-text: #1e1e24; --pwa-text2: #5d5b66; --pwa-text3: #9a98a3; --pwa-border: rgba(0,0,0,0.08);
+    .pwa-root { --pwa-accent: var(--pop, ${cfg.accent || '#ef5a46'}); --pwa-on-accent: var(--on-pop, #fff); --pwa-font: ${cfg.font ? `'${cfg.font}', ` : ''}system-ui, sans-serif;
+      --pwa-surface: var(--surface, #fff); --pwa-surface2: var(--field, #f4f3f0); --pwa-surface3: var(--line, #e6e3de);
+      --pwa-text: var(--ink, #1e1e24); --pwa-text2: var(--ink-soft, #5d5b66); --pwa-text3: var(--ink-muted, #9a98a3); --pwa-border: var(--edge-line, rgba(0,0,0,0.08));
       font-family: var(--pwa-font); color: var(--pwa-text); }
     .pwa-root *, .pwa-root *::before, .pwa-root *::after { box-sizing: border-box; margin: 0; padding: 0; }
     .pwa-banner { display: none; position: fixed; left: 50%; bottom: calc(16px + env(safe-area-inset-bottom)); transform: translateX(-50%);
@@ -127,7 +130,7 @@
     .pwa-body { flex: 1; min-width: 0; }
     .pwa-title { font-weight: 700; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .pwa-sub { font-size: 12px; color: var(--pwa-text3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .pwa-cta { flex-shrink: 0; background: var(--pwa-accent); color: #fff; border: none; cursor: pointer; font-family: inherit; font-weight: 700;
+    .pwa-cta { flex-shrink: 0; background: var(--pwa-accent); color: var(--pwa-on-accent); border: none; cursor: pointer; font-family: inherit; font-weight: 700;
       font-size: 14px; padding: 9px 16px; border-radius: 99px; }
     .pwa-cta:hover { filter: brightness(0.93); }
     .pwa-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px);
@@ -162,7 +165,7 @@
     .pwa-why { list-style: none; margin-top: 18px; padding: 12px 14px; background: var(--pwa-surface2); border-radius: 12px; display: flex; flex-direction: column; gap: 6px; }
     .pwa-why li { font-size: 13px; color: var(--pwa-text2); padding-left: 18px; position: relative; }
     .pwa-why li::before { content: '✓'; position: absolute; left: 0; color: var(--pwa-accent); font-weight: 700; }
-    .pwa-now { display: none; width: 100%; margin-top: 16px; background: var(--pwa-accent); color: #fff; border: none; cursor: pointer; font-family: inherit;
+    .pwa-now { display: none; width: 100%; margin-top: 16px; background: var(--pwa-accent); color: var(--pwa-on-accent); border: none; cursor: pointer; font-family: inherit;
       font-weight: 700; font-size: 15px; padding: 13px; border-radius: 99px; }
     @media (prefers-reduced-motion: reduce) { .pwa-banner, .pwa-modal { animation: none; } }
   `;
