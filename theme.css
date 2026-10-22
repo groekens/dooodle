@@ -74,6 +74,8 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { font-size: 17px; -webkit-text-size-adjust: 100%; }
+/* Pas de zoom au double toucher (deux dates voisines choisies vite), le pincement reste possible */
+* { touch-action: manipulation; }
 body {
   font-family: var(--font); background: var(--bg); color: var(--ink);
   min-height: 100vh; display: flex; flex-direction: column; line-height: 1.45;
